@@ -1,4 +1,5 @@
 #include<iostream>
+#include"Carte.h"
 
 using namespace std;
 
