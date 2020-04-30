@@ -2,11 +2,11 @@
 #include"Definitions.h"
 #include"menu.h"
 
-
 using namespace std;
 
 int main()
 {
+
 
     short unsigned int  choix;
     bool application, condition = false;
