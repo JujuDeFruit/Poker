@@ -7,14 +7,12 @@ using namespace std;
 class Card
 {
 private:
-	int number_;
+	string value_;
 	string suit_;
 public:
-	Card(int, string);
-	int GetNumber() const { return number_; };
+	Card(string, string);
+	string GetNumber() const { return value_; };
 	string GetSuit() const { return suit_; };
-	static vector<string> SuitList();
-	static vector<int> NumberList();
 	void PrintCard();
 };
 
@@ -24,5 +22,7 @@ private:
 	vector<Card> cardList_;
 public:
 	Deck();
+	static vector<string> SuitList();
+	static vector<string> ValueList();
 	void PrintDeck();
 };

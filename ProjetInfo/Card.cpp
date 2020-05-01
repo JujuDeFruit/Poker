@@ -3,26 +3,38 @@
 #include<string>
 
 /*Each card is unique and defined by a number and a suit*/
-Card::Card(int number, string suit)
+Card::Card(string number, string suit)
 {
-	number_ = number;
+	value_ = number;
 	suit_ = suit;
 }
 
-vector<string> Card::SuitList()
-{
-	vector<string> suitList = {"spade", "club", "heart", "diamond" }; // List of each (4) suits in a deck of cards
-	return suitList;
-}
 
-vector<int> Card::NumberList()
-{
-	vector<int> numberList(13); // From 1 to 13 : from 1 to King (list with all the values a card can get) 
-	for (unsigned int i = 1; i < 14; i++) numberList[i - 1] = i; // Let's full the list
-	return numberList;
-}
 
 void Card::PrintCard()
 {
-	cout << number_ << " of " << suit_ << endl;
+	wchar_t* symbol = nullptr;
+
+	/* We are trying to get unicode code to print the symbole of each suit.*/
+	if (suit_ == "spade")
+	{
+		symbol = L"\u2660"; // Unicode code for spades
+	}
+	else if (suit_ == "heart")
+	{
+		symbol = L"\u2665";
+	}
+	else if (suit_ == "diamond")
+	{
+		symbol = L"\u2666";
+	}
+	else if (suit_ == "club")
+	{
+		symbol = L"\u2663";
+	}
+	
+	wstring value(value_.begin(), value_.end()); // Converting the string value of the card into wchar_t * value to print it with the symbol.
+	const wchar_t* val = value.c_str(); // Converting to wchar_t* type
+
+	wcout <<  value + L" " + symbol << endl;
 }
