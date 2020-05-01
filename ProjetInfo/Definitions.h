@@ -18,8 +18,7 @@ public:
 	void PrintCard();
 };
 
-class Deck
-{
+class Deck{
 private:
 	vector<Card> cardList_;
 	bool deckShaked_ = false;
@@ -31,3 +30,22 @@ public:
 	void ShakeDeck();
 	void PrintDeck();
 };
+
+class Round {
+
+public:
+	void follow();
+};
+
+
+class Game {
+private:
+	bool server_;
+	
+public:
+	Round* round_;
+	Game(bool server);
+	bool GetServer() { return server_; };
+	void Start();
+};
+

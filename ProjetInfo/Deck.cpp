@@ -2,6 +2,8 @@
 #include<iostream>
 #include <algorithm>    // std::random_shuffle, reverse
 #include <ctime>        // std::time
+#include<vector>
+#include<string>
 
 /* Function returns a random number between 0 and i - 1 */
 int RandomNumber(int i) { return rand() % i; };

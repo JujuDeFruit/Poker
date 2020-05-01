@@ -3,30 +3,28 @@
 
 #include <string>
 #include <vector>
-#include "Definitions.h"
 
 using namespace std;
 
 
 class OptionMenu
 {
-    string name_;
+    string nom_;
     string description_;
   public:
     OptionMenu(const string &nom,const string &description);
-    string GetNom() const {return name_;}
-    string GetDescription() const {return description_;}
+    string getNom() const {return nom_;}
+    string getDescription() const {return description_;}
 };
 
 
-class Menu{      
+class Menu
+{
     string title_;
     vector<OptionMenu> listeOptions_;
-protected :
-    Game* Game_=NULL;
   public:
     Menu(const string & title);
-    void SetTitle(const string &title);
+    void SetTittle(const string &title);
     void AddOption(const string &nom,const string &description);
     void ShowMenu();
     int AskChoix();
@@ -45,14 +43,10 @@ public:
 };
 
 class MenuPokerGame : public Menu {
-    
 
 public :
-    MenuPokerGame(Game& Game);
+    MenuPokerGame();
 };
-
-#endif
-
 
 /*class MenuMoyenne : public Menu
 {
@@ -64,3 +58,5 @@ public:
     void saisirNotes();
     void calculerMoyenne();
 };*/
+#endif
+

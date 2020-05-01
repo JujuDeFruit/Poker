@@ -1,11 +1,12 @@
+#include<iostream>
 #include"Definitions.h"
 #include"menu.h"
-#include<iostream>
 
 using namespace std;
 
 int main()
 {
+
 
     short unsigned int  choix;
     bool application, condition = false;
@@ -14,30 +15,24 @@ int main()
         cin >> choix;
         if (choix == 0) {
             application = false;
+            // lancer une partie client
+            MenuPoker p1;
+            p1.executer();
 
-            //start a game as client
-            MenuPokerStart mstart;
-            mstart.Execute();
-            Game client(application);
-            MenuPokerGame mgame(client);
-            mgame.Execute();
-              
-
-            //en of the game
-            condition = true;				
+            //la partie ce finie
+            condition = true;
         }
         else if (choix == 1) {
             application = true;
-            // start a game as server
-            Game serveur(application);
+            // lancer une partie serveur
+            MenuPoker p2;
+            p2.executer();
 
-         
-
-            //end of the game
+            // la partie ce finie
             condition = true;
         }
         else {
-            cout << "Erreur de saisie, retaper :" << endl;  
+            cout << "Erreur de saisie, retaper :" << endl;
         }
 
 

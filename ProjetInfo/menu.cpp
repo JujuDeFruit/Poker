@@ -7,84 +7,94 @@ using namespace std;
 
 // Definition des methodes de la classe OptionMenu
 
-OptionMenu::OptionMenu(const string &nom,const string &description)
-  : nom_(nom), description_(description)
+OptionMenu::OptionMenu(const string &name,const string &description)
+  : name_(name), description_(description)
 {
 }
 
 
 // Definition des methodes de la classe Menu
 
-Menu::Menu(const string & titre) : titre_(titre)
+Menu::Menu(const string & title) : title_(title)
 {
 }
 
-void Menu::setTitre(const string &titre)
+void Menu::SetTitle(const string &title)
 {
-  titre_=titre;
+  title_=title;
 }
 
-void Menu::ajouterOption(const string &nom,const string &description)
+void Menu::AddOption(const string &nom,const string &description)
 {
   listeOptions_.push_back(OptionMenu(nom,description));
 }
 
 
-void Menu::afficherMenu()
+void Menu::ShowMenu()
 {
-  cout<<titre_<<endl;
+  cout<<title_<<endl;
   for (int i=0;i<listeOptions_.size();i++) {
-    cout<<"- "<<setw(2)<<i<<" : "<<listeOptions_[i].getDescription()<<endl;
+    cout<<"- "<<setw(2)<<i<<" : "<<listeOptions_[i].GetDescription()<<endl;
   }
 }
 
-int Menu::demanderChoix()
+int Menu::AskChoix()
 {
-  int choix;
-  cout<<"Votre choix : ";
-  cin>>choix;
+  int choice;
+  cout<<"Your choice : ";
+  cin>>choice;
   cout<<endl;
-  return choix;
+  return choice;
 }
 
-void Menu::executer()
+void Menu::Execute()
 {
-  bool fin=false;
-  while(!fin) {
+  bool end=false;
+  while(!end) {
     system("cls");
-    afficherMenu();
-    int choix=demanderChoix();
-    if (choix>=0 && choix<listeOptions_.size())
-      executerOption(listeOptions_[choix].getNom(),fin);
+    ShowMenu();
+    int choice=AskChoix();
+    if (choice>=0 && choice<listeOptions_.size())
+      ExecuteOption(listeOptions_[choice].GetNom(),end);
     else {
-      cout<<"Choix incorrect"<<endl;
+      cout<<"Wrong choice"<<endl;
       system("pause");
     }
   }
 }
 
-void Menu::executerOption(const string &nom,bool &fin)
+
+
+void Menu::ExecuteOption(const string &name,bool &end)
 {
-  fin=false;
-  if (nom=="quitter") fin=quitter();
-  else if (nom=="aide") aide();
+  end=false;
+  //menupokerstart
+  if (name == "leave") end = Leave(); 
+  else if (name == "start") end = Leave();
+  else if (name == "help") Help();
+  //menupokergame
+  else if (name == "follow") Game_->round_->follow();
+  else if (name == "all in");
+  else if (name == "check");
+  else if (name == "fold");
+  //
   else {
-    cout<<"Option inexistante"<<endl;
+    cout<<"Option not defined"<<endl;
     system("pause");
     }
 }
 
-bool Menu::quitter()
+bool Menu::Leave()
 {
-  bool fin=false;
-  char reponse;
-  cout<<"Voulez-vous vraiment sortir de l'application (o/n) ?";
-  cin>>reponse;
-  if ((reponse=='o')||(reponse=='O')) fin=true;
-  return fin;
+  bool end=false;
+  char answer;
+  cout<<"Do you want to leave (o/n) ?";
+  cin>>answer;
+  if ((answer=='o')||(answer=='O')) end=true;
+  return end;
 }
 
-void Menu::aide()
+void Menu::Help()
 {
   cout<<"La liste ci-dessus vous propose les options disponibles pour ce menu."<<endl;
   cout<<"Vous devez entrer un numero qui correspond a votre choix et valider en"<<endl;
