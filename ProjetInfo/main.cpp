@@ -10,30 +10,34 @@ int main()
     short unsigned int  choix;
     bool application, condition = false;
 
-	Deck deck;
-	deck.PrintDeck();
+	//Deck deck;
+	//deck.PrintDeck();
+
+
     while (condition == false) {
         cout << endl << "| Client taper 0 | Serveur taper 1 |" << endl;
         cin >> choix;
         if (choix == 0) {
             application = false;
-            // lancer une partie client
-            MenuPokerStart p1;
-            p1.Execute();
+            //start a game as client
+            MenuPokerStart mstart;
+            mstart.Execute();
+            Game client(application);
+            MenuPokerGame mgame(client);
+            mgame.Execute();
+              
 
-            //la partie ce finie
-            condition = true;
-
-			
-			
+            //en of the game
+            condition = true;				
         }
         else if (choix == 1) {
             application = true;
-            // lancer une partie serveur
-            MenuPokerStart p2;
-            p2.Execute();
+            // start a game as server
+            Game serveur(application);
 
-            // la partie ce finie
+         
+
+            //end of the game
             condition = true;
         }
         else {

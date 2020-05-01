@@ -25,10 +25,21 @@ public:
 	void PrintDeck();
 };
 
+class Round {
+
+public:
+	void follow();
+};
+
+
 class Game {
 private:
 	bool server_;
 	
 public:
+	Round* round_;
 	Game(bool server);
+	bool GetServer() { return server_; };
+	void Start();
 };
+

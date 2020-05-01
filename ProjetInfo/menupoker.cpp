@@ -9,12 +9,13 @@ using namespace std;
 MenuPokerStart::MenuPokerStart() : Menu("MenuPokerStart :") {    
     AddOption("help", "Show help");
     AddOption("start", "Start the game");    
-    AddOption("leave", "Leave the game");
+    //AddOption("leave", "Leave the game");
 }
 
 //======================================= Menu2 =========================================/
 
-MenuPokerGame::MenuPokerGame() : Menu("MenuPokerGame :") {
+MenuPokerGame::MenuPokerGame(Game& Game) : Menu("MenuPokerGame :") {
+    Menu::Game_= &Game;
     AddOption("bet", "Bet a sum");
     AddOption("follow", "Follow your oppenant");
     AddOption("all in", "Bet everything, all in !");

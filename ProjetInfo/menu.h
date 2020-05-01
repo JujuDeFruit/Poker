@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Definitions.h"
 
 using namespace std;
 
@@ -18,10 +19,11 @@ class OptionMenu
 };
 
 
-class Menu
-{
+class Menu{      
     string title_;
     vector<OptionMenu> listeOptions_;
+protected :
+    Game* Game_=NULL;
   public:
     Menu(const string & title);
     void SetTitle(const string &title);
@@ -43,9 +45,10 @@ public:
 };
 
 class MenuPokerGame : public Menu {
+    
 
 public :
-    MenuPokerGame();
+    MenuPokerGame(Game& Game);
 };
 
 #endif

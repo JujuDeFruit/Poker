@@ -63,12 +63,21 @@ void Menu::Execute()
   }
 }
 
+
+
 void Menu::ExecuteOption(const string &name,bool &end)
 {
   end=false;
-  if (name == "leave") end = Leave();
+  //menupokerstart
+  if (name == "leave") end = Leave(); 
+  else if (name == "start") end = Leave();
   else if (name == "help") Help();
-  else if (name == "start") Help();
+  //menupokergame
+  else if (name == "follow") Game_->round_->follow();
+  else if (name == "all in");
+  else if (name == "check");
+  else if (name == "fold");
+  //
   else {
     cout<<"Option not defined"<<endl;
     system("pause");
