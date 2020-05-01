@@ -4,7 +4,10 @@
 
 using namespace std;
 
-class Card{
+int RandomNumber(int i);
+
+class Card
+{
 private:
 	string value_;
 	string suit_;
@@ -18,10 +21,13 @@ public:
 class Deck{
 private:
 	vector<Card> cardList_;
+	bool deckShaked_ = false;
 public:
 	Deck();
 	static vector<string> SuitList();
 	static vector<string> ValueList();
+	vector<Card> DrawCard(int = 1);
+	void ShakeDeck();
 	void PrintDeck();
 };
 

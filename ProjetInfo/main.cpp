@@ -9,16 +9,12 @@ int main()
 
     short unsigned int  choix;
     bool application, condition = false;
-
-	//Deck deck;
-	//deck.PrintDeck();
-
-
     while (condition == false) {
         cout << endl << "| Client taper 0 | Serveur taper 1 |" << endl;
         cin >> choix;
         if (choix == 0) {
             application = false;
+
             //start a game as client
             MenuPokerStart mstart;
             mstart.Execute();
