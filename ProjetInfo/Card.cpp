@@ -14,6 +14,7 @@ Card::Card(string number, string suit)
 
 void Card::PrintCard()
 {
+	/* Set the flux mode to print Unicode-16 text */
 	_setmode(_fileno(stdout), _O_U16TEXT);
 
 	wchar_t* symbol = nullptr;
@@ -39,5 +40,9 @@ void Card::PrintCard()
 	wstring value(value_.begin(), value_.end()); // Converting the string value of the card into wchar_t * value to print it with the symbol.
 	const wchar_t* val = value.c_str(); // Converting to wchar_t* type
 
-	wcout <<  value + L" " + symbol << endl;
+	/* Print Unicode-16 text*/
+	wcout << value + L"\t" + symbol << endl;
+	
+	/* Reset the flux mode to print standard text */
+	_setmode(_fileno(stdout), _O_TEXT);
 }
