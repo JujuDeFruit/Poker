@@ -8,6 +8,8 @@ using namespace std;
 
 int main()
 {
+	_setmode(_fileno(stdout), _O_U16TEXT);
+
 
     short unsigned int  choix;
     bool application, condition = false;
