@@ -4,11 +4,20 @@ using namespace std;
 
 
 
+//======================================= Menu1 =========================================/
 
-MenuPoker::MenuPoker() : Menu("Exemple de menu :")
-{
-    
-    ajouterOption("aide", "Afficher de l'aide");
-    ajouterOption("commencer", "Commencer la partie");    
-    ajouterOption("quitter", "Quitter la partie");
+MenuPokerStart::MenuPokerStart() : Menu("MenuPokerStart :") {    
+    AddOption("help", "Show help");
+    AddOption("start", "Start the game");    
+    AddOption("leave", "Leave the game");
+}
+
+//======================================= Menu2 =========================================/
+
+MenuPokerGame::MenuPokerGame() : Menu("MenuPokerGame :") {
+    AddOption("bet", "Bet a sum");
+    AddOption("follow", "Follow your oppenant");
+    AddOption("all in", "Bet everything, all in !");
+    AddOption("check", "Check 0$");
+    AddOption("fold", "Fold your cards");
 }

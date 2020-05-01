@@ -4,7 +4,8 @@
 
 using namespace std;
 
-class Card{
+class Card
+{
 private:
 	int number_;
 	string suit_;
@@ -17,18 +18,11 @@ public:
 	void PrintCard();
 };
 
-class Deck{
+class Deck
+{
 private:
 	vector<Card> cardList_;
 public:
 	Deck();
 	void PrintDeck();
-};
-
-class Game {
-private:
-	bool server_;
-	
-public:
-	Game(bool server);
 };

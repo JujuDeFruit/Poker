@@ -9,12 +9,12 @@ using namespace std;
 
 class OptionMenu
 {
-    string name_;
+    string nom_;
     string description_;
   public:
     OptionMenu(const string &nom,const string &description);
-    string GetNom() const {return name_;}
-    string GetDescription() const {return description_;}
+    string getNom() const {return nom_;}
+    string getDescription() const {return description_;}
 };
 
 
@@ -24,7 +24,7 @@ class Menu
     vector<OptionMenu> listeOptions_;
   public:
     Menu(const string & title);
-    void SetTitle(const string &title);
+    void SetTittle(const string &title);
     void AddOption(const string &nom,const string &description);
     void ShowMenu();
     int AskChoix();
@@ -48,9 +48,6 @@ public :
     MenuPokerGame();
 };
 
-#endif
-
-
 /*class MenuMoyenne : public Menu
 {
     Semestre* semestre_;
@@ -61,3 +58,5 @@ public:
     void saisirNotes();
     void calculerMoyenne();
 };*/
+#endif
+

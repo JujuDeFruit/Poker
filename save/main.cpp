@@ -16,8 +16,8 @@ int main()
         if (choix == 0) {
             application = false;
             // lancer une partie client
-            MenuPokerStart p1;
-            p1.Execute();
+            MenuPoker p1;
+            p1.executer();
 
             //la partie ce finie
             condition = true;
@@ -25,14 +25,14 @@ int main()
         else if (choix == 1) {
             application = true;
             // lancer une partie serveur
-            MenuPokerStart p2;
-            p2.Execute();
+            MenuPoker p2;
+            p2.executer();
 
             // la partie ce finie
             condition = true;
         }
         else {
-            cout << "Erreur de saisie, retaper :" << endl;  
+            cout << "Erreur de saisie, retaper :" << endl;
         }
 
 
