@@ -1,6 +1,8 @@
 #include "Definitions.h"
 #include<iostream>
 #include<string>
+#include <io.h>
+#include <fcntl.h>
 
 /*Each card is unique and defined by a number and a suit*/
 Card::Card(string number, string suit)
@@ -10,9 +12,10 @@ Card::Card(string number, string suit)
 }
 
 
-
 void Card::PrintCard()
 {
+	_setmode(_fileno(stdout), _O_U16TEXT);
+
 	wchar_t* symbol = nullptr;
 
 	/* We are trying to get unicode code to print the symbole of each suit.*/

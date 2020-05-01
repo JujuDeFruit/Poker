@@ -1,18 +1,17 @@
 #include"Definitions.h"
 #include"menu.h"
 #include<iostream>
-#include <io.h>
-#include <fcntl.h>
 
 using namespace std;
 
 int main()
 {
-	_setmode(_fileno(stdout), _O_U16TEXT);
-
 
     short unsigned int  choix;
     bool application, condition = false;
+
+	Deck deck;
+	deck.PrintDeck();
     while (condition == false) {
         cout << endl << "| Client taper 0 | Serveur taper 1 |" << endl;
         cin >> choix;
@@ -24,6 +23,9 @@ int main()
 
             //la partie ce finie
             condition = true;
+
+			
+			
         }
         else if (choix == 1) {
             application = true;
