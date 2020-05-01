@@ -1,5 +1,7 @@
 #include"Definitions.h"
 #include<iostream>
+#include<vector>
+#include<string>
 
 Deck::Deck()
 {

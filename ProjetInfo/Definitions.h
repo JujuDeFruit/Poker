@@ -4,8 +4,7 @@
 
 using namespace std;
 
-class Card
-{
+class Card{
 private:
 	string value_;
 	string suit_;
@@ -16,8 +15,7 @@ public:
 	void PrintCard();
 };
 
-class Deck
-{
+class Deck{
 private:
 	vector<Card> cardList_;
 public:
@@ -26,3 +24,22 @@ public:
 	static vector<string> ValueList();
 	void PrintDeck();
 };
+
+class Round {
+
+public:
+	void follow();
+};
+
+
+class Game {
+private:
+	bool server_;
+	
+public:
+	Round* round_;
+	Game(bool server);
+	bool GetServer() { return server_; };
+	void Start();
+};
+
