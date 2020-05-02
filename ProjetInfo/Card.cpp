@@ -1,4 +1,4 @@
-#include "Definitions.h"
+#include "card_definitions.h"
 #include<iostream>
 #include<string>
 #include <io.h>
@@ -45,4 +45,10 @@ void Card::PrintCard()
 	
 	/* Reset the flux mode to print standard text */
 	_setmode(_fileno(stdout), _O_TEXT);
+}
+
+/* Method that permit to compare two cards. This method will be usefull to create Combinaison. */
+bool Card::operator==(Card card) {
+	if (value_ == card.GetNumber() && suit_ == card.GetSuit()) return true;
+	else return false;
 }

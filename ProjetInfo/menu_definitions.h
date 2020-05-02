@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Definitions.h"
+#include "game_definitions.h"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ class Menu{
     string title_;
     vector<OptionMenu> listeOptions_;
 protected :
-    Game* Game_=NULL;
+    Game* game_= nullptr;
   public:
     Menu(const string & title);
     void SetTitle(const string &title);

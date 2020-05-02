@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-#include "menu.h"
+#include "menu_definitions.h"
 
 
 
@@ -14,8 +14,8 @@ MenuPokerStart::MenuPokerStart() : Menu("MenuPokerStart :") {
 
 //======================================= Menu2 =========================================/
 
-MenuPokerGame::MenuPokerGame(Game& Game) : Menu("MenuPokerGame :") {
-    Menu::Game_= &Game;
+MenuPokerGame::MenuPokerGame(Game& game) : Menu("MenuPokerGame :") {
+    Menu::game_= &game;
     AddOption("bet", "Bet a sum");
     AddOption("follow", "Follow your oppenant");
     AddOption("all in", "Bet everything, all in !");

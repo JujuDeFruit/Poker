@@ -1,7 +1,7 @@
+#include "menu_definitions.h"
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
-#include "menu.h"
 
 using namespace std;
 
@@ -67,18 +67,20 @@ void Menu::Execute()
 
 void Menu::ExecuteOption(const string &name,bool &end)
 {
-  end=false;
-  //menupokerstart
-  if (name == "leave") end = Leave(); 
-  else if (name == "start") end = Leave();
-  else if (name == "help") Help();
-  //menupokergame
-  else if (name == "follow") Game_->round_->follow();
-  else if (name == "all in");
-  else if (name == "check");
-  else if (name == "fold");
-  //
-  else {
+	Round* round = game_->GetRound();
+	
+	end=false;
+	//menupokerstart
+	if (name == "leave") end = Leave(); 
+	else if (name == "start") end = Leave();
+	else if (name == "help") Help();
+	//menupokergame
+	else if (name == "follow") round->Follow();
+	else if (name == "all in");
+	else if (name == "check");
+	else if (name == "fold");
+	//
+	else {
     cout<<"Option not defined"<<endl;
     system("pause");
     }

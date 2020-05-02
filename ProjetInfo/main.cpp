@@ -1,5 +1,6 @@
-#include"Definitions.h"
-#include"menu.h"
+#include"game_definitions.h"
+#include"menu_definitions.h"
+#include"card_definitions.h"
 #include<iostream>
 
 using namespace std;
@@ -14,6 +15,12 @@ int main()
         cin >> choix;
         if (choix == 0) {
             application = false;
+
+			Card a("Jack", "diamond"), b("8", "club"), c("King", "heart"), d("2", "club"), e("9", "spade"), f("Queen", "club"), g("7", "club");
+			vector<Card> hand = { a, b };
+			vector<Card> river = {c, d, e, f, g};
+
+			Combinaison(hand, river);
 
             //start a game as client
             MenuPokerStart mstart;

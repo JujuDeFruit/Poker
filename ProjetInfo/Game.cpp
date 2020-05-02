@@ -1,5 +1,5 @@
-#include "menu.h"
-#include "Definitions.h"
+#include "menu_definitions.h"
+#include "game_definitions.h"
 #include <iostream>
 using namespace std;
 
@@ -11,8 +11,9 @@ using namespace std;
 
 Game::Game(bool application) {
 	server_ = application;
-	Round round1;
-	round_ = &round1;
+	Round* round = new Round();
+	SetRound(round);
+	//round_ = &round1;
 	// définir correctement le round aussi
 
 	// on lance les cartes ici ?

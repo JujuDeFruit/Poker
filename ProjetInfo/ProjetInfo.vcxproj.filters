@@ -36,12 +36,18 @@
     <ClCompile Include="Round.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="combinaison.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Definitions.h">
+    <ClInclude Include="game_definitions.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="menu.h">
+    <ClInclude Include="card_definitions.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="menu_definitions.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

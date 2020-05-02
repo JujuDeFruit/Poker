@@ -1,4 +1,4 @@
-#include"Definitions.h"
+#include"card_definitions.h"
 #include<iostream>
 #include <algorithm>    // std::random_shuffle, reverse
 #include <ctime>        // std::time
@@ -49,12 +49,12 @@ vector<string> Deck::ValueList()
 	Each picked card is draw from the end of the vector (Ex : for a full deck, 2 cards picked are deck[52] and deck [51]. */
 vector<Card> Deck::DrawCard(int number)
 {
-	/* In poker rules, 5 cards max can be draw at the same time. */
+	/* In poker rules, 5 cards max can be drawn at the same time. */
 	number = number > 5 ? 5 : number;
 
 	vector<Card> cards; // This entity is the collection of picked cards will be returned. 
 
-	if (!deckShaked_) // Shake the deck if this one wasn't shaked
+	if (!isShaked_) // Shake the deck if this one wasn't shaked
 		ShakeDeck();
 	cardList_.pop_back(); // Burn the first card of the deck before to pick a card.
 	
@@ -76,7 +76,7 @@ void Deck::ShakeDeck()
 {
 	srand(unsigned(time(0))); // Modifying the seed depending on time (to always be different).
 	random_shuffle(cardList_.begin(), cardList_.end(), RandomNumber); // Shaking the deck depending on the seed.
-	deckShaked_ = true;
+	isShaked_ = true;
 }
 
 /* Print the cards of the whole deck. */
