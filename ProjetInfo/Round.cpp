@@ -4,9 +4,11 @@
 using namespace std;
 
 
+Round::Round() {
 
+}
 
-void Round::follow() {
+void Round::Follow() {
 	cout << " test on suit " << endl;
 
 }

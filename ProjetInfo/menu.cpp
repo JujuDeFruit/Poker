@@ -34,8 +34,12 @@ void Menu::ShowMenu()
 {
   cout<<title_<<endl;
   for (int i=0;i<listeOptions_.size();i++) {
-    cout<<"- "<<setw(2)<<i<<" : "<<listeOptions_[i].GetDescription()<<endl;
+       cout<<"- "<<setw(2)<<i<<" : "<<listeOptions_[i].GetDescription()<<endl;     
   }
+  if (gameIsCreate_ == true) {
+     // cout << Game_->player_->allMyMoney_ << endl;
+      Game_->player_->PrintMoneyAndTokens();
+  }   
 }
 
 int Menu::AskChoix()
@@ -63,20 +67,18 @@ void Menu::Execute()
   }
 }
 
-
-
 void Menu::ExecuteOption(const string &name,bool &end)
 {
   end=false;
-  //menupokerstart
-  if (name == "leave") end = Leave(); 
-  else if (name == "start") end = Leave();
+  //menupokerstart options
+  if (name == "start") end = true;  
   else if (name == "help") Help();
-  //menupokergame
-  else if (name == "follow") Game_->round_->follow();
+  //menupokergame options
+  else if (name == "follow") Game_->round_->Follow();
   else if (name == "all in");
   else if (name == "check");
   else if (name == "fold");
+  else if (name == "leave") end = Leave();
   //
   else {
     cout<<"Option not defined"<<endl;

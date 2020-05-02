@@ -21,10 +21,11 @@ class OptionMenu
 
 class Menu{      
     string title_;
-    vector<OptionMenu> listeOptions_;
-protected :
+    vector<OptionMenu> listeOptions_;   
+protected : 
+    bool gameIsCreate_ = false;     //to know if the game is create
     Game* Game_=NULL;
-  public:
+  public:    
     Menu(const string & title);
     void SetTitle(const string &title);
     void AddOption(const string &nom,const string &description);
@@ -38,29 +39,15 @@ protected :
 
 class MenuPokerStart : public Menu
 {
-
 public:
     MenuPokerStart();
 
 };
 
-class MenuPokerGame : public Menu {
-    
-
+class MenuPokerGame : public Menu {  
 public :
     MenuPokerGame(Game& Game);
 };
 
 #endif
 
-
-/*class MenuMoyenne : public Menu
-{
-    Semestre* semestre_;
-public:
-    MenuMoyenne(Semestre* semestre);
-    void executerOption(const string& nom, bool& fin);
-    void saisirMatieres();
-    void saisirNotes();
-    void calculerMoyenne();
-};*/
