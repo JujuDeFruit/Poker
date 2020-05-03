@@ -11,9 +11,11 @@ using namespace std;
 
 Game::Game(bool application) {
 	server_ = application;
-	Round* round = new Round();
-	SetRound(round);
-	//round_ = &round1;
+	Player player1;
+	player_ = &player1;
+	Round round1;
+	round_ = &round1;
+
 	// définir correctement le round aussi
 
 	// on lance les cartes ici ?
