@@ -16,9 +16,9 @@ int main()
         if (choix == 0) {
             application = false;
 
-			Card a("Jack", "diamond"), b("8", "club"), c("King", "heart"), d("2", "club"), e("9", "spade"), f("Queen", "club"), g("7", "club");
-			vector<Card> hand = { a, b };
-			vector<Card> river = {c, d, e, f, g};
+			Card a("9", "diamond"), b("1", "diamond"), c("10", "diamond"), d("6", "club"), e("Jack", "diamond"), f("2", "diamond"), g("King", "diamond");
+			Deck hand({ a, b });
+			Deck river({c, d, e, f, g});
 
 			Combinaison(hand, river);
 

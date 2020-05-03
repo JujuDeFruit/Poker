@@ -11,7 +11,6 @@ Card::Card(string number, string suit)
 	suit_ = suit;
 }
 
-
 void Card::PrintCard()
 {
 	/* Set the flux mode to print Unicode-16 text */
@@ -51,4 +50,22 @@ void Card::PrintCard()
 bool Card::operator==(Card card) {
 	if (value_ == card.GetNumber() && suit_ == card.GetSuit()) return true;
 	else return false;
+}
+
+int Card::ConvertCardValueToNumber(string cardValue) {
+
+	int val = 0;
+	if (cardValue == "King") {
+		val = 13;
+	}
+	else if (cardValue == "Queen") {
+		val = 12;
+	}
+	else if (cardValue == "Jack") {
+		val = 11;
+	}
+	else {
+		val = stoi(cardValue);
+	}
+	return val;
 }

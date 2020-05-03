@@ -1,30 +1,18 @@
 #include"card_definitions.h"
 #include<iostream>
 #include <algorithm>    // std::random_shuffle, reverse
-#include <ctime>        // std::time
 #include<vector>
 #include<string>
 
-/* Function returns a random number between 0 and i - 1 */
-int RandomNumber(int i) { return rand() % i; };
+/* Constructor of the class Deck. */
+Deck::Deck(vector<Card> cards) { cardList_ = cards; }
 
-/* Constructor of the class Deck, build the 52 cards */
-Deck::Deck()
-{
-	const vector<string> valueList = Deck::ValueList();
-	const vector<string> suitList = Deck::SuitList();
-
-	/* This part will create the 52 cards deck. Instead of settings all cards manually, we decided to create the deck from the previous lists : NumberList and SuitList*/
-	for (vector<string>::const_iterator itS = suitList.begin(); itS != suitList.end(); itS++)
-	{
-		for (vector<string>::const_iterator itV = valueList.begin(); itV != valueList.end(); itV++)
-		{
-			Card card(*itV, *itS);
-			cardList_.push_back(card); // Adding the card to the deck
-		}
-	}
-	/*With this method, each card of the deck is unique*/
+Deck::Deck(vector<Card>::iterator begin, vector<Card>::iterator end) {
+	vector<Card> cards(begin, end);
+	cardList_ = cards;
 }
+
+Deck::Deck(const Deck& deck):Deck(deck.cardList_) {}
 
 /* This method return all suits a card can have */
 vector<string> Deck::SuitList()
@@ -45,42 +33,119 @@ vector<string> Deck::ValueList()
 	return valueList;
 }
 
-/* This method permit to draw one or many cards. The number of cards to draw is given in parameters. 
-	Each picked card is draw from the end of the vector (Ex : for a full deck, 2 cards picked are deck[52] and deck [51]. */
-vector<Card> Deck::DrawCard(int number)
-{
-	/* In poker rules, 5 cards max can be drawn at the same time. */
-	number = number > 5 ? 5 : number;
-
-	vector<Card> cards; // This entity is the collection of picked cards will be returned. 
-
-	if (!isShaked_) // Shake the deck if this one wasn't shaked
-		ShakeDeck();
-	cardList_.pop_back(); // Burn the first card of the deck before to pick a card.
-	
-	int deckSize = cardList_.size(); // Initiale size of the deck.
-	for (unsigned int i = deckSize - 1; i >= deckSize - number; i--)
-	{
-		cards.push_back(cardList_[i]); // Add the card to the list of card to be returned.
-		cardList_.pop_back(); // Remove the card from the deck.
-	}
-
-	/* Reverse the vector because this one was filled upside down. */
-	reverse(cards.begin(), cards.end());
-
-	return cards;
-}
-
-/* This method shake the deck. Initially, the deck isn't shaked. */
-void Deck::ShakeDeck()
-{
-	srand(unsigned(time(0))); // Modifying the seed depending on time (to always be different).
-	random_shuffle(cardList_.begin(), cardList_.end(), RandomNumber); // Shaking the deck depending on the seed.
-	isShaked_ = true;
+/* Method converts a collection of cards into a deck. */
+Deck Deck::ToDeck(vector<Card> cards) {
+	Deck deck(cards);
+	return deck;
 }
 
 /* Print the cards of the whole deck. */
 void Deck::PrintDeck()
 {
 	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) (*it).PrintCard();
+}
+
+/* Sort the card by values of cards. */
+void Deck::SortCardListByValue() {
+
+	vector<Card> sortByValue; // The sorted cards to return.
+
+	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++)
+	{
+		if (sortByValue.empty()) // Push the first card 
+			sortByValue.push_back(*it);
+		else {
+			int value = Card::ConvertCardValueToNumber((*it).GetNumber());
+			if (Card::ConvertCardValueToNumber(sortByValue.back().GetNumber()) <= value) {	// If the current card value is higher than the last value of the sorted list, 
+																							// then push the current card at the back of the sorted list.
+				sortByValue.push_back(*it);
+			}
+			else {
+				for (vector<Card>::iterator sBV = sortByValue.begin(); sBV != sortByValue.end(); sBV++) {
+					int valueSBV = Card::ConvertCardValueToNumber((*sBV).GetNumber());
+
+					if (valueSBV > value) { // Check the position to insert the current card. 
+						sortByValue.insert(sBV, *it);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	cardList_ = sortByValue; // Return the sorted list.
+}
+
+/* Gather same suit cards. */
+void Deck::SortCardListBySuit() {
+	vector<Card> sortedList;
+	const vector<string> suitList = Deck::SuitList();
+	for (vector<string>::const_iterator it = suitList.begin(); it != suitList.end(); it++) {
+		for (vector<Card>::iterator itCard = cardList_.begin(); itCard != cardList_.end(); itCard++) {
+			if ((*itCard).GetSuit() == *it) sortedList.push_back(*itCard);
+		}
+	}
+	
+	cardList_ = sortedList;
+}
+
+/* Count the number of cards that contains the key. */
+int Deck::Count(string key) {
+	int count = 0;
+	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) {
+		if ((*it).GetNumber() == key || (*it).GetSuit() == key) count += 1; // If the current card from the collection contains the key as number or suit, then increase count.
+	}
+	return count;
+}
+
+/* Check if a collection of cards is straight or not. */
+bool Deck::IsStraight() {
+	bool isStraight = true;
+	for (unsigned int i = 0; i < 4; i++) {
+		// The boolean is true while a card value equals the next card value less 1.
+		if (Card::ConvertCardValueToNumber(cardList_[i].GetNumber()) != Card::ConvertCardValueToNumber(cardList_[i + 1].GetNumber()) - 1) {
+			isStraight = false;
+			break;
+		}
+	}
+	return isStraight;
+}
+
+/* Extract a subvector all cards contain string key. */
+void Deck::ExtractCards(string key) {
+	vector<Card> extractedList; // The subvector to return.
+	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) {
+		if ((*it).GetNumber() == key || (*it).GetSuit() == key) {	// If the current card contains the key as a number or as a suit
+																	// then add it to the list to return.
+			extractedList.push_back(*it);
+		}
+	}
+	cardList_ = extractedList;
+}
+
+/* Return a subvector which does not contain a card containning the key. */
+void Deck::EraseCards(string key) {
+	vector<Card> returnedList;
+	Deck list(cardList_); // All the cards from the list that contain the key.
+	list.ExtractCards(key);
+	
+	for (vector<Card>::iterator it = Begin(); it != End(); it++) {
+		if (!count(list.Begin(), list.End(), *it)) { // If the current card is not contained in the extracted list (contains all the card to not return).
+			returnedList.push_back(*it);
+		}
+	}
+
+	cardList_ = returnedList;
+}
+
+/* Method that erase cards from a vector. */
+void Deck::EraseCards(Deck cardsToErase) {
+	Deck cards = cardList_;
+	for (vector<Card>::iterator it = cardsToErase.Begin(); it != cardsToErase.End(); it++) {
+		vector<Card>::iterator itCard = find(cards.Begin(), cards.End(), *it);
+		if (itCard != cards.End()) {
+			cards.GetCardList()->erase(itCard);
+		}
+	}
+	cardList_ = *cards.GetCardList();
 }
