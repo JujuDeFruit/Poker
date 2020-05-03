@@ -11,7 +11,7 @@ int main()
     while (condition == false) {
         cout << "                        BEST POKER OF THE WORLD " << endl;
         cout << "                    by DEGRANGE Alexis / RAYNAL Julien" << endl << endl;
-        cout << endl << "====| Client write 0 ===== Serveur write 1 |====" << endl;
+        cout << endl << "====| Client write 0 ===== Server write 1 |====" << endl;
         cin >> choice;
         if (choice == 0) {
             application = false;
