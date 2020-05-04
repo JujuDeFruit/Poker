@@ -14,8 +14,8 @@ MenuPokerStart::MenuPokerStart() : Menu("MenuPokerStart :") {
 
 //======================================= Menu2 =========================================/
 
-MenuPokerGame::MenuPokerGame(Game& Game) : Menu("MenuPokerGame :") {
-    Menu::Game_= &Game;
+MenuPokerGame::MenuPokerGame(Game& game) : Menu("MenuPokerGame :") {
+    Menu::game_= &game;
     gameIsCreate_ = true;
     AddOption("bet", "Bet a sum");
     AddOption("follow", "Follow your oppenant");

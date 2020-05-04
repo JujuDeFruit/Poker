@@ -20,12 +20,12 @@ class OptionMenu
 
 
 class Menu{      
-    string title_;
-    vector<OptionMenu> listeOptions_;   
 protected : 
-    bool gameIsCreate_ = false;     //to know if the game is create
-    Game* Game_=NULL;
-  public:    
+	string title_;
+	vector<OptionMenu> listeOptions_;
+    bool gameIsCreate_ = false;			//to know if the game is create
+    Game* game_ = NULL;
+public:    
     Menu(const string & title);
     void SetTitle(const string &title);
     void AddOption(const string &nom,const string &description);
@@ -44,9 +44,10 @@ public:
 
 };
 
-class MenuPokerGame : public Menu {  
+class MenuPokerGame : public Menu { 
+
 public :
-    MenuPokerGame(Game& Game);
+    MenuPokerGame(Game& game);
 };
 
 #endif

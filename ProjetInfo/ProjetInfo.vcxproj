@@ -148,15 +148,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="begin_deck.cpp" />
-    <ClCompile Include="Card.cpp" />
+    <ClCompile Include="card.cpp" />
     <ClCompile Include="combinaison.cpp" />
-    <ClCompile Include="Deck.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="deck.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
-    <ClCompile Include="menupoker.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Round.cpp" />
+    <ClCompile Include="menu_poker.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="round.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="card_definitions.h" />

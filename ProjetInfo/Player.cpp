@@ -1,5 +1,5 @@
-#include "menu.h"
-#include "Definitions.h"
+#include "menu_definitions.h"
+#include "game_definitions.h"
 #include <iostream>
 #include <string>
 using namespace std;
