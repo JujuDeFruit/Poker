@@ -23,7 +23,7 @@
     <ProjectGuid>{98038C5E-2236-43D7-AB8C-A2894E8BFCF9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ProjetInfo</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -147,18 +147,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Card.cpp" />
-    <ClCompile Include="Deck.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="begin_deck.cpp" />
+    <ClCompile Include="card.cpp" />
+    <ClCompile Include="combinaison.cpp" />
+    <ClCompile Include="deck.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
-    <ClCompile Include="menupoker.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Round.cpp" />
+    <ClCompile Include="menu_poker.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="round.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Definitions.h" />
-    <ClInclude Include="menu.h" />
+    <ClInclude Include="card_definitions.h" />
+    <ClInclude Include="game_definitions.h" />
+    <ClInclude Include="menu_definitions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
