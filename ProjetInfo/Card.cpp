@@ -47,11 +47,19 @@ void Card::PrintCard()
 }
 
 /* Method that permit to compare two cards. This method will be usefull to create Combinaison. */
-bool Card::operator==(Card card) {
-	if (value_ == card.GetNumber() && suit_ == card.GetSuit()) return true;
+bool Card::operator==(const Card& card) const {
+	if (value_ == card.GetValue() && suit_ == card.GetSuit()) return true;
 	else return false;
 }
 
+/* Method to compare cards. */
+bool Card::operator<(const Card& card) const {
+	int valueThis = Card::ConvertCardValueToNumber(value_);
+	int valueCard = Card::ConvertCardValueToNumber(card.value_);
+	return valueThis < valueCard;
+}
+
+/* Static method that permit to cast cards' value (string) to its int value (from 1 to 13 [King]). */
 int Card::ConvertCardValueToNumber(string cardValue) {
 
 	int val = 0;

@@ -4,7 +4,8 @@
 #include<vector>
 #include<string>
 
-/* Constructor of the class Deck. */
+
+#pragma region Constructors of the Deck class
 Deck::Deck(vector<Card> cards) { cardList_ = cards; }
 
 Deck::Deck(vector<Card>::iterator begin, vector<Card>::iterator end) {
@@ -12,14 +13,40 @@ Deck::Deck(vector<Card>::iterator begin, vector<Card>::iterator end) {
 	cardList_ = cards;
 }
 
-Deck::Deck(const Deck& deck):Deck(deck.cardList_) {}
+Deck::Deck(const Deck& deck) :Deck(deck.cardList_) {}
 
-/* This method return all suits a card can have */
-vector<string> Deck::SuitList()
-{
-	vector<string> suitList = { "spade", "club", "heart", "diamond" }; // List of each (4) suits in a deck of cards
-	return suitList;
+#pragma endregion
+
+#pragma region Overdefinition
+
+/* Overdefinition od + operator to fit to deck class. */
+Deck Deck::operator+(Deck deck) {
+	Deck d(*this);
+	d.cardList_.insert(d.End(), deck.Begin(), deck.End());
+	return d;
 }
+
+#pragma endregion
+
+
+#pragma region Basic methods
+
+/* Method converts a collection of cards into a deck. */
+Deck Deck::ToDeck(vector<Card> cards) {
+	Deck deck(cards);
+	return deck;
+}
+
+/* Print the cards of the whole deck. */
+void Deck::PrintDeck()
+{
+	for each (Card card in cardList_) card.PrintCard();
+}
+
+#pragma endregion
+
+
+#pragma region Suits and Values
 
 /* This method return all values a card can have */
 vector<string> Deck::ValueList()
@@ -33,16 +60,11 @@ vector<string> Deck::ValueList()
 	return valueList;
 }
 
-/* Method converts a collection of cards into a deck. */
-Deck Deck::ToDeck(vector<Card> cards) {
-	Deck deck(cards);
-	return deck;
-}
-
-/* Print the cards of the whole deck. */
-void Deck::PrintDeck()
+/* This method return all suits a card can have */
+vector<string> Deck::SuitList()
 {
-	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) (*it).PrintCard();
+	vector<string> suitList = { "spade", "club", "heart", "diamond" }; // List of each (4) suits in a deck of cards
+	return suitList;
 }
 
 /* Sort the card by values of cards. */
@@ -55,14 +77,14 @@ void Deck::SortCardListByValue() {
 		if (sortByValue.empty()) // Push the first card 
 			sortByValue.push_back(*it);
 		else {
-			int value = Card::ConvertCardValueToNumber((*it).GetNumber());
-			if (Card::ConvertCardValueToNumber(sortByValue.back().GetNumber()) <= value) {	// If the current card value is higher than the last value of the sorted list, 
+			int value = Card::ConvertCardValueToNumber((*it).GetValue());
+			if (Card::ConvertCardValueToNumber(sortByValue.back().GetValue()) <= value) {	// If the current card value is higher than the last value of the sorted list, 
 																							// then push the current card at the back of the sorted list.
 				sortByValue.push_back(*it);
 			}
 			else {
 				for (vector<Card>::iterator sBV = sortByValue.begin(); sBV != sortByValue.end(); sBV++) {
-					int valueSBV = Card::ConvertCardValueToNumber((*sBV).GetNumber());
+					int valueSBV = Card::ConvertCardValueToNumber((*sBV).GetValue());
 
 					if (valueSBV > value) { // Check the position to insert the current card. 
 						sortByValue.insert(sBV, *it);
@@ -85,37 +107,20 @@ void Deck::SortCardListBySuit() {
 			if ((*itCard).GetSuit() == *it) sortedList.push_back(*itCard);
 		}
 	}
-	
+
 	cardList_ = sortedList;
 }
 
-/* Count the number of cards that contains the key. */
-int Deck::Count(string key) {
-	int count = 0;
-	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) {
-		if ((*it).GetNumber() == key || (*it).GetSuit() == key) count += 1; // If the current card from the collection contains the key as number or suit, then increase count.
-	}
-	return count;
-}
+#pragma endregion
 
-/* Check if a collection of cards is straight or not. */
-bool Deck::IsStraight() {
-	bool isStraight = true;
-	for (unsigned int i = 0; i < 4; i++) {
-		// The boolean is true while a card value equals the next card value less 1.
-		if (Card::ConvertCardValueToNumber(cardList_[i].GetNumber()) != Card::ConvertCardValueToNumber(cardList_[i + 1].GetNumber()) - 1) {
-			isStraight = false;
-			break;
-		}
-	}
-	return isStraight;
-}
+
+#pragma region Extract and Erase cards
 
 /* Extract a subvector all cards contain string key. */
 void Deck::ExtractCards(string key) {
 	vector<Card> extractedList; // The subvector to return.
 	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) {
-		if ((*it).GetNumber() == key || (*it).GetSuit() == key) {	// If the current card contains the key as a number or as a suit
+		if ((*it).GetValue() == key || (*it).GetSuit() == key) {	// If the current card contains the key as a number or as a suit
 																	// then add it to the list to return.
 			extractedList.push_back(*it);
 		}
@@ -128,7 +133,7 @@ void Deck::EraseCards(string key) {
 	vector<Card> returnedList;
 	Deck list(cardList_); // All the cards from the list that contain the key.
 	list.ExtractCards(key);
-	
+
 	for (vector<Card>::iterator it = Begin(); it != End(); it++) {
 		if (!count(list.Begin(), list.End(), *it)) { // If the current card is not contained in the extracted list (contains all the card to not return).
 			returnedList.push_back(*it);
@@ -149,3 +154,106 @@ void Deck::EraseCards(Deck cardsToErase) {
 	}
 	cardList_ = *cards.GetCardList();
 }
+
+#pragma endregion
+
+
+#pragma region About deck
+
+/* Method returns true if the current deck contains all the cards of the deck in parameter. */
+bool Deck::Has(Deck deck) {
+	bool has = true;
+	for each(Card card in deck.cardList_) {
+		if (!Count(card)) {
+			has = false;
+			break;
+		}
+	}
+	return has;
+}
+
+/* Count the number of cards that contains the key. */
+int Deck::Count(string key) {
+	int count = 0;
+	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) {
+		if ((*it).GetValue() == key || (*it).GetSuit() == key) count += 1; // If the current card from the collection contains the key as number or suit, then increase count.
+	}
+	return count;
+}
+
+/* Count the number of cards of the deck that correspond to the card in parameter. */
+int Deck::Count(Card card) {
+	return Count(card.GetSuit()) && Count(card.GetValue());
+}
+
+/* Check if a collection of cards is straight or not. */
+bool Deck::IsStraight() {
+	bool isStraight = true;
+	for (unsigned int i = 0; i < 4; i++) {
+		// The boolean is true while a card value equals the next card value less 1.
+		if (Card::ConvertCardValueToNumber(cardList_[i].GetValue()) != Card::ConvertCardValueToNumber(cardList_[i + 1].GetValue()) - 1) {
+			isStraight = false;
+			break;
+		}
+	}
+	return isStraight;
+}
+
+/* Method that remove same multiple cards value. */
+void Deck::RemoveSameValueCards() {
+	Deck deck(cardList_);
+	vector<string> values;
+
+	/* Returned list containnig any card with the same value. */
+	Deck uniqueValueList;
+
+	/* For each value a card can have. */
+	vector<string> valuesList = Deck::ValueList();
+	for each (string val in valuesList) {
+		Deck deckExtracted(cardList_);
+		/* If a card of the deck has the value. */
+		if (Count(val)) {
+			/* Add a card to the returned list. */
+			deckExtracted.ExtractCards(val);
+			uniqueValueList.GetCardList()->push_back(deckExtracted.GetCardList()->front());
+		}
+	}
+
+	*this = uniqueValueList;
+}
+
+/* Method counts the number of combinaison in a deck of cards. */
+int Deck::CountCombinaison(combinaisonTypes e) {
+
+	int nbCards;
+
+	switch (e) {
+	case combinaisonTypes::pair: nbCards = 2;	// 2 cards are needed to have a trip (Max 3).
+		break;
+	case combinaisonTypes::trips: nbCards = 3;	// 3 cards are needed to have a trip (Max 2).
+		break;
+	case combinaisonTypes::quads: nbCards = 4;	// 4 cards are needed to have a quad (Max 1). 
+		break;
+	default: return (int)-1; // Wrong enum value. This method can only count pairs, trips and quads.
+	}
+
+	/* The number of pairs. */
+	int counter = 0;
+	/* Vector to store pair value already checked. */
+	vector<string> values;
+
+	for each(Card card in cardList_) {
+		string val = card.GetValue();
+		/*	Count the number of cards having the same value & searching current card value in the values vector.
+			If the value is not already in the vector and the card appears two times in the deck it is an unchecked pair.*/
+		if ( Count(val) == nbCards && find(values.begin(), values.end(), val) == values.end() ) {
+			/* Store the value to not increment counter for the other card of the pair. */
+			values.push_back(card.GetValue());
+			counter += 1;
+		}
+	}
+
+	return counter;
+}
+
+#pragma endregion
