@@ -17,6 +17,13 @@ int main()
         if (choice == 0) {
             application = false;
             //start a game as client
+
+			Deck hand({ Card("7", "club"), Card("2", "heart") });
+			Deck river({ Card("7", "diamond"), Card("7", "spade"), Card("2", "club"), Card("2", "diamond"), Card("8", "heart") });
+
+			//cout << hand.CountCombinaison(combinaisonTypes::quads) << endl;
+			Combinaison(hand, river);
+
             MenuPokerStart mstart;
             mstart.Execute();
             Game client(application);
