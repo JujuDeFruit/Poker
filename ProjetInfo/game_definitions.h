@@ -18,13 +18,16 @@ public:
 
 // ============================= PLAYER ============================= //
 class Player {
-protected:
+private:
 	string name_;
-	unsigned int* tokens_;		//index0: token 1$ - index1: token 5$ - index2: token 25$ - index3: token 50$ - index4: token 100$
+	unsigned int tokens_[5] = { 20, 10,4,2,1 };
+	//unsigned int *tokens_;		//index0: token 1$ - index1: token 5$ - index2: token 25$ - index3: token 50$ - index4: token 100$
 	unsigned int allMyMoney_;	//esay way to find all the moneys of the player
-public:
+	//Deck main;
+public:	
 	Player();
-	void GetAllMoneys();
+	
+	unsigned int GetAllMoneys();
 	void PrintMoneyAndTokens();
 	//~Player();
 };
