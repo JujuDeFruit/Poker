@@ -1,8 +1,12 @@
+#pragma region Includes
+
 #include"card_definitions.h"
 #include<iostream>
 #include <algorithm>    // std::random_shuffle, reverse
 #include<vector>
 #include<string>
+
+#pragma endregion
 
 
 #pragma region Constructors of the Deck class
