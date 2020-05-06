@@ -1,5 +1,9 @@
+#pragma region Includes
+
 #include"card_definitions.h"
 #include<iostream>
+
+#pragma endregion
 
 using namespace std;
 
@@ -66,10 +70,9 @@ Combinaison::Combinaison(Deck hand, Deck river) {
 	else {
 		combinaisonComposition_ = HighCard(hand);
 	}
-	combinaisonComposition_.cards_.PrintDeck();
-	system("pause");
+	//combinaisonComposition_.cards_.PrintDeck();
+	//system("pause");
 }
-
 
 #pragma endregion
 
@@ -113,6 +116,7 @@ CombinaisonComposition Combinaison::RoyalFlush(Deck deck) {
 }
 
 /* This method return the composition of a straight flush combinaison. */
+/* ===> Add straight for As. */
 CombinaisonComposition Combinaison::StraightFlush(Deck deck) {
 
 	CombinaisonComposition combinaisonComposition;
@@ -314,7 +318,7 @@ CombinaisonComposition Combinaison::Straight(Deck deck) {
 	int diffBetweenSizeAndNumberOfCards = cardList.GetCardList()->size() - MAX_CARDS_COMBINAISON;		// The number of cards to compare is 5.
 																										// Then if the list is bigger than five, 
 																										// the program has at least three straights to compare 
-																										
+
 																										// and has to choose the stronger one (with the highest card).
 	if (cardList.GetCardList()->size() >= 5) {
 		for (int i = diffBetweenSizeAndNumberOfCards; i >= 0; i--) {
@@ -362,7 +366,7 @@ CombinaisonComposition Combinaison::Trips(Deck deck) {
 
 /* This method return the composition of a two pairs combinaison. */
 CombinaisonComposition Combinaison::TwoPairs(Deck deck) {
-	
+
 	/* if the input deck has 7 cards, it means it is player's hand + river. Then extract the river.*/
 	Deck river;
 	if (deck.GetCardList()->size() == CARDS_HAND + CARDS_RIVER) river = Deck(deck.Begin() + 2, deck.End());
@@ -399,7 +403,7 @@ CombinaisonComposition Combinaison::TwoPairs(Deck deck) {
 		Deck hand(deck.Begin(), deck.Begin() + 2);
 
 		/* The combinaison has always the strongest pair. Now choose the second one. */
-		combinaisonComposition.cards_ = {pairList.End() - 2, pairList.End()};
+		combinaisonComposition.cards_ = { pairList.End() - 2, pairList.End() };
 		/* If the hand has a card of the middle pair or the hand has not cards belonging to two weekest pairs. */
 		if (hand.Count(pairList[2]) || !(hand.Count(pairList[0]) || hand.Count(pairList[2]))) {
 			combinaisonComposition.cards_.GetCardList()->insert(combinaisonComposition.cards_.Begin(), pairList.Begin() + 2, pairList.Begin() + 4);
@@ -464,5 +468,86 @@ CombinaisonComposition Combinaison::HighCard(Deck deck) {
 #pragma endregion
 
 #pragma region Compare combinaisons
+
+bool Combinaison::operator==(Combinaison combinaison) {
+	bool isEqual = false;
+
+	combinaisonComposition_.cards_.SortCardListByValue();
+	combinaison.combinaisonComposition_.cards_.SortCardListByValue();
+
+	vector<string> valuesOfThis;
+	for each (Card card in *combinaisonComposition_.cards_.GetCardList()) { valuesOfThis.push_back(card.GetValue()); }
+
+	vector<string> valuesCombinaison;
+	for each(Card card in *combinaison.combinaisonComposition_.cards_.GetCardList()) { valuesCombinaison.push_back(card.GetValue()); }
+
+	if (combinaisonComposition_.combinaison_ == combinaison.combinaisonComposition_.combinaison_
+		&&	valuesOfThis == valuesCombinaison
+		&&	Card::ConvertCardValueToNumber(highestCard_.GetValue()) == Card::ConvertCardValueToNumber(combinaison.highestCard_.GetValue())) {
+		cout << "Tie game !" << endl;
+		isEqual = true;
+	}
+	return isEqual;
+}
+
+/* Overdefinition of < operator to fit with Combinaison class. Returns a bool3States enum on the ground that to return TRUE, FALSE or NULL_STATE (for a tie game). */
+bool3States Combinaison::operator<(Combinaison combinaison) {
+
+	bool3States isInferior;
+
+	combinaisonComposition_.cards_.SortCardListByValue();
+	combinaison.combinaisonComposition_.cards_.SortCardListByValue();
+
+	combinaisonTypes myCombinaison = combinaisonComposition_.combinaison_;
+	combinaisonTypes combinaisonCombinaison = combinaison.combinaisonComposition_.combinaison_;
+
+	/* If the two combinaisons are equals, then returns NULL_STATE : it is a tie game. */
+	if (*this == combinaison) return NULL_STATE;
+	/* If the two combinaisons are not equals. */
+	else if (myCombinaison == combinaisonCombinaison) {
+
+		/* Let's get all the card values of the two combinaisons. */
+		vector<string> valuesOfThis;
+		for each (Card card in *combinaisonComposition_.cards_.GetCardList()) { valuesOfThis.push_back(card.GetValue()); }
+
+		vector<string> valuesCombinaison;
+		for each(Card card in *combinaison.combinaisonComposition_.cards_.GetCardList()) { valuesCombinaison.push_back(card.GetValue()); }
+
+		/* If the two vector<string> containning all the values are equal. For more details check : https://en.cppreference.com/w/cpp/container/vector/operator_cmp */
+		if (valuesOfThis == valuesCombinaison) {
+			/* Then to separate the winner to the loser, evaluate the highest card. The highest card win the round. */
+			if (Card::ConvertCardValueToNumber(highestCard_.GetValue()) < Card::ConvertCardValueToNumber(combinaison.highestCard_.GetValue())) {
+				isInferior = TRUE;
+			}
+			else {
+				isInferior = FALSE;
+			}
+		}
+		/* If values are not equals. */
+		else if (valuesOfThis < valuesCombinaison) {
+			isInferior = TRUE;
+		}
+		else {
+			isInferior = FALSE;
+		}
+	}
+	/* If combinaison of the current item is inferior to the combinaison in parameter then return FALSE. */
+	else if (myCombinaison < combinaisonCombinaison) {
+		isInferior = TRUE;
+	}
+	/* Otherwise return FALSE. */
+	else {
+		isInferior = FALSE;
+	}
+
+	return isInferior;
+}
+
+/* Overdefinition of > operator to fit with Combinaison class. Returns a bool3States enum on the ground that to return TRUE, FALSE or NULL_STATE (for a tie game). */
+bool3States Combinaison::operator>(Combinaison combinaison) {
+	if (*this == combinaison) return NULL_STATE;
+	else if (*this < combinaison) return FALSE;
+	else return TRUE;
+}
 
 #pragma endregion
