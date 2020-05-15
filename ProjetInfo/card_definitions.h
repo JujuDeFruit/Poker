@@ -1,11 +1,28 @@
 #pragma once
+#pragma region Includes
+
 #include<string>
 #include<vector>
 
+#pragma endregion
+
 using namespace std;
 
-/* Function returns a random number*/
+#pragma region Functions
+
+/* Function returns a random number. */
 int RandomNumber(int i);
+
+#pragma endregion
+
+#pragma region Enum
+
+/* Enum to know if the game if a win a loss or a tie game. */
+enum bool3States {
+	NULL_STATE = -1,
+	FALSE = 0,
+	TRUE = 1
+};
 
 /* Enumeration of all the poker combinaisons. The combinaisons are sorted by strength. */
 enum combinaisonTypes {
@@ -21,34 +38,42 @@ enum combinaisonTypes {
 	royalFlush = 9 // Quinte flush royale
 };
 
-/* Class that represent a playing card*/
+#pragma endregion
+
+#pragma region Card
+
+/* Class that represent a playing card. */
 class Card {
 private:
-	string value_; // Card value
-	string suit_;  // Card suit
+	string value_; // Card value.
+	string suit_;  // Card suit.
 public:
 	Card(string = "", string = "");	// Constructor of the instace Card.
 
-	string GetValue() const { return value_; };		// Method to get the card value
-	string GetSuit() const { return suit_; };		// Method to get the card suit
+	string GetValue() const { return value_; };		// Method to get the card value.
+	string GetSuit() const { return suit_; };		// Method to get the card suit.
 
-	void PrintCard(); // Method to print a card
+	void PrintCard(); // Method to print a card.
 
-	bool operator==(const Card&) const;									// Overdefinition of == operator
-	bool operator!=(const Card& c) const { return !(*this == c); };		// Overdefinition of != operator
+	bool operator==(const Card&) const;									// Overdefinition of == operator.
+	bool operator!=(const Card& c) const { return !(*this == c); };		// Overdefinition of != operator.
 	bool operator<(const Card&) const;									// Overload of < operator (based on card value).
 
-	static int ConvertCardValueToNumber(string); // Convert the card value in parameter to the correspondant number
+	static int ConvertCardValueToNumber(string); // Convert the card value in parameter to the correspondant number.
 };
+
+#pragma endregion
+
+#pragma region Deck
 
 /* Class created to manipulate a deck of cards (vector<Card>). */
 class Deck {
 protected:
 	vector<Card> cardList_; // The list of all the cards
 public:
-	Deck(vector<Card> = {});								// Build the deck
+	Deck(vector<Card> = {});								// Build the deck.
 	Deck(vector<Card>::iterator, vector<Card>::iterator);	// Deck class build with iterator.
-	Deck(const Deck&);										// Copy constructor
+	Deck(const Deck&);										// Copy constructor.
 
 	vector<Card>* GetCardList() { return &cardList_; };		// Return the collection of cards of the deck.
 
@@ -90,6 +115,10 @@ public:
 	void ShakeDeck();					// Shake the deck.
 };
 
+#pragma endregion
+
+#pragma region Combinaison
+
 /* Struct used to identified a combinaison. */
 struct CombinaisonComposition { 
 	combinaisonTypes combinaison_;	// Type of the combinaison (check combinaisonTypes enumeration).
@@ -115,4 +144,10 @@ public:
 	static CombinaisonComposition TwoPairs(Deck);		// Is the cards create a TwoPairs combinaison ?
 	static CombinaisonComposition Pair(Deck);			// Is the cards create a Pair combinaison ?
 	static CombinaisonComposition HighCard(Deck);		// The highest card of the deck if any combinaison is created
+
+	bool operator==(Combinaison);					// Overdefinition of == operator.
+	bool3States operator<(Combinaison);				// Overdefinition of < operator.
+	bool3States operator>(Combinaison);				// Overdefinition of > operator.
 };
+
+#pragma endregion

@@ -1,7 +1,11 @@
+#pragma region Includes
+
 #include"game_definitions.h"
 #include"menu_definitions.h"
 #include"card_definitions.h"
 #include<iostream>
+
+#pragma endregion
 
 using namespace std;
 
@@ -18,11 +22,14 @@ int main()
             application = false;
             //start a game as client
 
-			//Deck hand({ Card("7", "club"), Card("2", "heart") });
-			//Deck river({ Card("7", "diamond"), Card("7", "spade"), Card("2", "club"), Card("2", "diamond"), Card("8", "heart") });
+			Deck hand1({ Card("7", "club"), Card("2", "heart") }), hand2({Card("2","diamond"), Card("4","heart")});
+			Deck river({ Card("7", "diamond"), Card("4", "spade"), Card("King", "club"), Card("2", "spade"), Card("King", "heart") });
 
-			//cout << hand.CountCombinaison(combinaisonTypes::quads) << endl;
-			//Combinaison(hand, river);
+			Combinaison combi1(hand1, river);
+			Combinaison combi2(hand2, river);
+
+			bool3States myBool = combi1 > combi2;
+			system("pause");
 
             MenuPokerStart mstart;
             mstart.Execute();           

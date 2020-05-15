@@ -1,8 +1,14 @@
+#pragma region Includes
+
 #include "card_definitions.h"
 #include<iostream>
 #include<string>
 #include <io.h>
 #include <fcntl.h>
+
+#pragma endregion
+
+#pragma region Constructor
 
 /*Each card is unique and defined by a number and a suit*/
 Card::Card(string number, string suit)
@@ -11,6 +17,11 @@ Card::Card(string number, string suit)
 	suit_ = suit;
 }
 
+#pragma endregion
+
+#pragma region Methods
+
+/* Print a card with the correspondant symbol. */
 void Card::PrintCard()
 {
 	/* Set the flux mode to print Unicode-16 text */
@@ -46,19 +57,6 @@ void Card::PrintCard()
 	_setmode(_fileno(stdout), _O_TEXT);
 }
 
-/* Method that permit to compare two cards. This method will be usefull to create Combinaison. */
-bool Card::operator==(const Card& card) const {
-	if (value_ == card.GetValue() && suit_ == card.GetSuit()) return true;
-	else return false;
-}
-
-/* Method to compare cards. */
-bool Card::operator<(const Card& card) const {
-	int valueThis = Card::ConvertCardValueToNumber(value_);
-	int valueCard = Card::ConvertCardValueToNumber(card.value_);
-	return valueThis < valueCard;
-}
-
 /* Static method that permit to cast cards' value (string) to its int value (from 1 to 13 [King]). */
 int Card::ConvertCardValueToNumber(string cardValue) {
 
@@ -77,3 +75,22 @@ int Card::ConvertCardValueToNumber(string cardValue) {
 	}
 	return val;
 }
+
+#pragma endregion
+
+#pragma region Overdefinitions
+
+/* Method that permit to compare two cards. This method will be usefull to create Combinaison. */
+bool Card::operator==(const Card& card) const {
+	if (value_ == card.GetValue() && suit_ == card.GetSuit()) return true;
+	else return false;
+}
+
+/* Method to compare cards. */
+bool Card::operator<(const Card& card) const {
+	int valueThis = Card::ConvertCardValueToNumber(value_);
+	int valueCard = Card::ConvertCardValueToNumber(card.value_);
+	return valueThis < valueCard;
+}
+
+#pragma endregion

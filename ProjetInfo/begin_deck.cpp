@@ -1,11 +1,21 @@
+#pragma region Includes
+
 #include"card_definitions.h"
 #include<string>
 #include<vector>
 #include <algorithm>    // std::random_shuffle, reverse
 #include <ctime>        // std::time
 
+#pragma endregion
+
+#pragma region Functions
+
 /* Function returns a random number between 0 and i - 1 */
 int RandomNumber(int i) { return rand() % i; };
+
+#pragma endregion
+
+#pragma region Constructor
 
 BeginDeck::BeginDeck() {
 	const vector<string> valueList = Deck::ValueList();
@@ -24,8 +34,12 @@ BeginDeck::BeginDeck() {
 	/*With this method, each card of the deck is unique*/
 }
 
+#pragma endregion
+
+#pragma region Methods to interact with the deck
+
 /* This method permit to draw one or many cards. The number of cards to draw is given in parameters.
-Each picked card is draw from the end of the vector (Ex : for a full deck, 2 cards picked are deck[52] and deck [51]. */
+Each picked card is draw from the end of the vector (Ex : for a full deck, 2 cards picked are deck[51] and deck [50], the card deck[52] is the burned cards). */
 vector<Card> BeginDeck::DrawCard(int number)
 {
 	/* In poker rules, 5 cards max can be drawn at the same time. */
@@ -57,3 +71,5 @@ void BeginDeck::ShakeDeck()
 	random_shuffle(cardList_.begin(), cardList_.end(), RandomNumber); // Shaking the deck depending on the seed.
 	isShaked_ = true;
 }
+
+#pragma endregion
