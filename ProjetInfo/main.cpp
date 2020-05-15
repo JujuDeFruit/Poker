@@ -32,8 +32,8 @@ int main()
 			system("pause");
 
             MenuPokerStart mstart;
-            mstart.Execute();
-            Game client(application);
+            mstart.Execute();           
+            Game* client = new Game(application);
             MenuPokerGame mgame(client);
             mgame.Execute();
               

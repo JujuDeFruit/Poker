@@ -11,10 +11,11 @@ using namespace std;
 
 Game::Game(bool application) {
 	server_ = application;
-	Player player1;
-	player_ = &player1;
-	Round round1;
-	round_ = &round1;
+	//Player player1;
+	//Player* player = 
+	player_ = new Player;
+	//Round round1;
+	round_ = new Round;
 
 	// définir correctement le round aussi
 

@@ -47,7 +47,7 @@ public:
 class MenuPokerGame : public Menu { 
 
 public :
-    MenuPokerGame(Game& game);
+    MenuPokerGame(Game* game);
 };
 
 #endif
