@@ -22,21 +22,20 @@ int main()
             application = false;
             //start a game as client
 
-			Deck hand1({ Card("7", "club"), Card("2", "heart") }), hand2({Card("2","diamond"), Card("4","heart")});
-			Deck river({ Card("7", "diamond"), Card("4", "spade"), Card("King", "club"), Card("2", "spade"), Card("King", "heart") });
+			//Deck hand1({ Card("7", "club"), Card("2", "heart") }), hand2({Card("2","diamond"), Card("4","heart")});
+			//Deck river({ Card("7", "diamond"), Card("4", "spade"), Card("King", "club"), Card("2", "spade"), Card("King", "heart") });
 
-			Combinaison combi1(hand1, river);
-			Combinaison combi2(hand2, river);
+			//Combinaison combi1(hand1, river);
+			//Combinaison combi2(hand2, river);
 
-			bool3States myBool = combi1 > combi2;
-			system("pause");
+			//bool3States myBool = combi1 > combi2;
+			//system("pause");
 
             MenuPokerStart mstart;
             mstart.Execute();           
             Game* client = new Game(application);
             MenuPokerGame mgame(client);
-            mgame.Execute();
-              
+            mgame.Execute();              
 
             //en of the game
             condition = true;				
@@ -44,10 +43,12 @@ int main()
         else if (choice == 1) {
             application = true;
             // start a game as server
-            Game serveur(application);
-
+            MenuPokerStart mstart;
+            mstart.Execute();
+            Game* client = new Game(application);
+            MenuPokerGame mgame(client);
+            mgame.Execute();
          
-
             //end of the game
             condition = true;
         }
@@ -55,9 +56,7 @@ int main()
             cout << "Input Error, retype" << endl;  
         }
 
-
-
-
+             
         cout << endl << "Do you want to restart a game with your friend ?" << endl;
         cout << "=== Write '1' to restart ===" << endl;
         cin >> choice;

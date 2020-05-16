@@ -10,16 +10,19 @@ using namespace std;
 
 
 Game::Game(bool application) {
-	server_ = application;
-	//Player player1;
-	//Player* player = 
-	player_ = new Player;
-	//Round round1;
-	round_ = new Round;
+	server_ = application;	
+	player_ = new Player;	
+	round_ = new Round(player_);
 
-	// définir correctement le round aussi
+	//initialization of the game
+	if (server_ == true) { //to know who played first
+		round_->SetYourTurn(true);
+	}
+	else {
+		round_->SetYourTurn(false);
+	}
 
-	// on lance les cartes ici ?
+	
 	
 }
 
