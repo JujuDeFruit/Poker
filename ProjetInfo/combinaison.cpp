@@ -27,10 +27,6 @@ Combinaison::Combinaison(Deck hand, Deck river) {
 		river = intermediate;
 	}
 
-	/* Concat hand and river to create one same deck. First it is the hand, and then it is the river. */
-	Deck deck(hand);
-	deck.GetCardList()->insert(deck.End(), river.Begin(), river.End());
-
 	/* Let's find the highest combinaison as possible. */
 	if (RoyalFlush(hand, river).isCombinaison_) {
 		combinaisonComposition_ = RoyalFlush(hand, river);
@@ -44,16 +40,16 @@ Combinaison::Combinaison(Deck hand, Deck river) {
 		combinaisonComposition_ = Quads(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
-	//else if (Fullhouse(deck).isCombinaison_) {
-	//	combinaisonComposition_ = Fullhouse(deck);
-	//	highestCard_ = HighCard(hand).cards_[0];
-	//}
+	else if (Fullhouse(hand, river).isCombinaison_) {
+		combinaisonComposition_ = Fullhouse(hand, river);
+		highestCard_ = HighCard(hand).cards_[0];
+	}
 	else if (Flush(hand, river).isCombinaison_) {
 		combinaisonComposition_ = Flush(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
 	else if (Straight(hand, river).isCombinaison_) {
-		combinaisonComposition_ = Straight(deck, river);
+		combinaisonComposition_ = Straight(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
 	else if (Trips(hand, river).isCombinaison_) {
@@ -176,47 +172,50 @@ CombinaisonComposition Combinaison::Quads(Deck hand, Deck river) {
 }
 
 /* This method return the composition of a fullhouse combinaison. */
-//CombinaisonComposition Combinaison::Fullhouse(Deck deck) {
-//
-//	CombinaisonComposition combinaisonComposition;
-//	combinaisonComposition.isCombinaison_ = false;
-//
-//	/* There is 1 trip max, else it is not a Fullhouse. */
-//	CombinaisonComposition trips = Trips(deck);
-//
-//	if (trips.isCombinaison_) {
-//		/* Get a pair. */
-//		Deck deckListWithoutTrips(deck);
-//		deckListWithoutTrips.EraseCards(trips.cards_.GetCardList()->front().GetValue());
-//		CombinaisonComposition pair = Pair(deckListWithoutTrips);
-//
-//		/* Get the highest pair as possible. If there is a trips, there are maximum 2 pairs. */
-//		deckListWithoutTrips.EraseCards(pair.cards_);
-//		CombinaisonComposition pair2 = Pair(deckListWithoutTrips);
-//		if (pair.isCombinaison_ && pair2.isCombinaison_ && pair.cards_.GetCardList()->front() < pair2.cards_.GetCardList()->front()) pair = pair2;
-//
-//		if (pair.isCombinaison_) {
-//			combinaisonComposition.isCombinaison_ = true;
-//			combinaisonComposition.combinaison_ = combinaisonTypes::fullhouse;
-//			trips.cards_.GetCardList()->insert(trips.cards_.End(), pair.cards_.Begin(), pair.cards_.End());
-//			combinaisonComposition.cards_ = trips.cards_;
-//		}
-//	}
-//
-//	CombinaisonComposition riverCombinaison;
-//	if (deck.GetCardList()->size() == (CARDS_HAND + CARDS_RIVER)) {
-//		Deck river(deck.Begin() + 2, deck.End());
-//		riverCombinaison = Fullhouse(river);
-//	}
-//
-//	if (riverCombinaison.isCombinaison_ && combinaisonComposition.isCombinaison_ && riverCombinaison.cards_ == combinaisonComposition.cards_) {
-//		CombinaisonComposition nullCombinaison;
-//		nullCombinaison.isCombinaison_ = false;
-//		combinaisonComposition = nullCombinaison;
-//	}
-//
-//	return combinaisonComposition;
-//}
+CombinaisonComposition Combinaison::Fullhouse(Deck hand, Deck river) {
+	CombinaisonComposition combinaisonComposition;
+
+	Deck deck = hand.Concat(river); // Build the full deck
+	Deck pairDeck(deck);
+
+	bool isTrip = false, isPair = false;
+
+	/* There is 1 trip max, else it is not a Fullhouse. */
+	CombinaisonComposition trips;
+	if (deck.CountCombinaison(combinaisonTypes::trips)) {	// If there is a trip.
+		trips = Trips(hand, river);							// Then, get the value.
+		if (trips.cards_.GetCardList()->size()) {			// If the trip is involved in the hand.
+			hand.EraseCards(trips.cards_[0].GetValue());	// Erase cards involved in the trip.
+			river.EraseCards(trips.cards_[0].GetValue());
+			isTrip = true;
+		}
+		else return combinaisonComposition;					// Any trip is made from the hand.
+	}
+	else return combinaisonComposition;
+	
+	deck = hand.Concat(river); // Rebuild the deck without cards involved in the trip
+
+	CombinaisonComposition pair;
+	if (deck.CountCombinaison(combinaisonTypes::pair)) {
+		pair = Pair(hand, river);			// If the is a pair, then get it.
+		isPair = true;
+	}
+	else if (deck.CountCombinaison(combinaisonTypes::trips)) {
+		pair = Trips(hand, river);			// Else if there is another trip, then get it, and consider it as a pair.
+		pair.cards_.EraseCards(hand);
+		pair.cards_ = hand + Deck::ToDeck({pair.cards_[0]});
+		isPair = true;
+	}
+	else return combinaisonComposition;
+
+	if (isTrip && isPair) {				// if there is a pair and a trip, it is a fullhouse.
+		combinaisonComposition.isCombinaison_ = true;
+		combinaisonComposition.combinaison_ = combinaisonTypes::fullhouse;
+		combinaisonComposition.cards_ = trips.cards_ + pair.cards_;
+	}
+
+	return combinaisonComposition;
+}
 
 /* This method return the composition of a flush combinaison. */
 CombinaisonComposition Combinaison::Flush(Deck hand, Deck river) {
@@ -379,7 +378,10 @@ CombinaisonComposition Combinaison::Pair(Deck hand, Deck river) {
 
 	/* Get the cards value of the hand*/
 	string hand0Value = hand[0].GetValue();
-	string hand1Value = hand[1].GetValue();
+	string hand1Value;
+	if(hand.GetCardList()->size() == 2)
+		hand1Value = hand[1].GetValue();
+	else hand1Value = "";
 
 	/* If the pair is just build with hand's cards. */
 	if (hand0Value == hand1Value) {

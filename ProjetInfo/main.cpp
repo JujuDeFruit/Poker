@@ -22,13 +22,6 @@ int main()
             application = false;
             //start a game as client
 
-
-			Deck hand({ Card("1", "club"), Card("2", "club") });
-			Deck river({ Card("4", "diamond"), Card("5", "diamond"), Card("King", "spade"), Card("4", "heart"), Card("Queen", "club") });
-
-			Combinaison combi(hand, river);
-
-
             MenuPokerStart mstart;
             mstart.Execute();           
             Game* client = new Game(application);
