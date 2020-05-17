@@ -83,6 +83,7 @@ public:
 	bool operator==(Deck d) const { return cardList_ == d.cardList_; };		// Overdefinition of == operator.
 	bool operator!=(Deck d) const { return !(*this == d); };				// Overdefinition of != operator
 	void operator=(Deck d) { cardList_ = d.cardList_; };					// Overdefinition of affectation operator.
+	Deck operator+= (Deck d) { return *this + d; };
 
 	vector<Card>::iterator Begin() { return cardList_.begin(); };	// Return the first iterator of the collection of cards.
 	vector<Card>::iterator End() { return cardList_.end(); };		//Return the last iterator of the collection of cards.
@@ -115,7 +116,7 @@ private:
 	bool isShaked_; // Is the deck shaked or not ?
 public:
 	BeginDeck();						// COnstructor of the deck : create a deck with the 52 cards.
-	void DrawCard(int = 1);		// Allow to pick a/many card(s) from the deck (max 5 cards).
+	Deck DrawCard(int = 1);				// Allow to pick a/many card(s) from the deck (max 5 cards).
 	void ShakeDeck();					// Shake the deck.
 };
 
@@ -141,7 +142,7 @@ public:
 	static CombinaisonComposition RoyalFlush(Deck, Deck);		// Is the cards create a RoyalFlush combinaison ?
 	static CombinaisonComposition StraightFlush(Deck, Deck);	// Is the cards create a Straight Flush combinaison ?
 	static CombinaisonComposition Quads(Deck, Deck);			// Is the cards create a Quads combinaison ?
-	static CombinaisonComposition Fullhouse(Deck);				// Is the cards create a Fullhouse combinaison ?
+	static CombinaisonComposition Fullhouse(Deck, Deck);		// Is the cards create a Fullhouse combinaison ?
 	static CombinaisonComposition Flush(Deck, Deck);			// Is the cards create a Flush combinaison ?
 	static CombinaisonComposition Straight(Deck, Deck);			// Is the cards create a Straight combinaison ?
 	static CombinaisonComposition Trips(Deck, Deck);			// Is the cards create a Trips combinaison ?
