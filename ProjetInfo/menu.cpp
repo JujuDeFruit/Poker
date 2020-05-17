@@ -36,11 +36,10 @@ void Menu::ShowMenu()
 	for (int i = 0; i < listeOptions_.size(); i++) {
 		cout << "- " << setw(2) << i << " : " << listeOptions_[i].GetDescription() << endl;
 	}
-	if (gameIsCreate_ == true) {
-		// cout << Game_->player_->allMyMoney_ << endl;
-		//game_->GetRound()->Follow();
-		game_->GetPlayer()->PrintMoneyAndTokens();
-		cout << game_->GetPlayer()->GetAllMoneys() << " argent " << endl;
+	if (gameIsCreate_ == true) {		
+		game_->GetPlayer()->PrintMoneyAndTokens();		
+		cout << "Money plays by the opponent : " << game_->GetRound()->GetMoneyPlayedOpponent() <<"$"<<endl;
+		cout << "Money you played : " << game_->GetRound()->GetMoneyPlayedByYou() << "$" << endl;
 	}
 }
 
@@ -76,12 +75,12 @@ void Menu::ExecuteOption(const string &name, bool &end)
 	if (name == "start") end = true;
 	else if (name == "help") Help();
 	//menupokergame options
+	else if (name == "bet") game_->GetRound()->Bet();
 	else if (name == "follow") game_->GetRound()->Follow();
-	else if (name == "all in");
+	else if (name == "all in") game_->GetRound()->All_In(); 
 	else if (name == "check");
 	else if (name == "fold");
-	else if (name == "leave") end = Leave();
-	//
+	else if (name == "leave") end = Leave();	
 	else {
 		cout << "Option not defined" << endl;
 		system("pause");
