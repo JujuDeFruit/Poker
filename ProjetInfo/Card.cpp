@@ -61,7 +61,10 @@ void Card::PrintCard()
 int Card::ConvertCardValueToNumber(string cardValue) {
 
 	int val = 0;
-	if (cardValue == "King") {
+	if (cardValue == "1") {
+		val = 14;
+	}
+	else if (cardValue == "King") {
 		val = 13;
 	}
 	else if (cardValue == "Queen") {
@@ -91,6 +94,12 @@ bool Card::operator<(const Card& card) const {
 	int valueThis = Card::ConvertCardValueToNumber(value_);
 	int valueCard = Card::ConvertCardValueToNumber(card.value_);
 	return valueThis < valueCard;
+}
+
+/* Overdefinition of assignement operator. */
+void Card::operator=(const Card& card) {
+	value_ = card.GetValue();
+	suit_ = card.GetSuit();
 }
 
 #pragma endregion

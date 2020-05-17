@@ -21,6 +21,7 @@ Deck::Deck(const Deck& deck) :Deck(deck.cardList_) {}
 
 #pragma endregion
 
+
 #pragma region Overdefinition
 
 /* Overdefinition od + operator to fit to deck class. */
@@ -186,8 +187,12 @@ int Deck::Count(string key) {
 }
 
 /* Count the number of cards of the deck that correspond to the card in parameter. */
-int Deck::Count(Card card) {
-	return Count(card.GetSuit()) && Count(card.GetValue());
+int Deck::Count(Card c) {
+	int counter = 0;
+	for each(Card card in cardList_) {
+		if (card == c) counter += 1;
+	}
+	return counter;
 }
 
 /* Check if a collection of cards is straight or not. */
@@ -200,6 +205,7 @@ bool Deck::IsStraight() {
 			break;
 		}
 	}
+	if (Count("1") && Count("2") && Count("3") && Count("4") && Count("5")) isStraight = true;
 	return isStraight;
 }
 
@@ -258,6 +264,39 @@ int Deck::CountCombinaison(combinaisonTypes e) {
 	}
 
 	return counter;
+}
+
+/* Return true if two deck are equivalent : they have the same size and the same card in a different order. */
+bool Deck::Equivalent(Deck deck) {
+	bool equivalent = true;
+	
+	/* If the two decks have not the same size, they are not equivalent. */
+	if (cardList_.size() != deck.GetCardList()->size()) return false;
+
+	/* If the current deck and the deck in parameter has not the same cards then equivalent = false. */
+	for each(Card card in deck.cardList_) {
+		if (find(cardList_.begin(), cardList_.end(), card) == cardList_.end()) {
+			equivalent = false;
+			break;
+		}
+	}
+
+	/* If the two deck are equal, then they are equivalent. */
+	if (deck == *this) equivalent = true;
+	/* If the two decks have the same cards and the same size, then they are equivalent. */
+	else if (deck.GetCardList()->size() == cardList_.size() && equivalent) equivalent = true;
+	/* Else, they are not equivalent. */
+	else equivalent = false;
+
+	return equivalent;
+}
+
+/* Concat 2 decks, and return the concatenation. */
+Deck Deck::Concat(Deck deck) {
+	Deck d(cardList_);
+	d.GetCardList()->insert(d.End(), deck.Begin(), deck.End());
+	return d;
+
 }
 
 #pragma endregion

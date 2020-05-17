@@ -31,47 +31,49 @@ Combinaison::Combinaison(Deck hand, Deck river) {
 	Deck deck(hand);
 	deck.GetCardList()->insert(deck.End(), river.Begin(), river.End());
 
-	if (RoyalFlush(deck).isCombinaison_) {
-		combinaisonComposition_ = RoyalFlush(deck);
+	/* Let's find the highest combinaison as possible. */
+	if (RoyalFlush(hand, river).isCombinaison_) {
+		combinaisonComposition_ = RoyalFlush(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
-	else if (StraightFlush(deck).isCombinaison_) {
-		combinaisonComposition_ = StraightFlush(deck);
+	else if (StraightFlush(hand, river).isCombinaison_) {
+		combinaisonComposition_ = StraightFlush(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
-	else if (Quads(deck).isCombinaison_) {
-		combinaisonComposition_ = Quads(deck);
+	else if (Quads(hand, river).isCombinaison_) {
+		combinaisonComposition_ = Quads(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
-	else if (Fullhouse(deck).isCombinaison_) {
-		combinaisonComposition_ = Fullhouse(deck);
+	//else if (Fullhouse(deck).isCombinaison_) {
+	//	combinaisonComposition_ = Fullhouse(deck);
+	//	highestCard_ = HighCard(hand).cards_[0];
+	//}
+	else if (Flush(hand, river).isCombinaison_) {
+		combinaisonComposition_ = Flush(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
-	else if (Flush(deck).isCombinaison_) {
-		combinaisonComposition_ = Flush(deck);
+	else if (Straight(hand, river).isCombinaison_) {
+		combinaisonComposition_ = Straight(deck, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
-	else if (Straight(deck).isCombinaison_) {
-		combinaisonComposition_ = Straight(deck);
+	else if (Trips(hand, river).isCombinaison_) {
+		combinaisonComposition_ = Trips(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
-	else if (Trips(deck).isCombinaison_ && !Trips(river).isCombinaison_) {
-		combinaisonComposition_ = Trips(deck);
+	else if (TwoPairs(hand, river).isCombinaison_) {
+		combinaisonComposition_ = TwoPairs(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
-	else if (TwoPairs(deck).isCombinaison_) {
-		combinaisonComposition_ = TwoPairs(deck);
-		highestCard_ = HighCard(hand).cards_[0];
-	}
-	else if (Pair(deck).isCombinaison_ && !Pair(river).isCombinaison_) {
-		combinaisonComposition_ = Pair(deck);
+	else if (Pair(hand, river).isCombinaison_) {
+		combinaisonComposition_ = Pair(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
 	}
 	else {
 		combinaisonComposition_ = HighCard(hand);
 	}
-	//combinaisonComposition_.cards_.PrintDeck();
-	//system("pause");
+	cout << combinaisonComposition_.combinaison_ << endl;
+	combinaisonComposition_.cards_.PrintDeck();
+	system("pause");
 }
 
 #pragma endregion
@@ -79,253 +81,219 @@ Combinaison::Combinaison(Deck hand, Deck river) {
 #pragma region Check combinaison
 
 /* This method return the composition of a royale pair combinaison. */
-CombinaisonComposition Combinaison::RoyalFlush(Deck deck) {
-
+CombinaisonComposition Combinaison::RoyalFlush(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = false;
 
-	vector<string> suitList = Deck::SuitList();
-	for (vector<string>::iterator itSL = suitList.begin(); itSL != suitList.end(); itSL++)
+	Deck deck = hand.Concat(river);		// Build the full deck
+
+	const vector<string> suitList = Deck::SuitList();
+	/* Browse all suit to find a flush. */
+	for each (string suit in suitList)
 	{
-		if (count(deck.Begin(), deck.End(), Card("10", *itSL))
-			&& count(deck.Begin(), deck.End(), Card("Jack", *itSL))
-			&& count(deck.Begin(), deck.End(), Card("Queen", *itSL))
-			&& count(deck.Begin(), deck.End(), Card("King", *itSL))
-			&& count(deck.Begin(), deck.End(), Card("1", *itSL)))
+		/* If the hand and the river create a Royal Flush combinaison, and the hand is involved in this one. */
+		if (deck.Count(Card("10", suit))
+			&& deck.Count(Card("Jack", suit))
+			&& deck.Count(Card("Queen", suit))
+			&& deck.Count(Card("King", suit))
+			&& deck.Count(Card("1", suit))
+			&& (hand.Count(Card("10", suit)) || hand.Count(Card("Jack", suit)) || hand.Count(Card("Queen", suit)) || hand.Count(Card("King", suit)) || hand.Count(Card("1", suit)))
+			)
 		{
+			/* Then return the combinaison. */
 			combinaisonComposition.isCombinaison_ = true;
 			combinaisonComposition.combinaison_ = combinaisonTypes::straightFlush;
-			combinaisonComposition.cards_ = Deck::ToDeck({ Card("10", *itSL) , Card("Jack", *itSL) , Card("Queen", *itSL) , Card("King", *itSL) , Card("1", *itSL) });
+			combinaisonComposition.cards_ = Deck::ToDeck({ Card("10", suit) , Card("Jack", suit) , Card("Queen", suit) , Card("King", suit) , Card("1", suit) });
 			break;
 		}
-	}
-
-	CombinaisonComposition riverCombinaison;
-	if (deck.GetCardList()->size() == (CARDS_HAND + CARDS_RIVER)) {
-		Deck river(deck.Begin() + 2, deck.End());
-		riverCombinaison = RoyalFlush(river);
-	}
-
-	if (riverCombinaison.isCombinaison_ && combinaisonComposition.isCombinaison_ && riverCombinaison.cards_ == combinaisonComposition.cards_) {
-		CombinaisonComposition nullCombinaison;
-		nullCombinaison.isCombinaison_ = false;
-		combinaisonComposition = nullCombinaison;
 	}
 
 	return combinaisonComposition;
 }
 
 /* This method return the composition of a straight flush combinaison. */
-/* ===> Add straight for As. */
-CombinaisonComposition Combinaison::StraightFlush(Deck deck) {
-
+CombinaisonComposition Combinaison::StraightFlush(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = false;
 
-	Deck cardList(deck);
-	cardList.SortCardListByValue();
+	Deck deck = hand.Concat(river);		// Build the full deck.
 
-	vector<Card> extractedList;
+	/* Boolean used to know if the deck contains a flush. */
+	bool fiveCardsWithSameColor = false;
 
-	vector<string> suitList = Deck::SuitList();
-	for (vector<string>::iterator it = suitList.begin(); it != suitList.end(); it++) {
-		int count = cardList.Count(*it);
-		if (count >= MAX_CARDS_COMBINAISON) {
-			Deck extractedList(cardList);
-			cardList.ExtractCards(*it);
+	const vector<string> suitList = Deck::SuitList();
+	/* Browse all the suit a card can have. */
+	for each(string suit in suitList) {
+		/* If the deck contains 5 or more cards with the same suit, then the deck has a flush. */
+		if (deck.Count(suit) >= MAX_CARDS_COMBINAISON) {
+			/* Extract the cards involved in the flush from the hand and the river. */
+			hand.ExtractCards(suit);
+			river.ExtractCards(suit);
+			/* the deck contains a flush. it is a current evaluated suit flush. */
+			fiveCardsWithSameColor = true;
+			break;
 		}
 	}
 
-	if (extractedList.size() >= MAX_CARDS_COMBINAISON) {
-		int diffBetweenSizeAndNumberOfCards = extractedList.size() - MAX_CARDS_COMBINAISON; // The number of cards to compare is 5.
-																							// Then if the extracted list is bigger than five, 
-																							// the program has at least three straight to compare 
-																							// and has to choose the stronger one (with the highest card).
-		for (unsigned int i = diffBetweenSizeAndNumberOfCards; i >= 0; i--) {
-			Deck list(extractedList.begin() + i, extractedList.end() + (i - diffBetweenSizeAndNumberOfCards));
-			if (list.IsStraight()) {
-				combinaisonComposition.isCombinaison_ = true;
-				combinaisonComposition.combinaison_ = combinaisonTypes::straightFlush;
-				combinaisonComposition.cards_ = *list.GetCardList();
-				break;
-			}
-		}
-	}
+	/* If there is not a fluh or if the hand is not involved in this one, then return a null combinaison. */
+	if (!fiveCardsWithSameColor || !hand.GetCardList()->size()) return combinaisonComposition;
 
-	CombinaisonComposition riverCombinaison;
-	if (deck.GetCardList()->size() == (CARDS_HAND + CARDS_RIVER)) {
-		Deck river(deck.Begin() + 2, deck.End());
-		river.SortCardListByValue();
-		riverCombinaison = StraightFlush(river);
-	}
-
-	if (riverCombinaison.isCombinaison_ && combinaisonComposition.isCombinaison_ && riverCombinaison.cards_ == combinaisonComposition.cards_) {
-		CombinaisonComposition nullCombinaison;
-		nullCombinaison.isCombinaison_ = false;
-		combinaisonComposition = nullCombinaison;
+	/* Check if the flush can create a straight. */
+	CombinaisonComposition straightCardList = Straight(hand, river);
+	/* If the current flush is a straight too, then it is a straight flush. */
+	if (straightCardList.isCombinaison_ && hand.GetCardList()->size()) {
+		combinaisonComposition.isCombinaison_ = true;
+		combinaisonComposition.combinaison_ = combinaisonTypes::straightFlush;
+		combinaisonComposition.cards_ = straightCardList.cards_;
 	}
 
 	return combinaisonComposition;
 }
 
 /* This method return the composition of a quads combinaison. */
-CombinaisonComposition Combinaison::Quads(Deck deck) {
-
+CombinaisonComposition Combinaison::Quads(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = false;
 
-	vector<Card> quads;
+	Deck deck = hand.Concat(river);		// Build the full deck
+	deck.SortCardListByValue();
 
-	vector<string> valueList = Deck::ValueList();
-	for (vector<string>::iterator itString = valueList.begin(); itString != valueList.end(); itString++) {
-		int countQuads = 0;
-		quads.clear();
-		for (vector<Card>::iterator itCard = deck.Begin(); itCard != deck.End(); itCard++) {
-			if ((*itCard).GetValue() == *itString) {
-				countQuads += 1;
-				quads.push_back(*itCard);
-			}
-			if (countQuads == 4)
-			{
-				combinaisonComposition.isCombinaison_ = true;
-				combinaisonComposition.combinaison_ = combinaisonTypes::quads;
-				combinaisonComposition.cards_ = quads;
-				break;
-			}
-		}
+	/* If the hand and the river do not build a quads or if the river build a quad by itself, then return the null combiniaison. */
+	if (!deck.CountCombinaison(combinaisonTypes::quads) || river.CountCombinaison(combinaisonTypes::quads)) return combinaisonComposition;
 
-		CombinaisonComposition riverCombinaison;
-		if (deck.GetCardList()->size() == (CARDS_HAND + CARDS_RIVER)) {
-			Deck river(deck.Begin() + 2, deck.End());
-			riverCombinaison = Quads(river);
-		}
-
-		if (riverCombinaison.isCombinaison_ && combinaisonComposition.isCombinaison_ && riverCombinaison.cards_ == combinaisonComposition.cards_) {
-			CombinaisonComposition nullCombinaison;
-			nullCombinaison.isCombinaison_ = false;
-			combinaisonComposition = nullCombinaison;
+	/* It is sure, there is a quad. Count the number of same value card in the deck. When the quad is found, then quit the loop with break. */
+	for each (Card card in *deck.GetCardList()) {
+		string value = card.GetValue();
+		/* If there are 4 cards with the same value in the deck and one of the cards at least is in the hand. */
+		if (deck.Count(value) == 4 && hand.Count(value)) {
+			combinaisonComposition.isCombinaison_ = true;
+			combinaisonComposition.combinaison_ = combinaisonTypes::quads;
+			Deck cards(deck);
+			cards.ExtractCards(value);
+			combinaisonComposition.cards_ = cards;
+			break;
 		}
 	}
+
 	return combinaisonComposition;
 }
 
 /* This method return the composition of a fullhouse combinaison. */
-CombinaisonComposition Combinaison::Fullhouse(Deck deck) {
-
-	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = false;
-
-	/* There is 1 trip max, else it is not a Fullhouse. */
-	CombinaisonComposition trips = Trips(deck);
-
-	if (trips.isCombinaison_) {
-		/* Get a pair. */
-		Deck deckListWithoutTrips(deck);
-		deckListWithoutTrips.EraseCards(trips.cards_.GetCardList()->front().GetValue());
-		CombinaisonComposition pair = Pair(deckListWithoutTrips);
-
-		/* Get the highest pair as possible. If there is a trips, there are maximum 2 pairs. */
-		deckListWithoutTrips.EraseCards(pair.cards_);
-		CombinaisonComposition pair2 = Pair(deckListWithoutTrips);
-		if (pair.isCombinaison_ && pair2.isCombinaison_ && pair.cards_.GetCardList()->front() < pair2.cards_.GetCardList()->front()) pair = pair2;
-
-		if (pair.isCombinaison_) {
-			combinaisonComposition.isCombinaison_ = true;
-			combinaisonComposition.combinaison_ = combinaisonTypes::fullhouse;
-			trips.cards_.GetCardList()->insert(trips.cards_.End(), pair.cards_.Begin(), pair.cards_.End());
-			combinaisonComposition.cards_ = trips.cards_;
-		}
-	}
-
-	CombinaisonComposition riverCombinaison;
-	if (deck.GetCardList()->size() == (CARDS_HAND + CARDS_RIVER)) {
-		Deck river(deck.Begin() + 2, deck.End());
-		riverCombinaison = Fullhouse(river);
-	}
-
-	if (riverCombinaison.isCombinaison_ && combinaisonComposition.isCombinaison_ && riverCombinaison.cards_ == combinaisonComposition.cards_) {
-		CombinaisonComposition nullCombinaison;
-		nullCombinaison.isCombinaison_ = false;
-		combinaisonComposition = nullCombinaison;
-	}
-
-	return combinaisonComposition;
-}
+//CombinaisonComposition Combinaison::Fullhouse(Deck deck) {
+//
+//	CombinaisonComposition combinaisonComposition;
+//	combinaisonComposition.isCombinaison_ = false;
+//
+//	/* There is 1 trip max, else it is not a Fullhouse. */
+//	CombinaisonComposition trips = Trips(deck);
+//
+//	if (trips.isCombinaison_) {
+//		/* Get a pair. */
+//		Deck deckListWithoutTrips(deck);
+//		deckListWithoutTrips.EraseCards(trips.cards_.GetCardList()->front().GetValue());
+//		CombinaisonComposition pair = Pair(deckListWithoutTrips);
+//
+//		/* Get the highest pair as possible. If there is a trips, there are maximum 2 pairs. */
+//		deckListWithoutTrips.EraseCards(pair.cards_);
+//		CombinaisonComposition pair2 = Pair(deckListWithoutTrips);
+//		if (pair.isCombinaison_ && pair2.isCombinaison_ && pair.cards_.GetCardList()->front() < pair2.cards_.GetCardList()->front()) pair = pair2;
+//
+//		if (pair.isCombinaison_) {
+//			combinaisonComposition.isCombinaison_ = true;
+//			combinaisonComposition.combinaison_ = combinaisonTypes::fullhouse;
+//			trips.cards_.GetCardList()->insert(trips.cards_.End(), pair.cards_.Begin(), pair.cards_.End());
+//			combinaisonComposition.cards_ = trips.cards_;
+//		}
+//	}
+//
+//	CombinaisonComposition riverCombinaison;
+//	if (deck.GetCardList()->size() == (CARDS_HAND + CARDS_RIVER)) {
+//		Deck river(deck.Begin() + 2, deck.End());
+//		riverCombinaison = Fullhouse(river);
+//	}
+//
+//	if (riverCombinaison.isCombinaison_ && combinaisonComposition.isCombinaison_ && riverCombinaison.cards_ == combinaisonComposition.cards_) {
+//		CombinaisonComposition nullCombinaison;
+//		nullCombinaison.isCombinaison_ = false;
+//		combinaisonComposition = nullCombinaison;
+//	}
+//
+//	return combinaisonComposition;
+//}
 
 /* This method return the composition of a flush combinaison. */
-CombinaisonComposition Combinaison::Flush(Deck deck) {
+CombinaisonComposition Combinaison::Flush(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = false;
 
+	Deck deck = hand.Concat(river);
+
+	/* Deck that store all the cards of the flush. */
+	Deck sameSuitCards;
+	/* Variable that store the suit involved in the flush, if there is. */
+	string suit;
+
+	/* Browse the deck to find a card combinaison where there are 5 cards or more that have the same suit. */
 	const vector<string> suitList = Deck::SuitList();
-	for (vector<string>::const_iterator it = suitList.begin(); it != suitList.end(); it++) {
-		if (deck.Count(*it) >= MAX_CARDS_COMBINAISON) {
-			combinaisonComposition.isCombinaison_ = true;
-			combinaisonComposition.combinaison_ = combinaisonTypes::flush;
-			Deck extractedCards(deck);
-			extractedCards.ExtractCards(*it);
-			extractedCards.SortCardListByValue();
-			combinaisonComposition.cards_ = *extractedCards.GetCardList();
+	for each(string suitValue in suitList) {
+		/* If the suit create a flush. */
+		if (deck.Count(suitValue) >= MAX_CARDS_COMBINAISON) {
+			sameSuitCards = deck;
+			sameSuitCards.ExtractCards(suitValue);
+			sameSuitCards.SortCardListByValue();
+			suit = suitValue;
+			break;
 		}
 	}
 
-	/* If there are more than 5 cards in the flush choose these ones in the player hand. */
-	if (combinaisonComposition.isCombinaison_ && combinaisonComposition.cards_.GetCardList()->size() > MAX_CARDS_COMBINAISON) {
-		Deck river(deck.Begin() + 2, deck.End()); //
-		river.SortCardListByValue();
-		int cardsToErase = combinaisonComposition.cards_.GetCardList()->size() - MAX_CARDS_COMBINAISON; // 6 cards, in the flush, we need to remove one card that belong to the river and to the composition.
-		int counter = 0;
-		for (vector<Card>::iterator it = river.Begin(); it != river.End(); it++) {
-			if ((*it).GetSuit() == combinaisonComposition.cards_.GetCardList()->front().GetSuit()) {
-				Deck combinaisonDeck(combinaisonComposition.cards_);
-				combinaisonDeck.EraseCards(Deck::ToDeck({ *it }));
-				combinaisonComposition.cards_ = *combinaisonDeck.GetCardList();
-				counter += 1;
-			}
-			if (counter == cardsToErase) break;
+	if (river.Equivalent(sameSuitCards) || sameSuitCards.GetCardList()->empty()) return combinaisonComposition;
+
+	combinaisonComposition.isCombinaison_ = true;
+	combinaisonComposition.combinaison_ = combinaisonTypes::flush;
+
+	int size = sameSuitCards.GetCardList()->size();
+
+	/* If the flush is composed at least by 5 cards, hand is involded. */
+	if (size == MAX_CARDS_COMBINAISON) {
+		combinaisonComposition.cards_ = sameSuitCards;
+	}
+	/* If the flush is composed by 6 or 7 cards, then get the highest ones which han is involved. */
+	else if (size > MAX_CARDS_COMBINAISON) {
+		hand.SortCardListByValue();
+		/* Get the highest cards. */
+		Deck comb(sameSuitCards.End() - 5, sameSuitCards.End());
+		/* if the highest cards are the river, then intervert the last card of the hand with the first card of the combinaison. */
+		if (river.Equivalent(comb)) {
+			comb.GetCardList()->front() = sameSuitCards.GetCardList()->size() == MAX_CARDS_COMBINAISON + 1 ? sameSuitCards[0] : sameSuitCards[1];
 		}
-	}
-
-	CombinaisonComposition riverCombinaison;
-	if (deck.GetCardList()->size() == (CARDS_HAND + CARDS_RIVER)) {
-		Deck river(deck.Begin() + 2, deck.End());
-		riverCombinaison = Flush(river);
-	}
-
-	if (riverCombinaison.isCombinaison_ && combinaisonComposition.isCombinaison_ && riverCombinaison.cards_ == combinaisonComposition.cards_) {
-		CombinaisonComposition nullCombinaison;
-		nullCombinaison.isCombinaison_ = false;
-		combinaisonComposition = nullCombinaison;
+		combinaisonComposition.cards_ = comb;
 	}
 
 	return combinaisonComposition;
+
 }
 
 /* This method return the composition of a flush combinaison. */
-CombinaisonComposition Combinaison::Straight(Deck deck) {
+CombinaisonComposition Combinaison::Straight(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = false;
 
-	Deck river;
-	if (deck.GetCardList()->size() == (CARDS_HAND + CARDS_RIVER)) {
-		river = Deck(deck.Begin() + 2, deck.End());
-	}
+	Deck deck = hand.Concat(river);		// Build the full deck. 
 
 	Deck cardList(deck);
-	cardList.RemoveSameValueCards();
+	cardList.RemoveSameValueCards();		// Remove all multiple same value Card to keep the value information.
 	cardList.SortCardListByValue();
+
+	if (cardList.Count("1")) cardList.GetCardList()->front() = cardList.GetCardList()->back();	// If the deck has an ace, then this one can be the weakest or the strongest one. It has to be the first and the last element.
 
 	int diffBetweenSizeAndNumberOfCards = cardList.GetCardList()->size() - MAX_CARDS_COMBINAISON;		// The number of cards to compare is 5.
 																										// Then if the list is bigger than five, 
 																										// the program has at least three straights to compare 
-
 																										// and has to choose the stronger one (with the highest card).
-	if (cardList.GetCardList()->size() >= 5) {
+	if (cardList.GetCardList()->size() >= MAX_CARDS_COMBINAISON) {
+		/* Let's browse the deck from the end to get the strongest straight as possible. */
 		for (int i = diffBetweenSizeAndNumberOfCards; i >= 0; i--) {
+			/* Create the 5 cards current deck. */
 			Deck list(cardList.GetCardList()->begin() + i, cardList.GetCardList()->end() + (i - diffBetweenSizeAndNumberOfCards));
-			if (list.IsStraight() && !Straight(river).isCombinaison_) {
+			/* If the current 5 cards deck id a straight and if the hand is involved in the straight, then the current deck is a combinaison. */
+			if (list.IsStraight() && (list.Count(hand.GetCardList()->front()) || list.Count(hand.GetCardList()->back()))) {
 				combinaisonComposition.isCombinaison_ = true;
-				combinaisonComposition.combinaison_ = combinaisonTypes::straightFlush;
+				combinaisonComposition.combinaison_ = combinaisonTypes::straight;
 				combinaisonComposition.cards_ = *list.GetCardList();
 				break;
 			}
@@ -336,131 +304,117 @@ CombinaisonComposition Combinaison::Straight(Deck deck) {
 }
 
 /* This method return the composition of a trips combinaison. */
-CombinaisonComposition Combinaison::Trips(Deck deck) {
+CombinaisonComposition Combinaison::Trips(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = false;
 
-	vector<Card> cardList;
+	Deck deck = hand.Concat(river);
 
-	vector<string> valueList = Deck::ValueList();
-	for (vector<string>::iterator itString = valueList.begin(); itString != valueList.end(); itString++) {
-		int countTrips = 0;
-		cardList.clear();
-		for (vector<Card>::iterator itCard = deck.Begin(); itCard != deck.End(); itCard++) {
-			if ((*itCard).GetValue() == *itString) {
-				countTrips += 1;
-				cardList.push_back(*itCard);
-			}
-			if (countTrips == 3) {
-				combinaisonComposition.isCombinaison_ = true;
-				combinaisonComposition.combinaison_ = combinaisonTypes::trips;
-				combinaisonComposition.cards_ = cardList;
-				break;
-			}
+	if (!deck.CountCombinaison(combinaisonTypes::trips)) return combinaisonComposition;
+
+	/* Sort the hand to have the strongest card at the end. */
+	hand.SortCardListByValue();
+
+	/* Browse the hand from the end to get the stongest card first. */
+	for (vector<Card>::reverse_iterator card = hand.GetCardList()->rbegin(); card != hand.GetCardList()->rend(); card++) {
+		string value = (*card).GetValue();
+		/* If there are 3 cards with the same value, then quit the for loop and get the cards involved in the trip before. */
+		if (deck.Count(value) == 3) {
+			Deck trip(deck);
+			trip.ExtractCards(value);
+			combinaisonComposition.isCombinaison_ = true;
+			combinaisonComposition.combinaison_ = combinaisonTypes::trips;
+			combinaisonComposition.cards_ = trip;
+			break;
 		}
-		if (countTrips == 3) break;
 	}
 
 	return combinaisonComposition;
 }
 
 /* This method return the composition of a two pairs combinaison. */
-CombinaisonComposition Combinaison::TwoPairs(Deck deck) {
+CombinaisonComposition Combinaison::TwoPairs(Deck hand, Deck river) {
+	CombinaisonComposition combinaisonComposition;
 
-	/* if the input deck has 7 cards, it means it is player's hand + river. Then extract the river.*/
-	Deck river;
-	if (deck.GetCardList()->size() == CARDS_HAND + CARDS_RIVER) river = Deck(deck.Begin() + 2, deck.End());
+	Deck twoPairs;
+	Deck deck = hand.Concat(river);
 
 	/* Pair number in the deck. */
 	int pairNumber = deck.CountCombinaison(combinaisonTypes::pair);
 
 	/* If the river as the same pair number than the hand more the river, then river contains all pairs or if the number of pair isn't at least 2. */
-	if (river.CountCombinaison(combinaisonTypes::pair) == pairNumber || pairNumber < 2) {
-		CombinaisonComposition nullCombinaison;
-		return nullCombinaison;
-	}
+	if (river.CountCombinaison(combinaisonTypes::pair) == pairNumber || pairNumber < 2 || hand[0].GetValue() == hand[1].GetValue()) return combinaisonComposition;
 
-	/* Now, it is sure there are double pairs. */
-	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = true;
-	combinaisonComposition.combinaison_ = combinaisonTypes::twoPairs;
+	bool isTwoPairs = true;
 
-	Deck pairList, d(deck);
-
-	/* Create a vector containning just pairs. */
-	for (int i = 0; i < pairNumber; i++) {
-		CombinaisonComposition pair = Pair(d);
-		pairList = pairList + pair.cards_;
-		d.EraseCards(pair.cards_);
-	}
-
-	/* Sort pairs by value. */
-	pairList.SortCardListByValue();
-
-	/* If there are 3 pairs, then the program has to choose the strongest ones not contained by the river. */
-	if (pairNumber == 3) {
-		/* Restore the hand. */
-		Deck hand(deck.Begin(), deck.Begin() + 2);
-
-		/* The combinaison has always the strongest pair. Now choose the second one. */
-		combinaisonComposition.cards_ = { pairList.End() - 2, pairList.End() };
-		/* If the hand has a card of the middle pair or the hand has not cards belonging to two weekest pairs. */
-		if (hand.Count(pairList[2]) || !(hand.Count(pairList[0]) || hand.Count(pairList[2]))) {
-			combinaisonComposition.cards_.GetCardList()->insert(combinaisonComposition.cards_.Begin(), pairList.Begin() + 2, pairList.Begin() + 4);
-		}
-		/* If the hand has a card belonging to the weekest pair. */
+	/* If each card of the hand creates a pair, then it is a Two Pairs combinaison. */
+	for each(Card card in *hand.GetCardList()) {
+		Deck pair(deck);
+		pair.ExtractCards(card.GetValue());
+		/* If the extracted cards are a pair, then add it to the deck twoPairs, that will remain to the combinaison. */
+		if (pair.GetCardList()->size() == 2) twoPairs = twoPairs + pair;
 		else {
-			combinaisonComposition.cards_.GetCardList()->insert(combinaisonComposition.cards_.Begin(), pairList.Begin(), pairList.Begin() + 2);
+			isTwoPairs = false;
+			break;
 		}
 	}
-	else {
-		combinaisonComposition.cards_ = pairList;
+
+	/* If there are two pairs created by the hand. */
+	if (isTwoPairs) {
+		combinaisonComposition.isCombinaison_ = true;
+		combinaisonComposition.combinaison_ = combinaisonTypes::twoPairs;
+		combinaisonComposition.cards_ = twoPairs;
 	}
 
 	return combinaisonComposition;
 }
 
 /* This method return the composition of a pair combinaison. */
-CombinaisonComposition Combinaison::Pair(Deck deck) {
-
+CombinaisonComposition Combinaison::Pair(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
-	combinaisonComposition.isCombinaison_ = false;
 
-	vector<Card> cardList;
+	Deck deck = hand.Concat(river);		// Build the full deck.
 
-	vector<string> valueList = Deck::ValueList();
-	for (vector<string>::iterator itString = valueList.begin(); itString != valueList.end(); itString++) {
-		int countPair = 0;
-		cardList.clear();
-		for (vector<Card>::iterator itCard = deck.Begin(); itCard != deck.End(); itCard++) {
-			if ((*itCard).GetValue() == *itString) {
-				countPair += 1;
-				cardList.push_back(*itCard);
-			}
-			if (countPair == 2) {
-				combinaisonComposition.isCombinaison_ = true;
-				combinaisonComposition.combinaison_ = combinaisonTypes::pair;
-				combinaisonComposition.cards_ = cardList;
-				break;
-			}
-		}
-		if (countPair == 2) break;
+	/* If deck does not contain at least one pair, return null combinaison. */
+	if (!deck.CountCombinaison(combinaisonTypes::pair)) return combinaisonComposition;
+
+	/* Get the cards value of the hand*/
+	string hand0Value = hand[0].GetValue();
+	string hand1Value = hand[1].GetValue();
+
+	/* If the pair is just build with hand's cards. */
+	if (hand0Value == hand1Value) {
+		combinaisonComposition.isCombinaison_ = true;
+		combinaisonComposition.combinaison_ = combinaisonTypes::pair;
+		combinaisonComposition.cards_ = hand;
+	}
+	/* If the pair is build with the first card of the hand, and another card in the river. */
+	else if (river.Count(hand0Value)) {
+		river.ExtractCards(hand0Value);
+		combinaisonComposition.isCombinaison_ = true;
+		combinaisonComposition.combinaison_ = combinaisonTypes::pair;
+		combinaisonComposition.cards_ = Deck::ToDeck({ hand[0] }) + river;
+	}
+	/* If the pair is build with the second card of the hand, and another card in the river. */
+	else if (river.Count(hand1Value)) {
+		river.ExtractCards(hand1Value);
+		combinaisonComposition.isCombinaison_ = true;
+		combinaisonComposition.combinaison_ = combinaisonTypes::pair;
+		combinaisonComposition.cards_ = Deck::ToDeck({ hand[1] }) + river;
 	}
 
 	return combinaisonComposition;
 }
 
 /* Return the highest card of the deck. It is not considered as combinaison. */
-CombinaisonComposition Combinaison::HighCard(Deck deck) {
+CombinaisonComposition Combinaison::HighCard(Deck hand) {
 	CombinaisonComposition combinaisonComposition;
-
-	combinaisonComposition.isCombinaison_ = false;
 	combinaisonComposition.combinaison_ = combinaisonTypes::highCard;
 
-	if (Card::ConvertCardValueToNumber(deck[0].GetValue()) > Card::ConvertCardValueToNumber(deck[1].GetValue()))
-		combinaisonComposition.cards_ = Deck::ToDeck({ deck[0] });
+	/* Compare the 2 cards. Return the strongest one. */
+	if (Card::ConvertCardValueToNumber(hand[0].GetValue()) > Card::ConvertCardValueToNumber(hand[1].GetValue()))
+		combinaisonComposition.cards_ = Deck::ToDeck({ hand[0] });
 	else
-		combinaisonComposition.cards_ = Deck::ToDeck({ deck[1] });
+		combinaisonComposition.cards_ = Deck::ToDeck({ hand[1] });
 
 	return combinaisonComposition;
 }
@@ -483,7 +437,7 @@ bool Combinaison::operator==(Combinaison combinaison) {
 
 	if (combinaisonComposition_.combinaison_ == combinaison.combinaisonComposition_.combinaison_
 		&&	valuesOfThis == valuesCombinaison
-		&&	Card::ConvertCardValueToNumber(highestCard_.GetValue()) == Card::ConvertCardValueToNumber(combinaison.highestCard_.GetValue())) {
+		&& Card::ConvertCardValueToNumber(highestCard_.GetValue()) == Card::ConvertCardValueToNumber(combinaison.highestCard_.GetValue())) {
 		cout << "Tie game !" << endl;
 		isEqual = true;
 	}

@@ -40,7 +40,7 @@ BeginDeck::BeginDeck() {
 
 /* This method permit to draw one or many cards. The number of cards to draw is given in parameters.
 Each picked card is draw from the end of the vector (Ex : for a full deck, 2 cards picked are deck[51] and deck [50], the card deck[52] is the burned cards). */
-vector<Card> BeginDeck::DrawCard(int number)
+void BeginDeck::DrawCard(int number)
 {
 	/* In poker rules, 5 cards max can be drawn at the same time. */
 	number = number > 5 ? 5 : number;
@@ -61,7 +61,7 @@ vector<Card> BeginDeck::DrawCard(int number)
 	/* Reverse the vector because this one was filled upside down. */
 	reverse(cards.begin(), cards.end());
 
-	return cards;
+	cardList_ = cards;
 }
 
 /* This method shake the deck. Initially, the deck isn't shaked. */
