@@ -28,8 +28,8 @@ int main()
 			Combinaison combi(hand, river);
 
             MenuPokerStart mstart;
-            mstart.Execute();
-            Game client(application);
+            mstart.Execute();           
+            Game* client = new Game(application);
             MenuPokerGame mgame(client);
             mgame.Execute();
               

@@ -38,7 +38,9 @@ void Menu::ShowMenu()
 	}
 	if (gameIsCreate_ == true) {
 		// cout << Game_->player_->allMyMoney_ << endl;
-		//game_->GetPlayer()->PrintMoneyAndTokens();
+		//game_->GetRound()->Follow();
+		game_->GetPlayer()->PrintMoneyAndTokens();
+		cout << game_->GetPlayer()->GetAllMoneys() << " argent " << endl;
 	}
 }
 
@@ -90,7 +92,7 @@ bool Menu::Leave()
 {
 	bool end = false;
 	char answer;
-	cout << "Do you want to leave (o/n) ?";
+	cout << "Do you want to leave the game (o/n) ?";
 	cin >> answer;
 	if ((answer == 'o') || (answer == 'O')) end = true;
 	return end;
