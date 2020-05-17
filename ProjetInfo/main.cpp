@@ -22,17 +22,18 @@ int main()
             application = false;
             //start a game as client
 
+
 			Deck hand({ Card("1", "club"), Card("2", "club") });
 			Deck river({ Card("4", "diamond"), Card("5", "diamond"), Card("King", "spade"), Card("4", "heart"), Card("Queen", "club") });
 
 			Combinaison combi(hand, river);
 
+
             MenuPokerStart mstart;
             mstart.Execute();           
             Game* client = new Game(application);
             MenuPokerGame mgame(client);
-            mgame.Execute();
-              
+            mgame.Execute();              
 
             //en of the game
             condition = true;				
@@ -40,10 +41,12 @@ int main()
         else if (choice == 1) {
             application = true;
             // start a game as server
-            Game serveur(application);
-
+            MenuPokerStart mstart;
+            mstart.Execute();
+            Game* client = new Game(application);
+            MenuPokerGame mgame(client);
+            mgame.Execute();
          
-
             //end of the game
             condition = true;
         }
@@ -51,9 +54,7 @@ int main()
             cout << "Input Error, retype" << endl;  
         }
 
-
-
-
+             
         cout << endl << "Do you want to restart a game with your friend ?" << endl;
         cout << "=== Write '1' to restart ===" << endl;
         cin >> choice;
