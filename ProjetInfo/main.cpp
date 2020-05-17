@@ -22,14 +22,10 @@ int main()
             application = false;
             //start a game as client
 
-			Deck hand1({ Card("7", "club"), Card("2", "heart") }), hand2({Card("2","diamond"), Card("4","heart")});
-			Deck river({ Card("7", "diamond"), Card("4", "spade"), Card("King", "club"), Card("2", "spade"), Card("King", "heart") });
+			Deck hand({ Card("1", "club"), Card("2", "club") });
+			Deck river({ Card("4", "diamond"), Card("5", "diamond"), Card("King", "spade"), Card("4", "heart"), Card("Queen", "club") });
 
-			Combinaison combi1(hand1, river);
-			Combinaison combi2(hand2, river);
-
-			bool3States myBool = combi1 > combi2;
-			system("pause");
+			Combinaison combi(hand, river);
 
             MenuPokerStart mstart;
             mstart.Execute();

@@ -58,6 +58,7 @@ public:
 	bool operator==(const Card&) const;									// Overdefinition of == operator.
 	bool operator!=(const Card& c) const { return !(*this == c); };		// Overdefinition of != operator.
 	bool operator<(const Card&) const;									// Overload of < operator (based on card value).
+	void operator=(const Card&);
 
 	static int ConvertCardValueToNumber(string); // Convert the card value in parameter to the correspondant number.
 };
@@ -77,9 +78,10 @@ public:
 
 	vector<Card>* GetCardList() { return &cardList_; };		// Return the collection of cards of the deck.
 
-	Card operator[](const int i) const { return cardList_[i]; };			// Overdefiniton of the [] operator.
+	Card operator[](const int i) const { return cardList_[i]; };			// Overdefiniton of the [] operator. Used just to get the value : cannot do the assignment.
 	Deck operator+(Deck);													// Overdefinition of + operator.
 	bool operator==(Deck d) const { return cardList_ == d.cardList_; };		// Overdefinition of == operator.
+	bool operator!=(Deck d) const { return !(*this == d); };				// Overdefinition of != operator
 	void operator=(Deck d) { cardList_ = d.cardList_; };					// Overdefinition of affectation operator.
 
 	vector<Card>::iterator Begin() { return cardList_.begin(); };	// Return the first iterator of the collection of cards.
@@ -99,6 +101,8 @@ public:
 	int CountCombinaison(combinaisonTypes);		// Count the number of specific combinaison in the deck such as Pair, Trip and Quad.
 	bool IsStraight();							// Return true if the vector of cards is straight.
 	void RemoveSameValueCards();				// Remove from the deck all the cards that have the same value.
+	bool Equivalent(Deck);						// Return true if two deck are equivalent : they have the same sie and the same card in a different order.
+	Deck Concat(Deck);							// Methd that return a deck build with the concatenation of the object and the deck in parameters.
 
 	void ExtractCards(string);			// Extract a subvector all cards contain the string key.
 	void EraseCards(string);			// Delete cards containning the key from the collection.
@@ -111,7 +115,7 @@ private:
 	bool isShaked_; // Is the deck shaked or not ?
 public:
 	BeginDeck();						// COnstructor of the deck : create a deck with the 52 cards.
-	vector<Card> DrawCard(int = 1);		// Allow to pick a/many card(s) from the deck (max 5 cards).
+	void DrawCard(int = 1);		// Allow to pick a/many card(s) from the deck (max 5 cards).
 	void ShakeDeck();					// Shake the deck.
 };
 
@@ -121,8 +125,8 @@ public:
 
 /* Struct used to identified a combinaison. */
 struct CombinaisonComposition { 
-	combinaisonTypes combinaison_;	// Type of the combinaison (check combinaisonTypes enumeration).
-	Deck cards_;					// Cards involved in the combinaison.
+	combinaisonTypes combinaison_;			// Type of the combinaison (check combinaisonTypes enumeration).
+	Deck cards_;							// Cards involved in the combinaison.
 	bool isCombinaison_ = false;			// Is there a specific combinaison ?
 };
 
@@ -134,16 +138,16 @@ private:
 public:
 	Combinaison(Deck, Deck);							// The class is built with 2 decks, the first one is the player's hand and the second one is the river.
 
-	static CombinaisonComposition RoyalFlush(Deck);		// Is the cards create a RoyalFlush combinaison ?
-	static CombinaisonComposition StraightFlush(Deck);	// Is the cards create a Straight Flush combinaison ?
-	static CombinaisonComposition Quads(Deck);			// Is the cards create a Quads combinaison ?
-	static CombinaisonComposition Fullhouse(Deck);		// Is the cards create a Fullhouse combinaison ?
-	static CombinaisonComposition Flush(Deck);			// Is the cards create a Flush combinaison ?
-	static CombinaisonComposition Straight(Deck);		// Is the cards create a Straight combinaison ?
-	static CombinaisonComposition Trips(Deck);			// Is the cards create a Trips combinaison ?
-	static CombinaisonComposition TwoPairs(Deck);		// Is the cards create a TwoPairs combinaison ?
-	static CombinaisonComposition Pair(Deck);			// Is the cards create a Pair combinaison ?
-	static CombinaisonComposition HighCard(Deck);		// The highest card of the deck if any combinaison is created
+	static CombinaisonComposition RoyalFlush(Deck, Deck);		// Is the cards create a RoyalFlush combinaison ?
+	static CombinaisonComposition StraightFlush(Deck, Deck);	// Is the cards create a Straight Flush combinaison ?
+	static CombinaisonComposition Quads(Deck, Deck);			// Is the cards create a Quads combinaison ?
+	static CombinaisonComposition Fullhouse(Deck);				// Is the cards create a Fullhouse combinaison ?
+	static CombinaisonComposition Flush(Deck, Deck);			// Is the cards create a Flush combinaison ?
+	static CombinaisonComposition Straight(Deck, Deck);			// Is the cards create a Straight combinaison ?
+	static CombinaisonComposition Trips(Deck, Deck);			// Is the cards create a Trips combinaison ?
+	static CombinaisonComposition TwoPairs(Deck, Deck);			// Is the cards create a TwoPairs combinaison ?
+	static CombinaisonComposition Pair(Deck, Deck);				// Is the cards create a Pair combinaison ?
+	static CombinaisonComposition HighCard(Deck);				// The highest card of the deck if any combinaison is created
 
 	bool operator==(Combinaison);					// Overdefinition of == operator.
 	bool3States operator<(Combinaison);				// Overdefinition of < operator.
