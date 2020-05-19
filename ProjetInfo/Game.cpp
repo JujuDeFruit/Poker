@@ -3,12 +3,6 @@
 #include <iostream>
 using namespace std;
 
-
-
-
-
-
-
 Game::Game(bool application) {
 	server_ = application;	
 	player_ = new Player;	

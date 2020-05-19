@@ -3,6 +3,7 @@
 #include "card_definitions.h"
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 #pragma region Constructor
@@ -207,32 +208,30 @@ void Round::Bet() {
 	player_->SetTokens(token100, 4);
 }
 
-#pragma region River Evolution
+#pragma region Card gestion
 
 /* Reveal the first 3 cards of the river. */
 void Round::Flop() {
 	/* If any cards are face up, then reveal the 3 first ones. */
 	if (!river_.GetCardList()->size()) river_ += beginDeck_.DrawCard(3);
+	PrintRiver();
 }
 
 /* Reveal the 4th card of the river. */
 void Round::Turn() {
 	if (beginDeck_.GetCardList()->size() == 3) river_ += beginDeck_.DrawCard();
+	PrintRiver();
 }
 
 /* Reveal the last card of the river. */
 void Round::River() {
 	if (river_.GetCardList()->size() == 4) river_ += beginDeck_.DrawCard();
+	PrintRiver();
 }
-
-#pragma endregion
-
-#pragma region Usefull Methods
 
 /* Print the cards in the river. */
 void Round::PrintRiver() {
 	river_.PrintDeck();
-
 }
 
 #pragma endregion
