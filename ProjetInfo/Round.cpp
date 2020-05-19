@@ -3,27 +3,28 @@
 #include "card_definitions.h"
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 #pragma region Constructor
 
 Round::Round(Player* player) {
-	player_= player;
-  BeginDeck beginDeck;
+	player_ = player;
+	BeginDeck beginDeck;
 	beginDeck.ShakeDeck();
 	beginDeck_ = beginDeck;
 }
 
 #pragma endregion
 
-void Round::Follow() {	
-	if (player_->GetAllMoneys()< moneyPlayedOpponent_) {
+void Round::Follow() {
+	if (player_->GetAllMoneys() < moneyPlayedOpponent_) {
 		cout << endl << "You can't follow" << endl;
 		system("pause");
 		return;
-	}	
+	}
 	bool condition = false;
-	unsigned int nbTokens, token100=0, token50=0, token25=0, token5=0, token1=0,yourBet=0;
+	unsigned int nbTokens, token100 = 0, token50 = 0, token25 = 0, token5 = 0, token1 = 0, yourBet = 0;
 	cout << "Choose the tokens : " << endl;
 	while (yourBet != moneyPlayedOpponent_) {
 		while (condition == false) { //Tokens of 100$
@@ -93,17 +94,17 @@ void Round::Follow() {
 		}
 	}
 	//to know how many tokens you played and update the actually tokens you will have with you		
-	tokensPlayedByYou_[0] = tokensPlayedByYou_[0]+token1;
-	tokensPlayedByYou_[1] = tokensPlayedByYou_[1]+token5;
-	tokensPlayedByYou_[2] = tokensPlayedByYou_[2]+token25;
-	tokensPlayedByYou_[3] = tokensPlayedByYou_[3]+token50;
-	tokensPlayedByYou_[4] = tokensPlayedByYou_[4]+token100;
+	tokensPlayedByYou_[0] = tokensPlayedByYou_[0] + token1;
+	tokensPlayedByYou_[1] = tokensPlayedByYou_[1] + token5;
+	tokensPlayedByYou_[2] = tokensPlayedByYou_[2] + token25;
+	tokensPlayedByYou_[3] = tokensPlayedByYou_[3] + token50;
+	tokensPlayedByYou_[4] = tokensPlayedByYou_[4] + token100;
 	player_->SetTokens(token1, 0);
 	player_->SetTokens(token5, 1);
 	player_->SetTokens(token25, 2);
 	player_->SetTokens(token50, 3);
 	player_->SetTokens(token100, 4);
-}	
+}
 
 void Round::All_In() {
 	tokensPlayedByYou_[0] = tokensPlayedByYou_[0] + player_->GetTokens()[0];
@@ -125,7 +126,7 @@ void Round::Bet() {
 		return;
 	}
 	bool condition = false;
-	unsigned int nbTokens, token100=0, token50=0, token25=0, token5=0, token1=0, yourBet=0;
+	unsigned int nbTokens, token100 = 0, token50 = 0, token25 = 0, token5 = 0, token1 = 0, yourBet = 0;
 	cout << "Choose the tokens : " << endl;
 	while (yourBet <= moneyPlayedOpponent_) {
 		while (condition == false) { //Tokens of 100$
@@ -207,32 +208,30 @@ void Round::Bet() {
 	player_->SetTokens(token100, 4);
 }
 
-#pragma region River Evolution
+#pragma region Card gestion
 
 /* Reveal the first 3 cards of the river. */
 void Round::Flop() {
 	/* If any cards are face up, then reveal the 3 first ones. */
 	if (!river_.GetCardList()->size()) river_ += beginDeck_.DrawCard(3);
+	PrintRiver();
 }
 
 /* Reveal the 4th card of the river. */
 void Round::Turn() {
 	if (beginDeck_.GetCardList()->size() == 3) river_ += beginDeck_.DrawCard();
+	PrintRiver();
 }
 
 /* Reveal the last card of the river. */
 void Round::River() {
 	if (river_.GetCardList()->size() == 4) river_ += beginDeck_.DrawCard();
+	PrintRiver();
 }
-
-#pragma endregion
-
-#pragma region Usefull Methods
 
 /* Print the cards in the river. */
 void Round::PrintRiver() {
 	river_.PrintDeck();
-
 }
 
 #pragma endregion

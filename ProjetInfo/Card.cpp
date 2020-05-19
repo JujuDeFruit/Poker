@@ -24,6 +24,8 @@ Card::Card(string number, string suit)
 /* Print a card with the correspondant symbol. */
 void Card::PrintCard()
 {
+	cout << " |";
+
 	/* Set the flux mode to print Unicode-16 text */
 	_setmode(_fileno(stdout), _O_U16TEXT);
 
@@ -51,10 +53,12 @@ void Card::PrintCard()
 	const wchar_t* val = value.c_str(); // Converting to wchar_t* type
 
 	/* Print Unicode-16 text*/
-	wcout << value + L"\t" + symbol << endl;
+	wcout << value + L"\t" + symbol;
 	
 	/* Reset the flux mode to print standard text */
 	_setmode(_fileno(stdout), _O_TEXT);
+
+	cout << "| ";
 }
 
 /* Static method that permit to cast cards' value (string) to its int value (from 1 to 13 [King]). */
