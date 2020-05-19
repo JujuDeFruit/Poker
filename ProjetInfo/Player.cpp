@@ -2,15 +2,12 @@
 #include "game_definitions.h"
 #include <iostream>
 #include <string>
+
 using namespace std;
-
-
-
 
 Player::Player() {	
 	cout << "What is your name ?" << endl;
-	cin >> name_;
-	
+	getline(cin >> ws, name_);
 	PrintMoneyAndTokens();
 }
 

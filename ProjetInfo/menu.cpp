@@ -15,14 +15,9 @@ OptionMenu::OptionMenu(const string &name, const string &description)
 
 // Definition des methodes de la classe Menu
 
-Menu::Menu(const string & title) : title_(title)
-{
-}
+Menu::Menu(const string & title) : title_(title) {}
 
-void Menu::SetTitle(const string &title)
-{
-	title_ = title;
-}
+void Menu::SetTitle(const string &title) {	title_ = title; }
 
 void Menu::AddOption(const string &nom, const string &description)
 {
