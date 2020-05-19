@@ -4,11 +4,10 @@
 #include <vector>
 using namespace std;
 
-// ============================= PLAYER ====================*========= //
+// ============================= PLAYER ============================= //
 class Player {
 private:
 	string name_;
-	Round* currentRound_;
 	Deck main;
 	vector<unsigned int> tokens_{ 20, 10,4,2,1 };	//index0: token 1$ - index1: token 5$ - index2: token 25$ - index3: token 50$ - index4: token 100$			
 	unsigned int allMyMoney_;					//esay way to find all the moneys of the player
