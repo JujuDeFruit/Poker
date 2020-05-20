@@ -17,18 +17,15 @@ MenuPokerStart::MenuPokerStart() : Menu("MenuPokerStart :") {
 MenuPokerGame::MenuPokerGame(Game* game) : Menu("Game :") {
     Menu::game_= game;
     gameIsCreate_ = true;
-  
-	bool isInitFileEmpty = false;
 
 	string file = "/__init__.txt";
 	ODrive od;
 
-	string initialContentFile = od.readFile(file);
-
-	od.writeInFile(file, game->GetPlayer()->GetName() + ":ready", ios_base::app);
-	if (initialContentFile == "") {
+	if (!game->GetServer()) {
 		od.waitForChange(file);
-		od.writeInFile(file, "Ok", ios_base::app);
+	}
+	else {
+		od.writeInFile(file, game->GetPlayer()->GetName() + ":ready", ios_base::app);
 	}
 
     AddOption("bet", "Bet a sum");

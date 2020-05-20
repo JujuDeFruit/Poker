@@ -83,3 +83,4 @@ Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
 Message : "julien:ready"	 | 	File : "/Is_Game_Ready.txt".
 Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
 Message : "aleis:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "julien:ready"	 | 	File : "/__init__.txt".
