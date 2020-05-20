@@ -9,11 +9,13 @@ using namespace std;
 
 #pragma region Constructor
 
-Round::Round(Player* player) {
+Round::Round(Player* player, bool isServer) {
 	player_ = player;
-	BeginDeck beginDeck;
-	beginDeck.ShakeDeck();
-	beginDeck_ = beginDeck;
+	if (isServer) {
+		BeginDeck beginDeck;
+		beginDeck.ShakeDeck();
+		beginDeck_ = beginDeck;
+	}
 	cout << "Round !" << endl;
 	DrawHand();
 }
