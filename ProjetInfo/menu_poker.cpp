@@ -17,7 +17,7 @@ MenuPokerStart::MenuPokerStart() : Menu("MenuPokerStart :") {
 MenuPokerGame::MenuPokerGame(Game* game) : Menu("Game :") {
     Menu::game_= game;
     gameIsCreate_ = true;
-
+  
 	bool isInitFileEmpty = false;
 
 	string file = "/__init__.txt";
