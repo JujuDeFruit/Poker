@@ -69,5 +69,4 @@ public:
 	Player* GetPlayer() { return player_; };
 	void SetPlayer(Player* player) { player_ = player; };
 	void Start();
-	void ClearAllFiles();
 };

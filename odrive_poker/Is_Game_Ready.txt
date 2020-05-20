@@ -1,5 +1,2 @@
-NULL
-julien:ready
-alexis:ready
 Ok
-Ok
+aleis:ready
