@@ -1,6 +1,7 @@
 #ifndef ODRIVE_H
 #define ODRIVE_H
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ class ODrive
 	string odErrorPath_;
     bool debugMode_;
 public:
-    ODrive(string =".odrive-agent", string ="source\\repos\\ProjetInfo", bool debugMode=false);
+    ODrive(string =".odrive-agent", bool debugMode=false);
     string getFullName(string file) {return odDrivePath_+'/'+file;}
     void sync(string dir);
     void refresh(string dir);
@@ -24,6 +25,7 @@ public:
 
 	void writeInErrorLogFile(string);
 	void writeInFile(string, string, ios_base::openmode);
+	void writeInFile(string, vector<string>);
 	string getOdDrivePath() const { return odDrivePath_; };
 };
 

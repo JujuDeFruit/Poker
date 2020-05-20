@@ -8,12 +8,13 @@
 #include <thread>
 #include <chrono>
 #include "odrive.h"
+#include <list>
+#pragma message("SOLUTIONDIR == " SOLUTIONDIR)
 
 #if defined(_WIN32) || defined(WIN32)
 #define stat _stat
 #pragma warning(suppress : 4996)
 #endif
-
 
 using namespace std;
 
@@ -24,7 +25,7 @@ using namespace std;
  * @param odDriveDir the path of the mounting point of the drive
  * @param debugMode  output odrive information to the console
  */
-ODrive::ODrive(string odAgentDir, string odDriveDir, bool debugMode)
+ODrive::ODrive(string odAgentDir, bool debugMode)
 {
 	ostringstream osAgent, osDrive, osError;
 	string logFile = "odrive_class.log";
@@ -35,8 +36,8 @@ ODrive::ODrive(string odAgentDir, string odDriveDir, bool debugMode)
 	redirString_ = " >> " + logFile + " 2>&1";
 #elif defined(_WIN32) || defined(WIN32)
 	osAgent << getenv("HOMEDRIVE") << getenv("HOMEPATH") << '\\' << odAgentDir << "\\bin\\odrive";
-	osDrive << getenv("HOMEDRIVE") << getenv("HOMEPATH") << '\\' << odDriveDir << "\\odrive_poker";
-	osError << getenv("HOMEDRIVE") << getenv("HOMEPATH") << '\\' << odAgentDir << "\\log\\error.txt";
+	osDrive << SOLUTIONDIR << "odrive_poker";
+	osError << SOLUTIONDIR << "error.txt";
 	redirString_ = " >> " + logFile + " 2>&1";
 #endif
 
@@ -206,7 +207,6 @@ void ODrive::writeInErrorLogFile(string message) {
  * @param mode : opening mode (append or erase before).
  */
 void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
-
 	ODrive od;
 	od.sync(file); // Create the file
 
@@ -217,7 +217,30 @@ void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 		if (ofile.bad()) writeInErrorLogFile("Writing error ! Message \"" + message + "\" not printed. ");
 		else writeInErrorLogFile("Message : \"" + message + "\"\t | \tFile : \"" + file + "\".");
 	}
+	ofile.close();
+}
 
+/** Overload of writeInfIle method to write many messages.
+ *
+ * @param file : file name.
+ * @param messages : list of messages to print.
+ */
+void ODrive::writeInFile(string file, vector<string> messages) {
+	if (messages.size()) return;
+
+	ODrive od;
+	od.sync(file); // Create the file
+
+	ofstream ofile(od.getFullName(file), ofstream::app);
+	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
+	else {
+		for each(string message in messages) {
+			ofile << message << endl;
+			if (ofile.bad()) writeInErrorLogFile("Writing error ! Message \"" + message + "\" not printed. ");
+			else writeInErrorLogFile("Message : \"" + message + "\"\t | \tFile : \"" + file + "\".");
+		}
+	}
+	ofile.close();
 }
 
 #pragma endregion

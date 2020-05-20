@@ -13,12 +13,13 @@ MenuPokerStart::MenuPokerStart() : Menu("MenuPokerStart :") {
 
 //======================================= Menu2 =========================================/
 
-MenuPokerGame::MenuPokerGame(Game* game) : Menu("MenuPokerGame :") {
+MenuPokerGame::MenuPokerGame(Game* game) : Menu("Game :") {
     Menu::game_= game;
     gameIsCreate_ = true;
 
 	string file = "/Is_Game_Ready.txt";
 	ODrive od;
+
 	od.writeInFile(file, game->GetPlayer()->GetName() + ":ready", ios_base::app);
 	od.waitForChange(file);
 	od.writeInFile(file, "Ok", ios_base::app);
