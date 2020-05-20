@@ -17,7 +17,8 @@ MenuPokerGame::MenuPokerGame(Game* game) : Menu("MenuPokerGame :") {
     Menu::game_= game;
     gameIsCreate_ = true;
 
-	string file = "/Is_Game_Ready.txt";
+	//string file = "/Is_Game_Ready.txt";
+    string file = "Google Drive\\Mini Projet Info\\odrive_poker\\Is_Game_Ready.txt";
 	ODrive od;
 	od.writeInFile(file, game->GetPlayer()->GetName() + ":ready", ios_base::app);
 	od.waitForChange(file);

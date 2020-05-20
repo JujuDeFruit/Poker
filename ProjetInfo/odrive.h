@@ -12,7 +12,8 @@ class ODrive
 	string odErrorPath_;
     bool debugMode_;
 public:
-    ODrive(string =".odrive-agent", string ="source\\repos\\ProjetInfo", bool debugMode=false);
+    ODrive(string =".odrive-agent", string ="odrive", bool debugMode=false);
+   // ODrive(string = ".odrive-agent", string = "source\\repos\\ProjetInfo", bool debugMode = false);
     string getFullName(string file) {return odDrivePath_+'/'+file;}
     void sync(string dir);
     void refresh(string dir);
