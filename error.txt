@@ -44,3 +44,42 @@ Message : "julien:ready"	 | 	File : "/Is_Game_Ready.txt".
 Message : "alexis:ready"	 | 	File : "/Is_Game_Ready.txt".
 Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
 Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : ".odrive".
+Message : "NULL"	 | 	File : "Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : "River.txt.cloud".
+Message : "NULL"	 | 	File : "Round.txt.cloud".
+Message : "Julien:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : ".odrive".
+Message : "NULL"	 | 	File : "Is_Game_Ready (conflict).txt".
+Message : "NULL"	 | 	File : "Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : "River.txt.cloud".
+Message : "NULL"	 | 	File : "Round.txt.cloud".
+Message : "julien:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : ".odrive".
+Message : "NULL"	 | 	File : "Is_Game_Ready (conflict 2).txt".
+Message : "NULL"	 | 	File : "Is_Game_Ready (conflict).txt".
+Message : "NULL"	 | 	File : "Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : "River.txt.cloud".
+Message : "NULL"	 | 	File : "Round.txt.cloud".
+Message : "alexis:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
+Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : ".odrive".
+Message : "NULL"	 | 	File : "Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : "River.txt.cloud".
+Message : "NULL"	 | 	File : "Round.txt.cloud".
+Message : "julien:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : ".odrive".
+Message : "NULL"	 | 	File : "Is_Game_Ready.txt".
+Message : "NULL"	 | 	File : "River.txt.cloud".
+Message : "NULL"	 | 	File : "Round.txt.cloud".
+Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
+Message : "alexis:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "aleis:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "julien:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
+Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
+Message : "julien:ready"	 | 	File : "/Is_Game_Ready.txt".
+Message : "Ok"	 | 	File : "/Is_Game_Ready.txt".
+Message : "aleis:ready"	 | 	File : "/Is_Game_Ready.txt".

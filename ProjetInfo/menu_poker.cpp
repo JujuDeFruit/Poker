@@ -1,6 +1,7 @@
 #include "menu_definitions.h"
 #include "odrive.h"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -16,14 +17,19 @@ MenuPokerStart::MenuPokerStart() : Menu("MenuPokerStart :") {
 MenuPokerGame::MenuPokerGame(Game* game) : Menu("Game :") {
     Menu::game_= game;
     gameIsCreate_ = true;
+  
+	bool isInitFileEmpty = false;
 
-	//string file = "/Is_Game_Ready.txt";
-    string file = "Google Drive\\Mini Projet Info\\odrive_poker\\Is_Game_Ready.txt";
+	string file = "/__init__.txt";
 	ODrive od;
 
+	string initialContentFile = od.readFile(file);
+
 	od.writeInFile(file, game->GetPlayer()->GetName() + ":ready", ios_base::app);
-	od.waitForChange(file);
-	od.writeInFile(file, "Ok", ios_base::app);
+	if (initialContentFile == "") {
+		od.waitForChange(file);
+		od.writeInFile(file, "Ok", ios_base::app);
+	}
 
     AddOption("bet", "Bet a sum");
     AddOption("follow", "Follow your oppenant");

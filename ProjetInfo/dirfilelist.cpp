@@ -1,5 +1,6 @@
-#include <windows.h>
 #include "dirfilelist.h"
+#include "odrive.h"
+#include <windows.h>
 
 /** Retreive the list of all files in a directory
  *  \param dirName name of the directory to scan
@@ -31,3 +32,19 @@ bool getDirectoryFileList(const string &dirName, list<string> & outputList)
   return error;
 }
 
+/**
+ * Check if the file already exists
+ * @param od : Odrive object where check the file.
+ * @param fileName : name of the file to search.
+ */
+bool fileAlreadyExists(const ODrive &od, const string &fileName) {
+	const string odDrivePath = od.getOdDrivePath();
+
+	list<string> fileList;
+	bool error = getDirectoryFileList(odDrivePath, fileList);
+
+	for each (string file in fileList) {
+		if (fileName == file) return true;
+	}
+	return false;
+}

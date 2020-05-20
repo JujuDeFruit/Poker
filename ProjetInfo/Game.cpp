@@ -9,7 +9,8 @@
 using namespace std;
 
 Game::Game(bool application) {
-	ClearAllFiles();
+	ODrive od;
+	od.ClearAllFiles();
 
 	server_ = application;	
 	player_ = new Player;	
@@ -31,21 +32,3 @@ void Game::Start() {
 	cout << "La partie ce lance" << endl;
 }
 
-/**
- * Clear all the files in the drive when the game is over. 
- */
-void Game::ClearAllFiles() {
-	ODrive od;
-	const string odDrivePath = od.getOdDrivePath();
-
-	list<string> fileList;
-	bool error = getDirectoryFileList(odDrivePath, fileList);
-
-	if (error) od.writeInErrorLogFile("An error occured when game closed.");
-	else {
-		fileList.sort();
-		for each (string file in fileList) {
-			od.writeInFile(file, "NULL", ofstream::out);
-		}
-	}
-}

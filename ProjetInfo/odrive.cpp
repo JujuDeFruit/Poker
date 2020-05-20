@@ -1,15 +1,16 @@
+#pragma message("SOLUTIONDIR == " SOLUTIONDIR)
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include "sys/stat.h"
 #include <ctime>
 #include <thread>
 #include <chrono>
-#include "odrive.h"
 #include <list>
-#pragma message("SOLUTIONDIR == " SOLUTIONDIR)
+#include "odrive.h"
+#include "sys/stat.h"
+#include "dirfilelist.h"
 
 #if defined(_WIN32) || defined(WIN32)
 #define stat _stat
@@ -208,10 +209,14 @@ void ODrive::writeInErrorLogFile(string message) {
  */
 void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 	ODrive od;
-	od.sync(file); // Create the file
+	if(!fileAlreadyExists(od, file)) od.sync(file + ".cloud"); // Create the file
 
 	ofstream ofile(od.getFullName(file), mode);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
+	else if (message == "NULL") {
+		ofile.close();
+		return;
+	}
 	else {
 		ofile << message << endl;
 		if (ofile.bad()) writeInErrorLogFile("Writing error ! Message \"" + message + "\" not printed. ");
@@ -229,7 +234,7 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 	if (messages.size()) return;
 
 	ODrive od;
-	od.sync(file); // Create the file
+	if (!fileAlreadyExists(od, file)) od.sync(file + ".cloud"); // Create the file
 
 	ofstream ofile(od.getFullName(file), ofstream::app);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
@@ -243,4 +248,33 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 	ofile.close();
 }
 
+/**
+ * Clear all the files in the drive when the game is over.
+ */
+void ODrive::clearAllFiles(){
+
+
+	list<string> fileList;
+	bool error = getDirectoryFileList(odDrivePath_, fileList);
+
+	if (error) writeInErrorLogFile("An error occured when game closed.");
+	else {
+		fileList.sort();
+		for each (string file in fileList) {
+			writeInFile(file, "NULL", ofstream::out);
+		}
+	}
+}
+
+string ODrive::readFile(string file) {
+	string text;
+	// If the comm files exists, prints contents
+	if (ifstream(getFullName(file)).good())
+	{
+		ifstream ifile(getFullName(file));
+		getline(ifile, text);
+	}
+
+	return text;
+}
 #pragma endregion
