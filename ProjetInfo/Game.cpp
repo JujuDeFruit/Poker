@@ -10,7 +10,7 @@ using namespace std;
 
 Game::Game(bool application) {
 	ODrive od;
-	od.ClearAllFiles();
+	od.clearAllFiles();
 
 	server_ = application;	
 	player_ = new Player;	
