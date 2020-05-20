@@ -14,7 +14,7 @@ Game::Game(bool application) {
 
 	server_ = application;	
 	player_ = new Player;	
-	round_ = new Round(player_);
+	round_ = new Round(player_, server_);
 
 	//initialization of the game
 	if (server_ == true) { //to know who played first

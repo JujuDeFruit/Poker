@@ -35,7 +35,7 @@ private:
 	vector<unsigned int> tokensPlayedByYou_{ 0,0,0,0,0 };  //to know how many tokens you played
 	bool yourTurn_;	//to know who played first then second..
 public:
-	Round(Player* player);
+	Round(Player* player, bool);
 	void DrawHand();
 	void SetYourTurn(bool turn) { yourTurn_ = turn; };
 	bool GetYourTurn() { return yourTurn_; };
