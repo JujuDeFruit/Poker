@@ -22,10 +22,11 @@ MenuPokerGame::MenuPokerGame(Game* game) : Menu("Game :") {
 	ODrive od;
 
 	if (!game->GetServer()) {
+		od.sync(file);
 		od.waitForChange(file);
 	}
 	else {
-		od.writeInFile(file, game->GetPlayer()->GetName() + ":ready", ios_base::app);
+		od.writeInFile(file,"ready", ios_base::app);
 	}
 
     AddOption("bet", "Bet a sum");

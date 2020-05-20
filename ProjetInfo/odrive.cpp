@@ -88,8 +88,9 @@ void ODrive::sync(string dir)
 }
 
 
-void ODrive::refresh(string dir)
+void ODrive::refresh(string dir = "")
 {
+	dir = dir == "" ? odDrivePath_ : dir;
 	// Wait for 1s
 	this_thread::sleep_for(chrono::seconds(1));
 	// Send refresh command
@@ -209,7 +210,7 @@ void ODrive::writeInErrorLogFile(string message) {
  */
 void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 	ODrive od;
-	if(!fileAlreadyExists(od, file)) od.sync(file + ".cloud"); // Create the file
+	od.sync(file); // Create the file
 
 	ofstream ofile(od.getFullName(file), mode);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
@@ -231,16 +232,16 @@ void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
  * @param messages : list of messages to print.
  */
 void ODrive::writeInFile(string file, vector<string> messages) {
-	if (messages.size()) return;
+	if (!messages.size()) return;
 
 	ODrive od;
-	if (!fileAlreadyExists(od, file)) od.sync(file + ".cloud"); // Create the file
+	od.sync(file); // Create the file
 
 	ofstream ofile(od.getFullName(file), ofstream::app);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
 	else {
 		for each(string message in messages) {
-			ofile << message << endl;
+			ofile << message + "\n";
 			if (ofile.bad()) writeInErrorLogFile("Writing error ! Message \"" + message + "\" not printed. ");
 			else writeInErrorLogFile("Message : \"" + message + "\"\t | \tFile : \"" + file + "\".");
 		}
@@ -266,15 +267,27 @@ void ODrive::clearAllFiles(){
 	}
 }
 
-string ODrive::readFile(string file) {
-	string text;
+/**
+ * Read a file and return a vector for each line of the file.
+ * @param file : the name of the file to read.
+ */
+vector<string> ODrive::readFile(string file) {
+	vector<string> fileContent;
 	// If the comm files exists, prints contents
 	if (ifstream(getFullName(file)).good())
 	{
 		ifstream ifile(getFullName(file));
-		getline(ifile, text);
+		string text;
+		while (!ifile.eof()) {
+			ifile >> text;
+			fileContent.push_back(text);
+		}
+		ifile.close();
 	}
+	else writeInErrorLogFile("Error while opening " + file + " file.");
 
-	return text;
+	fileContent.pop_back();
+
+	return fileContent;
 }
 #pragma endregion

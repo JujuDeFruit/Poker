@@ -5,6 +5,7 @@
 #include <algorithm>    // std::random_shuffle, reverse
 #include<vector>
 #include<string>
+#include "sstream"
 
 #pragma endregion
 
@@ -297,6 +298,24 @@ Deck Deck::Concat(Deck deck) {
 	d.GetCardList()->insert(d.End(), deck.Begin(), deck.End());
 	return d;
 
+}
+
+/*
+ * Deserialize cards and turn in into a deck.
+ * @param cards : list to deserialize.
+ */
+Deck Deck::DeserializeCards(vector<string> cards) {
+	Deck deck;
+	for each (string cardJson in cards) {
+		size_t pos = cardJson.find("+");
+		cardJson.replace(pos, 1, " ");
+		string value, suit;
+		istringstream iss(cardJson);
+		iss >> value >> suit;
+		Card card(value, suit);
+		deck.GetCardList()->push_back(card);
+	}
+	return deck;
 }
 
 #pragma endregion

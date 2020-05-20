@@ -5,6 +5,9 @@
 #include <vector>
 #include "odrive.h"
 
+#include <thread>
+#include <chrono>
+
 using namespace std;
 
 #pragma region Constructor
@@ -16,8 +19,14 @@ Round::Round(Player* player, bool isServer) {
 		beginDeck.ShakeDeck();
 		beginDeck_ = beginDeck;
 	}
-	cout << "Round !" << endl;
+	cout << "Waiting for your partner !" << endl;
 	DrawHand();
+	ODrive od;
+	this_thread::sleep_for(chrono::seconds(1));
+	vector<string> s = od.readFile(player->GetName() + "Hand.txt");
+	Deck test = Deck::DeserializeCards(s);
+	test.PrintDeck();
+	system("pause");
 }
 
 #pragma endregion
@@ -31,7 +40,7 @@ void Round::DrawHand() {
 		cards.push_back(json);
 	}
 	ODrive od;
-	od.writeInFile(player_->GetName() + "Hand", cards);
+	od.writeInFile(player_->GetName() + "Hand.txt", cards);
 }
 
 void Round::Follow() {

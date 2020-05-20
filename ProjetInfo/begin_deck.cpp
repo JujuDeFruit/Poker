@@ -56,8 +56,7 @@ Deck BeginDeck::DrawCard(int number)
 
 	vector<Card> cards; // This entity is the collection of picked cards will be returned. 
 
-	if (!!isShaked_) // Shake the deck if this one wasn't shaked
-		ShakeDeck();
+	if (!isShaked_) ShakeDeck(); // Shake the deck if this one wasn't shaked
 	cardList_.pop_back(); // Burn the first card of the deck before to pick a card.
 
 	int deckSize = cardList_.size(); // Initiale size of the deck.

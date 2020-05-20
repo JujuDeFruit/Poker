@@ -1,5 +1,5 @@
 #pragma region Includes
-
+#include "odrive.h"
 #include"game_definitions.h"
 #include"menu_definitions.h"
 #include"card_definitions.h"
@@ -11,6 +11,9 @@ using namespace std;
 
 int main()
 {
+	ODrive od;
+	od.refresh("");
+
     short unsigned int  choice;
     bool application, condition = false;
     while (condition == false) {
