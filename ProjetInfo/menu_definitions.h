@@ -23,7 +23,7 @@ class Menu{
 protected : 
 	string title_;
 	vector<OptionMenu> listeOptions_;
-    bool gameIsCreate_ = false;			//to know if the game is create
+    bool gameIsCreate_ = false;			//to know if the game is created
     Game* game_ = NULL;
 public:    
     Menu(const string & title);
