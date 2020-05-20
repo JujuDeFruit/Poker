@@ -3,6 +3,7 @@
 #include "card_definitions.h"
 #include <iostream>
 #include <vector>
+#include "odrive.h"
 
 using namespace std;
 
@@ -13,9 +14,23 @@ Round::Round(Player* player) {
 	BeginDeck beginDeck;
 	beginDeck.ShakeDeck();
 	beginDeck_ = beginDeck;
+	cout << "Round !" << endl;
+	DrawHand();
 }
 
 #pragma endregion
+
+void Round::DrawHand() {
+	Deck hand = beginDeck_.DrawCard(2);
+	player_->SetHand(&hand);
+	vector<string> cards;
+	for each (Card card in *hand.GetCardList()) {
+		string json = card.GetValue() + "+" + card.GetSuit();
+		cards.push_back(json);
+	}
+	ODrive od;
+	od.writeInFile(player_->GetName() + "Hand", cards);
+}
 
 void Round::Follow() {
 	if (player_->GetAllMoneys() < moneyPlayedOpponent_) {

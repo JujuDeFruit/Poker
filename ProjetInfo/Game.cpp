@@ -4,10 +4,13 @@
 #include "dirfilelist.h"
 #include <iostream>
 #include <list>
+#include <fstream>
 
 using namespace std;
 
 Game::Game(bool application) {
+	ClearAllFiles();
+
 	server_ = application;	
 	player_ = new Player;	
 	round_ = new Round(player_);
@@ -31,9 +34,9 @@ void Game::Start() {
 /**
  * Clear all the files in the drive when the game is over. 
  */
-Game::~Game() {
+void Game::ClearAllFiles() {
 	ODrive od;
-	string odDrivePath = od.getOdDrivePath();
+	const string odDrivePath = od.getOdDrivePath();
 
 	list<string> fileList;
 	bool error = getDirectoryFileList(odDrivePath, fileList);
@@ -42,7 +45,7 @@ Game::~Game() {
 	else {
 		fileList.sort();
 		for each (string file in fileList) {
-			od.writeInFile(file, "", ios_base::out);
+			od.writeInFile(file, "NULL", ofstream::out);
 		}
 	}
 }

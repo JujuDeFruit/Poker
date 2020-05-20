@@ -18,6 +18,7 @@ public:
 	unsigned int GetAllMoneys();
 	void PrintMoneyAndTokens();
 	string GetName() const { return name_; };
+	void SetHand(Deck* d) { hand_ = d; };
 	//~Player();
 };
 
@@ -35,6 +36,7 @@ private:
 	bool yourTurn_;	//to know who played first then second..
 public:
 	Round(Player* player);
+	void DrawHand();
 	void SetYourTurn(bool turn) { yourTurn_ = turn; };
 	bool GetYourTurn() { return yourTurn_; };
 	unsigned int GetMoneyPlayedOpponent() { return moneyPlayedOpponent_; };
@@ -67,5 +69,5 @@ public:
 	Player* GetPlayer() { return player_; };
 	void SetPlayer(Player* player) { player_ = player; };
 	void Start();
-	~Game();
+	void ClearAllFiles();
 };
