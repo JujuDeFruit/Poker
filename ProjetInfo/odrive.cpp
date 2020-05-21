@@ -209,7 +209,7 @@ void ODrive::writeInErrorLogFile(string message) {
  */
 void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 	ODrive od;
-	if(!fileAlreadyExists(od, file)) od.sync(file + ".cloud"); // Create the file
+	if(!fileAlreadyExists(od, file)) od.sync(file); // Create the file
 
 	ofstream ofile(od.getFullName(file), mode);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
@@ -234,7 +234,7 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 	if (messages.size()) return;
 
 	ODrive od;
-	if (!fileAlreadyExists(od, file)) od.sync(file + ".cloud"); // Create the file
+	if (!fileAlreadyExists(od, file)) od.sync(file); // Create the file
 
 	ofstream ofile(od.getFullName(file), ofstream::app);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");

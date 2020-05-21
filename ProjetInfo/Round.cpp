@@ -16,7 +16,7 @@ Round::Round(Player* player, bool isServer) {
 		beginDeck.ShakeDeck();
 		beginDeck_ = beginDeck;
 	}
-	cout << "Round !" << endl;
+	cout << "Waiting for your partner !" << endl;
 	DrawHand();
 }
 
