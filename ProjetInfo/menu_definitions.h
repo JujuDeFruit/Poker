@@ -24,30 +24,36 @@ protected :
 	string title_;
 	vector<OptionMenu> listeOptions_;
     bool gameIsCreate_ = false;			//to know if the game is created
-    Game* game_ = NULL;
 public:    
     Menu(const string & title);
     void SetTitle(const string &title);
     void AddOption(const string &nom,const string &description);
-    void ShowMenu();
+    virtual void ShowMenu();
     int AskChoix();
-    void Execute();
-    virtual void ExecuteOption(const string &nom,bool &fin);
+    virtual void Execute();
+    virtual void ExecuteOption(const string &nom,bool &fin) = 0;
     bool Leave();
     virtual void Help();
 };
 
-class MenuPokerStart : public Menu
-{
+class MenuPokerStart : public Menu {
+private:
+	Game* game_ = NULL;
 public:
-    MenuPokerStart();
-
+    MenuPokerStart(Game*);
+	virtual void ExecuteOption(const string &nom, bool &fin);
 };
 
 class MenuPokerGame : public Menu { 
-
+private :
+	Round* round_;
+	Deck river_;
+	Deck hand_;
 public :
-    MenuPokerGame(Game* game);
+    MenuPokerGame(Round* round, Deck river, Deck hand);
+	virtual void ExecuteOption(const string &nom, bool &fin);
+	virtual void ShowMenu();
+	virtual void Execute();
 };
 
 #endif

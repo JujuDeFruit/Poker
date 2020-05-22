@@ -221,7 +221,7 @@ void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 	else {
 		ofile << message << endl;
 		if (ofile.bad()) writeInErrorLogFile("Writing error ! Message \"" + message + "\" not printed. ");
-		else writeInErrorLogFile("Message : \"" + message + "\"\t | \tFile : \"" + file + "\".");
+		else writeInErrorLogFile("Message : \"" + message + "\"\t\t\t | \tFile : \"" + file + "\".");
 	}
 	ofile.close();
 }
@@ -243,7 +243,7 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 		for each(string message in messages) {
 			ofile << message + "\n";
 			if (ofile.bad()) writeInErrorLogFile("Writing error ! Message \"" + message + "\" not printed. ");
-			else writeInErrorLogFile("Message : \"" + message + "\"\t | \tFile : \"" + file + "\".");
+			else writeInErrorLogFile("Message : \"" + message + "\"\t\t\t | \tFile : \"" + file + "\".");
 		}
 	}
 	ofile.close();
@@ -286,7 +286,7 @@ vector<string> ODrive::readFile(string file) {
 	}
 	else writeInErrorLogFile("Error while opening " + file + " file.");
 
-	fileContent.pop_back();
+	if (fileContent.size()) fileContent.pop_back();
 
 	return fileContent;
 }

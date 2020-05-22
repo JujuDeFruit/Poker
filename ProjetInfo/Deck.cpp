@@ -267,7 +267,10 @@ int Deck::CountCombinaison(combinaisonTypes e) {
 	return counter;
 }
 
-/* Return true if two deck are equivalent : they have the same size and the same card in a different order. */
+/* 
+ * Return true if two deck are equivalent : they have the same size and the same card in a different order. 
+ * @param deck : deck to try equivalence.
+ */
 bool Deck::Equivalent(Deck deck) {
 	bool equivalent = true;
 	
@@ -292,12 +295,28 @@ bool Deck::Equivalent(Deck deck) {
 	return equivalent;
 }
 
-/* Concat 2 decks, and return the concatenation. */
+/*
+ * Concat 2 decks, and return the concatenation. 
+ * @param deck : deck to add at the end of the object.
+ */
 Deck Deck::Concat(Deck deck) {
 	Deck d(cardList_);
 	d.GetCardList()->insert(d.End(), deck.Begin(), deck.End());
 	return d;
 
+}
+
+/*
+ * Serialize cards to write them in files.
+ * @param deck : deck to serialize.
+ */
+vector<string> Deck::SerializeCards(Deck deck) {
+	vector<string> cards;
+	for each (Card card in *deck.GetCardList()) {
+		string json = card.GetValue() + "+" + card.GetSuit();
+		cards.push_back(json);
+	}
+	return cards;
 }
 
 /*
