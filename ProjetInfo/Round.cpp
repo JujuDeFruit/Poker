@@ -35,6 +35,7 @@ Round::Round(Player* player, int id) {
 	}
 
 	InitialiseRound();
+
 }
 
 #pragma endregion
