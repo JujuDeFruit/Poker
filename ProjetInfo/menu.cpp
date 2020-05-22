@@ -1,4 +1,5 @@
 #include "menu_definitions.h"
+#include "odrive.h"
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
@@ -12,29 +13,19 @@ OptionMenu::OptionMenu(const string &name, const string &description)
 {
 }
 
-
 // Definition des methodes de la classe Menu
 
 Menu::Menu(const string & title) : title_(title) {}
 
 void Menu::SetTitle(const string &title) {	title_ = title; }
 
-void Menu::AddOption(const string &nom, const string &description)
-{
-	listeOptions_.push_back(OptionMenu(nom, description));
-}
-
+void Menu::AddOption(const string &nom, const string &description) { listeOptions_.push_back(OptionMenu(nom, description)); }
 
 void Menu::ShowMenu()
 {
 	cout << title_ << endl;
 	for (int i = 0; i < listeOptions_.size(); i++) {
 		cout << "- " << setw(2) << i << " : " << listeOptions_[i].GetDescription() << endl;
-	}
-	if (gameIsCreate_ == true) {		
-		game_->GetPlayer()->PrintMoneyAndTokens();		
-		cout << "Money plays by the opponent : " << game_->GetRound()->GetMoneyPlayedOpponent() <<"$"<<endl;
-		cout << "Money you played : " << game_->GetRound()->GetMoneyPlayedByYou() << "$" << endl;
 	}
 }
 
@@ -63,25 +54,6 @@ void Menu::Execute()
 	}
 }
 
-void Menu::ExecuteOption(const string &name, bool &end)
-{
-	end = false;
-	//menupokerstart options
-	if (name == "start") end = true;
-	else if (name == "help") Help();
-	//menupokergame options
-	else if (name == "bet") game_->GetRound()->Bet();
-	else if (name == "follow") game_->GetRound()->Follow();
-	else if (name == "all in") game_->GetRound()->All_In(); 
-	else if (name == "check");
-	else if (name == "fold");
-	else if (name == "leave") end = Leave();	
-	else {
-		cout << "Option not defined" << endl;
-		system("pause");
-	}
-}
-
 bool Menu::Leave()
 {
 	bool end = false;
@@ -100,6 +72,3 @@ void Menu::Help()
 	cout << "Une fois l'option executee, vous aurez a nouveau acces au menu." << endl << endl;
 	system("pause");
 }
-
-
-

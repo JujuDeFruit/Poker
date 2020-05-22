@@ -20,21 +20,24 @@ int RandomNumber(int i) { return rand() % i; };
 
 #pragma region Constructor
 
-BeginDeck::BeginDeck() {
-	const vector<string> valueList = Deck::ValueList();
-	const vector<string> suitList = Deck::SuitList();
+BeginDeck::BeginDeck(bool createDeck) {
 
-	/* This part will create the 52 cards deck. Instead of settings all cards manually, we decided to create the deck from the previous lists : NumberList and SuitList*/
-	for (vector<string>::const_iterator itS = suitList.begin(); itS != suitList.end(); itS++)
-	{
-		for (vector<string>::const_iterator itV = valueList.begin(); itV != valueList.end(); itV++)
+	if (createDeck) {
+		const vector<string> valueList = Deck::ValueList();
+		const vector<string> suitList = Deck::SuitList();
+
+		/* This part will create the 52 cards deck. Instead of settings all cards manually, we decided to create the deck from the previous lists : NumberList and SuitList*/
+		for (vector<string>::const_iterator itS = suitList.begin(); itS != suitList.end(); itS++)
 		{
-			Card card(*itV, *itS);
-			cardList_.push_back(card); // Adding the card to the deck
+			for (vector<string>::const_iterator itV = valueList.begin(); itV != valueList.end(); itV++)
+			{
+				Card card(*itV, *itS);
+				cardList_.push_back(card); // Adding the card to the deck
+			}
 		}
+		isShaked_ = false;
+		/*With this method, each card of the deck is unique*/
 	}
-	isShaked_ = false;
-	/*With this method, each card of the deck is unique*/
 }
 
 #pragma endregion
@@ -56,8 +59,7 @@ Deck BeginDeck::DrawCard(int number)
 
 	vector<Card> cards; // This entity is the collection of picked cards will be returned. 
 
-	if (!!isShaked_) // Shake the deck if this one wasn't shaked
-		ShakeDeck();
+	if (!isShaked_) ShakeDeck(); // Shake the deck if this one wasn't shaked
 	cardList_.pop_back(); // Burn the first card of the deck before to pick a card.
 
 	int deckSize = cardList_.size(); // Initiale size of the deck.
@@ -79,6 +81,18 @@ void BeginDeck::ShakeDeck()
 	srand(unsigned(time(0))); // Modifying the seed depending on time (to always be different).
 	random_shuffle(cardList_.begin(), cardList_.end(), RandomNumber); // Shaking the deck depending on the seed.
 	isShaked_ = true;
+}
+
+/* 
+ * Convert a deck to a BeginDeck.
+ * 
+ * @param Deck : deck to convert.
+ */
+BeginDeck BeginDeck::ToBeginDeck(Deck deck) {
+	BeginDeck callback;
+	callback.cardList_ = *deck.GetCardList();
+	callback.isShaked_ = true;
+	return callback;
 }
 
 #pragma endregion

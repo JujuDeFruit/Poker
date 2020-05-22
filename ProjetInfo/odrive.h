@@ -28,7 +28,7 @@ public:
 	void writeInFile(string, vector<string>);
 	void clearAllFiles();
 	string getOdDrivePath() const { return odDrivePath_; };
-	string readFile(string file);
+	vector<string> readFile(string file);
 };
 
 #endif // ODRIVE_H

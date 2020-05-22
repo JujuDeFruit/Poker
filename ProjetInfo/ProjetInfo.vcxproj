@@ -152,7 +152,6 @@
     <ClCompile Include="dirfilelist.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="main2.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="menu_poker.cpp" />
     <ClCompile Include="odrive.cpp" />
