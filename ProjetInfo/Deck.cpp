@@ -5,6 +5,7 @@
 #include <algorithm>    // std::random_shuffle, reverse
 #include<vector>
 #include<string>
+#include "sstream"
 
 #pragma endregion
 
@@ -266,7 +267,10 @@ int Deck::CountCombinaison(combinaisonTypes e) {
 	return counter;
 }
 
-/* Return true if two deck are equivalent : they have the same size and the same card in a different order. */
+/* 
+ * Return true if two deck are equivalent : they have the same size and the same card in a different order. 
+ * @param deck : deck to try equivalence.
+ */
 bool Deck::Equivalent(Deck deck) {
 	bool equivalent = true;
 	
@@ -291,12 +295,46 @@ bool Deck::Equivalent(Deck deck) {
 	return equivalent;
 }
 
-/* Concat 2 decks, and return the concatenation. */
+/*
+ * Concat 2 decks, and return the concatenation. 
+ * @param deck : deck to add at the end of the object.
+ */
 Deck Deck::Concat(Deck deck) {
 	Deck d(cardList_);
 	d.GetCardList()->insert(d.End(), deck.Begin(), deck.End());
 	return d;
 
+}
+
+/*
+ * Serialize cards to write them in files.
+ * @param deck : deck to serialize.
+ */
+vector<string> Deck::SerializeCards(Deck deck) {
+	vector<string> cards;
+	for each (Card card in *deck.GetCardList()) {
+		string json = card.GetValue() + "+" + card.GetSuit();
+		cards.push_back(json);
+	}
+	return cards;
+}
+
+/*
+ * Deserialize cards and turn in into a deck.
+ * @param cards : list to deserialize.
+ */
+Deck Deck::DeserializeCards(vector<string> cards) {
+	Deck deck;
+	for each (string cardJson in cards) {
+		size_t pos = cardJson.find("+");
+		cardJson.replace(pos, 1, " ");
+		string value, suit;
+		istringstream iss(cardJson);
+		iss >> value >> suit;
+		Card card(value, suit);
+		deck.GetCardList()->push_back(card);
+	}
+	return deck;
 }
 
 #pragma endregion

@@ -5,10 +5,11 @@
 
 using namespace std;
 
-Player::Player() {	
+Player::Player(bool isServer) {	
+	isServer_ = isServer;
 	cout << "What is your name ?" << endl;
 	getline(cin >> ws, name_);
-	PrintMoneyAndTokens();
+	//PrintMoneyAndTokens();
 }
 
 unsigned int Player::GetAllMoneys() {		
@@ -21,8 +22,6 @@ void Player::PrintMoneyAndTokens() {
 	cout << "Token 1$: " << tokens_[0] << "  Token 5$: " << tokens_[1] << "  Token 25$: " << tokens_[2] << "  Token 50$: " << tokens_[3] << "  Token 100$: " << tokens_[4] << endl;	
 	cout << "Money you have : " << GetAllMoneys() << " $" << endl;
 }
-
-
 
 //Player::~Player() {
 //	delete tokens_;

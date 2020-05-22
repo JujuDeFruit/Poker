@@ -24,7 +24,7 @@ Card::Card(string number, string suit)
 /* Print a card with the correspondant symbol. */
 void Card::PrintCard()
 {
-	cout << " |";
+	cout << "|";
 
 	/* Set the flux mode to print Unicode-16 text */
 	_setmode(_fileno(stdout), _O_U16TEXT);

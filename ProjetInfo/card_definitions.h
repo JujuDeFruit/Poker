@@ -96,14 +96,16 @@ public:
 	void SortCardListByValue();			// Sort a vector of cards from the lowest value (1) to the highest (King).
 	void SortCardListBySuit();			// Gather same suit cards in a vector.
 
-	bool Has(Deck);								// Return true if the current deck has all the card in parameters.
-	int Count(string);							// Count all the cards from a collection that contains the key.
-	int Count(Card);							// Count the number of card of the deck that fit with the card in parameter.
-	int CountCombinaison(combinaisonTypes);		// Count the number of specific combinaison in the deck such as Pair, Trip and Quad.
-	bool IsStraight();							// Return true if the vector of cards is straight.
-	void RemoveSameValueCards();				// Remove from the deck all the cards that have the same value.
-	bool Equivalent(Deck);						// Return true if two deck are equivalent : they have the same sie and the same card in a different order.
-	Deck Concat(Deck);							// Methd that return a deck build with the concatenation of the object and the deck in parameters.
+	bool Has(Deck);										// Return true if the current deck has all the card in parameters.
+	int Count(string);									// Count all the cards from a collection that contains the key.
+	int Count(Card);									// Count the number of card of the deck that fit with the card in parameter.
+	int CountCombinaison(combinaisonTypes);				// Count the number of specific combinaison in the deck such as Pair, Trip and Quad.
+	bool IsStraight();									// Return true if the vector of cards is straight.
+	void RemoveSameValueCards();						// Remove from the deck all the cards that have the same value.
+	bool Equivalent(Deck);								// Return true if two deck are equivalent : they have the same sie and the same card in a different order.
+	Deck Concat(Deck);									// Methd that return a deck build with the concatenation of the object and the deck in parameters.
+	static vector<string> SerializeCards(Deck);			// Serialize cards.
+	static Deck DeserializeCards(vector<string>);		// Deserialize cards.
 
 	void ExtractCards(string);			// Extract a subvector all cards contain the string key.
 	void EraseCards(string);			// Delete cards containning the key from the collection.
@@ -115,9 +117,10 @@ class BeginDeck : public Deck {
 private:
 	bool isShaked_; // Is the deck shaked or not ?
 public:
-	BeginDeck();						// COnstructor of the deck : create a deck with the 52 cards.
+	BeginDeck(bool = false);			// COnstructor of the deck : create a deck with the 52 cards, if bool == true else nothing.
 	Deck DrawCard(int = 1);				// Allow to pick a/many card(s) from the deck (max 5 cards).
 	void ShakeDeck();					// Shake the deck.
+	static BeginDeck ToBeginDeck(Deck);	// Turn a Deck to a BeginDeck.
 };
 
 #pragma endregion

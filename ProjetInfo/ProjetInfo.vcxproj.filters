@@ -48,9 +48,6 @@
     <ClCompile Include="odrive.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="main2.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="dirfilelist.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>

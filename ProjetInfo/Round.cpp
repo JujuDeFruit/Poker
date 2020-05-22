@@ -1,40 +1,93 @@
 #include "menu_definitions.h"
 #include "game_definitions.h"
 #include "card_definitions.h"
+#include "odrive.h"
+#include <fstream>
 #include <iostream>
 #include <vector>
-#include "odrive.h"
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
 #pragma region Constructor
 
-Round::Round(Player* player, bool isServer) {
+Round::Round(Player* player, int id) {
 	player_ = player;
-	if (isServer) {
-		BeginDeck beginDeck;
-		beginDeck.ShakeDeck();
-		beginDeck_ = beginDeck;
+	roundId = id;
+
+	// To know who played first.
+	if (player_->GetServer()) {
+		if (id % 2 == 0) {
+			yourTurn_ = false;
+		}
+		else {
+			yourTurn_ = true;
+		}
 	}
-	cout << "Waiting for your partner !" << endl;
-	DrawHand();
+	else {
+		if (id % 2 == 0) {
+			yourTurn_ = true;
+		}
+		else {
+			yourTurn_ = false;
+		}
+	}
+
+	InitialiseRound();
+
 }
 
 #pragma endregion
 
-void Round::DrawHand() {
-	Deck hand = beginDeck_.DrawCard(2);
-	player_->SetHand(&hand);
-	vector<string> cards;
-	for each (Card card in *hand.GetCardList()) {
-		string json = card.GetValue() + "+" + card.GetSuit();
-		cards.push_back(json);
-	}
+/* 
+ * Initialise the round, create the deck and draw hands. 
+ */
+void Round::InitialiseRound() {
 	ODrive od;
-	od.writeInFile(player_->GetName() + "Hand", cards);
+	const string deckFile = "Deck.txt";
+	if (player_->GetServer()) {			// If the player is the master, then it manage the deck. 
+		BeginDeck beginDeck(true);
+		beginDeck.ShakeDeck();
+		beginDeck_ = beginDeck;
+		DrawHand();
+		vector<string> deck = Deck::SerializeCards(beginDeck_);
+		od.writeInFile(deckFile, deck);
+	}
+	else {
+		vector<string> callback = od.readFile(deckFile);
+		if (!callback.size()) {
+			od.waitForChange(deckFile);
+			callback = od.readFile(deckFile);
+			beginDeck_ = BeginDeck::ToBeginDeck(Deck::DeserializeCards(callback));
+		}
+		DrawHand();
+		od.writeInFile(deckFile, "NULL", ofstream::out);
+		vector<string> deck = Deck::SerializeCards(beginDeck_);
+		od.writeInFile(deckFile, deck);
+	}
+
+	Start();
 }
 
+void Round::Start() {
+	MenuPokerGame mgame(this, river_, player_->GetHand());
+	mgame.Execute();	
+}
+
+void Round::ChangeTurn() {
+	ODrive od;
+	const string file = "Turn.txt";
+	string message = player_->GetServer() ? "0" : "1"; // Write '0' if server just played, else write '1'.
+	od.writeInFile(file, message, ofstream::out);
+	yourTurn_ = false;
+}
+
+#pragma region Options
+
 void Round::Follow() {
+	if (!yourTurn_) return;
+
 	if (player_->GetAllMoneys() < moneyPlayedOpponent_) {
 		cout << endl << "You can't follow" << endl;
 		system("pause");
@@ -121,9 +174,12 @@ void Round::Follow() {
 	player_->SetTokens(token25, 2);
 	player_->SetTokens(token50, 3);
 	player_->SetTokens(token100, 4);
+
 }
 
 void Round::All_In() {
+	if (!yourTurn_) return;
+
 	tokensPlayedByYou_[0] = tokensPlayedByYou_[0] + player_->GetTokens()[0];
 	tokensPlayedByYou_[1] = tokensPlayedByYou_[1] + player_->GetTokens()[1];
 	tokensPlayedByYou_[2] = tokensPlayedByYou_[2] + player_->GetTokens()[2];
@@ -134,9 +190,12 @@ void Round::All_In() {
 	player_->SetTokens(player_->GetTokens()[2], 2);
 	player_->SetTokens(player_->GetTokens()[3], 3);
 	player_->SetTokens(player_->GetTokens()[4], 4);
+
 }
 
 void Round::Bet() {
+	if (!yourTurn_) return;
+
 	if (player_->GetAllMoneys() < moneyPlayedOpponent_) {
 		cout << endl << "You can't bet" << endl;
 		system("pause");
@@ -223,36 +282,76 @@ void Round::Bet() {
 	player_->SetTokens(token25, 2);
 	player_->SetTokens(token50, 3);
 	player_->SetTokens(token100, 4);
+
 }
 
-#pragma region Card gestion
-
-/* Reveal the first 3 cards of the river. */
-void Round::Flop() {
-	/* If any cards are face up, then reveal the 3 first ones. */
-	if (!river_.GetCardList()->size()) river_ += beginDeck_.DrawCard(3);
-	PrintRiver();
-}
-
-/* Reveal the 4th card of the river. */
-void Round::Turn() {
-	if (beginDeck_.GetCardList()->size() == 3) river_ += beginDeck_.DrawCard();
-	PrintRiver();
-}
-
-/* Reveal the last card of the river. */
-void Round::River() {
-	if (river_.GetCardList()->size() == 4) river_ += beginDeck_.DrawCard();
-	PrintRiver();
-}
-
-/* Print the cards in the river. */
-void Round::PrintRiver() {
-	river_.PrintDeck();
+void Round::Check() {
+	//do nothing ?
+	if (!yourTurn_) return;
 }
 
 #pragma endregion
 
-void Round::Check() {
-	//do nothing ?
+#pragma region Card gestion
+
+/* 
+ * Draw 2 cards to compose player's hand.
+ */
+void Round::DrawHand() {
+	Deck* hand = new Deck(beginDeck_.DrawCard(2));
+	player_->SetHand(hand);
+	vector<string> cards = Deck::SerializeCards(*hand);
+	ODrive od;
+	string booleanString = player_->GetServer() ? "1Hand" : "0Hand";
+	od.writeInFile(booleanString + ".txt", cards);
 }
+
+/* 
+ * Reveal the first 3 cards of the river. 
+ */
+void Round::Flop() {
+	ODrive od;
+	/* If any cards are face up, then reveal the 3 first ones. */
+	if (!river_.GetCardList()->size()) {
+		river_ += beginDeck_.DrawCard(3);
+		vector<string> riv = Deck::SerializeCards(river_);
+		od.writeInFile("River.txt", riv);
+	}
+	else {
+		od.writeInErrorLogFile("River : Error revealing flop.");
+	}
+}
+
+/* 
+ * Reveal the 4th card of the river. 
+ */
+void Round::Turn() { 
+	ODrive od;
+	if (beginDeck_.GetCardList()->size() == 3) {
+		Deck cardToAdd = beginDeck_.DrawCard();
+		river_ += cardToAdd;
+		vector<string> card = Deck::SerializeCards(cardToAdd);
+		od.writeInFile("River.txt", card);
+	}
+	else {
+		od.writeInErrorLogFile("River : Error revealing turn.");
+	}
+}
+
+/* 
+ * Reveal the last card of the river. 
+ */
+void Round::River() { 
+	ODrive od;
+	if (river_.GetCardList()->size() == 4) {
+		Deck cardToAdd = beginDeck_.DrawCard();
+		river_ += cardToAdd;
+		vector<string> card = Deck::SerializeCards(cardToAdd);
+		od.writeInFile("River.txt", card);
+	}
+	else {
+		od.writeInErrorLogFile("River : Error revealing flop.");
+	}
+}
+
+#pragma endregion

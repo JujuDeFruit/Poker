@@ -8,27 +8,59 @@
 
 using namespace std;
 
+/*
+ * Contructor of the game.
+ * @param application : if true, create a game as a client else create a game as a server.
+ */
 Game::Game(bool application) {
+	cout << "Waiting for your partner !" << endl;
+
 	ODrive od;
 	od.clearAllFiles();
 
-	server_ = application;	
-	player_ = new Player;	
-	round_ = new Round(player_, server_);
+	server_ = application;
 
-	//initialization of the game
-	if (server_ == true) { //to know who played first
-		round_->SetYourTurn(true);
+	Synchronisation();
+	player_ = new Player(application);
+	Start();
+}
+
+/*
+ * Start the game as a client or a server.
+ */
+void Game::Start() {
+	ODrive od;
+	od.writeInErrorLogFile("Game begin.");
+
+	bool winner = false;
+
+	while (!winner) {
+		MenuPokerStart mstart(this);
+		mstart.Execute();
+		currentRoundId_ += 1;
+	}
+}
+
+/*
+ * Synchronise 2 players.
+ */
+void Game::Synchronisation() {
+	string file = "/__init__.txt";
+	ODrive od;
+
+	if (!server_) {
+		od.writeInErrorLogFile("Client connection.");
+		od.waitForChange(file);
 	}
 	else {
-		round_->SetYourTurn(false);
+		od.writeInErrorLogFile("Server connection.");
+		od.writeInFile(file, "ready", ios_base::app);
 	}
-
-	
-	
 }
 
-void Game::Start() {
-	cout << "La partie ce lance" << endl;
+/*
+ * Destructor of the class Game.
+ */
+Game::~Game() {
+	delete player_;
 }
-
