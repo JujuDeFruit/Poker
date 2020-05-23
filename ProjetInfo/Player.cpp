@@ -9,7 +9,6 @@ Player::Player(bool isServer) {
 	isServer_ = isServer;
 	cout << "What is your name ?" << endl;
 	getline(cin >> ws, name_);
-	//PrintMoneyAndTokens();
 }
 
 unsigned int Player::GetAllMoneys() {		

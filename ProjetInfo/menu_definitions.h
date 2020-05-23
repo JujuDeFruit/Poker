@@ -42,17 +42,16 @@ private:
 public:
     MenuPokerStart(Game*);
 	virtual void ExecuteOption(const string &nom, bool &fin);
+	virtual void ShowMenu();
 };
 
 class MenuPokerGame : public Menu { 
 private :
 	Round* round_;
-	Deck river_;
-	Deck hand_;
 public :
-    MenuPokerGame(Round* round, Deck river, Deck hand);
+    MenuPokerGame(Round* round);
 	virtual void ExecuteOption(const string &nom, bool &fin);
-	virtual void ShowMenu();
+	virtual void ShowMenu(string);		// Set the action of the opponent as parameter.
 	virtual void Execute();
 };
 

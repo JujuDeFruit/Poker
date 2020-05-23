@@ -8,6 +8,7 @@
 #include <thread>
 #include <chrono>
 #include <list>
+#include "constantes_files_name.h"
 #include "odrive.h"
 #include "sys/stat.h"
 #include "dirfilelist.h"
@@ -90,7 +91,7 @@ void ODrive::sync(string dir)
 
 void ODrive::refresh(string dir = "")
 {
-	dir = dir == "" ? odDrivePath_ : dir;
+	//dir = dir == "" ? odDrivePath_ : dir;
 	// Wait for 1s
 	this_thread::sleep_for(chrono::seconds(1));
 	// Send refresh command
@@ -123,7 +124,7 @@ void ODrive::delFile(string file)
 #ifdef __unix__
 	ocmd << "rm \"" << odDrivePath_ << '/' << file << "\"" << redirString_;
 #elif defined(_WIN32) || defined(WIN32)
-	ocmd << "del \"" << odDrivePath_ << '/' << file << "\"" << redirString_;
+	ocmd << "del \"" << odDrivePath_ << '\\' << file << "\""/* << redirString_*/;
 #endif
 	system(ocmd.str().c_str());
 
@@ -252,9 +253,7 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 /**
  * Clear all the files in the drive when the game is over.
  */
-void ODrive::clearAllFiles(){
-
-
+void ODrive::deleteAllFiles(){
 	list<string> fileList;
 	bool error = getDirectoryFileList(odDrivePath_, fileList);
 
@@ -262,7 +261,7 @@ void ODrive::clearAllFiles(){
 	else {
 		fileList.sort();
 		for each (string file in fileList) {
-			writeInFile(file, "NULL", ofstream::out);
+			delFile(file);
 		}
 	}
 }
@@ -289,5 +288,44 @@ vector<string> ODrive::readFile(string file) {
 	if (fileContent.size()) fileContent.pop_back();
 
 	return fileContent;
+}
+
+/*
+ * Sync all the files have .cloud extension. 
+ */
+void ODrive::syncAll() {
+	list<string> files;
+	bool error = getDirectoryFileList(odDrivePath_, files);
+	if (error) {
+		writeInErrorLogFile("Error getting file list.");
+		return;
+	}
+	else {
+		for each (string file in files) {
+			if (file.find(".cloud")) {
+				sync(file);
+			}
+		}
+	}
+}
+
+/*
+ * Clear all the files exect the init one.
+ */
+void ODrive::clearFiles() {
+	list<string> files;
+	bool error = getDirectoryFileList(odDrivePath_, files);
+
+	files.remove(ConstFiles::INITFILE);
+
+	if (error) {
+		writeInErrorLogFile("Error getting file list.");
+		return;
+	}
+	else {
+		for each (string file in files) {
+			writeInFile(file, "NULL", ofstream::out);
+		}
+	}
 }
 #pragma endregion
