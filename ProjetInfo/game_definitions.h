@@ -4,6 +4,8 @@
 #include <vector>
 using namespace std;
 
+class MenuPokerGame;
+
 #pragma region Player
 
 // ============================= PLAYER ============================= //
@@ -42,13 +44,13 @@ private:
 	Player* player_;							// Player on the round.
 	BeginDeck beginDeck_;						// Deck of 52 cards.
 	Deck river_;								// The river. 
-	unsigned int pot_ = 0;						// The common tokens available for all the players.
-	unsigned int currentStake_ = 0;				// Attribute to know what is the current stake bet by players.
-	unsigned int moneyPlayedOpponent_ = 100;
+	unsigned int pot_ = 0;						// The common tokens available for all the players. The winner of the round earns all.
+	unsigned int moneyPlayedOpponent_ = 0;
 	unsigned int moneyPlayedByYou_ = 0;
 	vector<unsigned int> tokensPlayedByYou_{ 0,0,0,0,0 };  //to know how many tokens you played
+	string opponentAction_;						// Get opponent action to know if it is a double check. Then reveal a part of the river or end the round.
 	bool yourTurn_;	// To know who played first then second..
-	int roundId;	// Round number to know which player plays first.
+	int roundId_;	// Round number to know which player plays first.
 public:
 	Round(Player* player, int id);
 
@@ -57,17 +59,20 @@ public:
 
 	#pragma region Get / Set
 	Player* GetPlayer() const { return player_; };
+	Deck GetRiver() const { return river_; };
 	void SetYourTurn(bool turn) { yourTurn_ = turn; };
-	bool GetYourTurn() { return yourTurn_; };
+	unsigned int GetPot() const { return pot_; };
 	unsigned int GetMoneyPlayedOpponent() { return moneyPlayedOpponent_; };
 	unsigned int GetMoneyPlayedByYou() { return moneyPlayedByYou_ = tokensPlayedByYou_[0] * 1 + tokensPlayedByYou_[1] * 5 + tokensPlayedByYou_[2] * 25 + tokensPlayedByYou_[3] * 50 + tokensPlayedByYou_[4] * 100; };
 	#pragma endregion
 
 	void Follow();
 	void All_In();
-	void Check();
+	bool Check();
 	void Bet();
-	void Fold();
+	bool Fold();
+
+	void WriteActionInFile(const string);		// Write the current action of the player in the appropriate file.
 
 	void Flop();
 	void Turn();
@@ -75,6 +80,9 @@ public:
 
 	void DrawHand();		// Draw hands.
 	void ChangeTurn();		//Invert the bool to alert drive it is the other player to play. Bool specify if app is waiting from the drive, or if this one write on it.
+	bool GetInfoFromOpponent(MenuPokerGame*);	// Get info from the opponent and act consequently. 
+	void DetermineWinner();					// Determine which player is the winner of the round.
+	void GiveTokensToWinner(string);		// Give tokens to the winner
 };
 
 #pragma endregion
@@ -85,7 +93,6 @@ public:
 class Game {
 private:
 	bool server_;
-	Round* round_;
 	Player* player_;
 	int currentRoundId_ = 1; // Round ID to dertermine which player plays first.
 public:
@@ -93,8 +100,6 @@ public:
 	
 	#pragma region Get / Set
 	bool GetServer() const { return server_; };
-	Round* GetRound() const { return round_; };
-	void SetRound(Round* round) { round_ = round; };
 	Player* GetPlayer() const { return player_; };
 	void SetPlayer(Player* player) { player_ = player; };
 	int GetCurrentRoundId() const { return currentRoundId_; };

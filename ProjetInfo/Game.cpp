@@ -1,3 +1,4 @@
+#include "constantes_files_name.h"
 #include "menu_definitions.h"
 #include "game_definitions.h"
 #include "odrive.h"
@@ -5,6 +6,8 @@
 #include <iostream>
 #include <list>
 #include <fstream>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -13,12 +16,14 @@ using namespace std;
  * @param application : if true, create a game as a client else create a game as a server.
  */
 Game::Game(bool application) {
-	cout << "Waiting for your partner !" << endl;
+	cout << "Deleting files !" << endl;
 
 	ODrive od;
-	od.clearAllFiles();
+	if (application) od.deleteAllFiles(); // TODO2
 
 	server_ = application;
+
+	cout << "Waiting for your partner !" << endl;
 
 	Synchronisation();
 	player_ = new Player(application);
@@ -45,16 +50,21 @@ void Game::Start() {
  * Synchronise 2 players.
  */
 void Game::Synchronisation() {
-	string file = "/__init__.txt";
 	ODrive od;
 
 	if (!server_) {
+		od.refresh("");
+		/*while (!fileAlreadyExists(od, ConstFiles::INITFILE + ".cloud")) {
+			od.refresh("");
+		}*/ //TODO
+		od.sync(ConstFiles::INITFILE);
+		vector<string> callback = od.readFile(ConstFiles::INITFILE);
+		if (!callback.size()) od.waitForChange(ConstFiles::INITFILE);
 		od.writeInErrorLogFile("Client connection.");
-		od.waitForChange(file);
 	}
 	else {
+		od.writeInFile(ConstFiles::INITFILE, "ready", ios_base::out);
 		od.writeInErrorLogFile("Server connection.");
-		od.writeInFile(file, "ready", ios_base::app);
 	}
 }
 

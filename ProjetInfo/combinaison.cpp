@@ -67,9 +67,9 @@ Combinaison::Combinaison(Deck hand, Deck river) {
 	else {
 		combinaisonComposition_ = HighCard(hand);
 	}
-	cout << combinaisonComposition_.combinaison_ << endl;
-	combinaisonComposition_.cards_.PrintDeck();
-	system("pause");
+	//cout << combinaisonComposition_.combinaison_ << endl;
+	//combinaisonComposition_.cards_.PrintDeck();
+	//system("pause");
 }
 
 #pragma endregion

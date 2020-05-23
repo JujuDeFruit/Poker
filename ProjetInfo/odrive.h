@@ -26,9 +26,11 @@ public:
 	void writeInErrorLogFile(string);
 	void writeInFile(string, string, ios_base::openmode);
 	void writeInFile(string, vector<string>);
-	void clearAllFiles();
+	void deleteAllFiles();
 	string getOdDrivePath() const { return odDrivePath_; };
 	vector<string> readFile(string file);
+	void syncAll();
+	void clearFiles();
 };
 
 #endif // ODRIVE_H

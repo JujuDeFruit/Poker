@@ -83,7 +83,7 @@ public:
 	bool operator==(Deck d) const { return cardList_ == d.cardList_; };		// Overdefinition of == operator.
 	bool operator!=(Deck d) const { return !(*this == d); };				// Overdefinition of != operator
 	void operator=(Deck d) { cardList_ = d.cardList_; };					// Overdefinition of affectation operator.
-	Deck operator+= (Deck d) { return *this + d; };
+	void operator+= (Deck d) { *this = *this + d; };						// Overdefinition of += operator.
 
 	vector<Card>::iterator Begin() { return cardList_.begin(); };	// Return the first iterator of the collection of cards.
 	vector<Card>::iterator End() { return cardList_.end(); };		//Return the last iterator of the collection of cards.

@@ -11,8 +11,6 @@ using namespace std;
 
 int main()
 {
-	ODrive od;
-	od.refresh("");
 
     short unsigned int  choice;
     bool condition = false;
