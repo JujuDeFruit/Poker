@@ -1,12 +1,8 @@
-#pragma region Includes
-
 #include "card_definitions.h"
 #include<iostream>
 #include<string>
 #include <io.h>
 #include <fcntl.h>
-
-#pragma endregion
 
 #pragma region Constructor
 
@@ -53,7 +49,7 @@ void Card::PrintCard()
 	const wchar_t* val = value.c_str(); // Converting to wchar_t* type
 
 	/* Print Unicode-16 text*/
-	wcout << value + L"\t" + symbol;
+	wcout << value + L" " + symbol;
 	
 	/* Reset the flux mode to print standard text */
 	_setmode(_fileno(stdout), _O_TEXT);

@@ -38,12 +38,48 @@ void Game::Start() {
 	od.writeInErrorLogFile("Game begin.");
 
 	bool winner = false;
+	string win;
 
 	while (!winner) {
 		MenuPokerStart mstart(this);
 		mstart.Execute();
 		currentRoundId_ += 1;
+		//if (player_->GetAllMoneys() == 0) {
+		//	winner = true;
+		//	const string winningGameFile = server_ ? ConstFiles::WINNINGGAMEFILESERVER : ConstFiles::WINNINGGAMEFILECLIENT;
+		//	const string win = server_ ? "0" : "1";		// Winner is not in this game, the opponent won the game.
+		//	od.writeInFile(winningGameFile, win, ofstream::out);
+		//}
+		//else {
+		//	const string winningGameFile = server_ ? ConstFiles::WINNINGGAMEFILECLIENT : ConstFiles::WINNINGGAMEFILESERVER;
+		//	vector<string> wins = od.readFile(winningGameFile);
+		//	if (wins.size()) {
+		//		win = wins[0];
+		//		winner = true;
+		//	}
+		//}
+		if (!player_->GetAllMoneys() || player_->GetAllMoneys() == 2 * player_->GetInitialMoney()) break;
 	}
+	if (!player_->GetAllMoneys()) {
+		system("cls");
+		cout << "You lose the game over your opponent. You are the LOSER !" << endl;
+		system("pause");
+	}
+	else if (player_->GetAllMoneys() == 2 * player_->GetInitialMoney()) {
+		system("cls");
+		cout << "You won the game over your opponent. You are the WINNER !" << endl;
+		system("pause");
+	}
+	/*if ((win == "0" && !server_) || (win == "1" && server_)) {
+		system("cls");
+		cout << "You won the game over your opponent. You are the WINNER !" << endl;
+		system("pause");
+	}
+	else {
+		system("cls");
+		cout << "You lose the game over your opponent. You are the LOSER !" << endl;
+		system("pause");
+	}*/
 }
 
 /*

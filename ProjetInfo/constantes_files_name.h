@@ -28,4 +28,7 @@ namespace ConstFiles {
 
 	const std::string POTFILESERVER = "1Pot.txt";
 	const std::string POTFILECLIENT = "0Pot.txt";
+
+	const std::string WINNINGGAMEFILESERVER = "1Game.txt";
+	const std::string WINNINGGAMEFILECLIENT = "0Game.txt";
 }
