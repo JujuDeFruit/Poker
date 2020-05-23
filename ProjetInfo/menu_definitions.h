@@ -43,6 +43,7 @@ public:
     MenuPokerStart(Game*);
 	virtual void ExecuteOption(const string &nom, bool &fin);
 	virtual void ShowMenu();
+	virtual void Execute();
 };
 
 class MenuPokerGame : public Menu { 

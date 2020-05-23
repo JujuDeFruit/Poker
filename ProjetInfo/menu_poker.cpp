@@ -7,7 +7,7 @@
 using namespace std;
 
 //======================================= Menu1 =========================================/
-#pragma region MenuPokerGame
+#pragma region MenuPokerStart
 
 /*
  * MenuPokerStart Constructor.
@@ -36,6 +36,23 @@ void MenuPokerStart::ExecuteOption(const string &name, bool &end)
 	}
 }
 
+void MenuPokerStart::Execute()
+{
+	bool end = false;
+	while (!end) {
+		if (!game_->GetPlayer()->GetAllMoneys() || game_->GetPlayer()->GetAllMoneys() == 2 * game_->GetPlayer()->GetInitialMoney()) break;
+		system("cls");
+		ShowMenu();
+		int choice = AskChoix();
+		if (choice >= 0 && choice < listeOptions_.size())
+			ExecuteOption(listeOptions_[choice].GetNom(), end);
+		else {
+			cout << "Wrong choice" << endl;
+			system("pause");
+		}
+	}
+}
+
 /*
  * ShowMenu overload.
  */
@@ -61,7 +78,7 @@ MenuPokerGame::MenuPokerGame(Round* round) : Menu("Round :") {
 	AddOption("all in", "Bet everything, all in !");
 	AddOption("check", "Check 0$");
 	AddOption("fold", "Fold your cards");
-	AddOption("leave", "Leave the game");
+	//AddOption("leave", "Leave the game");
 }
 
 /*
@@ -72,11 +89,11 @@ void MenuPokerGame::ExecuteOption(const string &name, bool &end)
 	end = false;
 	//menupokergame options
 	if (name == "bet") round_->Bet();
-	else if (name == "follow") round_->Follow();
+	else if (name == "follow") end = round_->Follow();
 	else if (name == "all in") round_->All_In();
 	else if (name == "check") end = round_->Check();
 	else if (name == "fold") end = round_->Fold();
-	else if (name == "leave") end = Leave();
+	//else if (name == "leave") end = Leave();
 	else {
 		cout << "Option not defined" << endl;
 		system("pause");

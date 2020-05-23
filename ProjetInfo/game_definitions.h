@@ -14,12 +14,14 @@ private:
 	string name_;
 	bool isServer_;
 	Deck* hand_;
+	int initialMoney_ = 0;
 	vector<unsigned int> tokens_{ 20, 10,4,2,1 };	//index0: token 1$ - index1: token 5$ - index2: token 25$ - index3: token 50$ - index4: token 100$			
 	unsigned int allMyMoney_;					//esay way to find all the moneys of the player
 public:
 	Player(bool isServer);
 
 	#pragma region Get / Set
+	int GetInitialMoney() const { return initialMoney_; };
 	vector<unsigned int> GetTokens() { return tokens_; };
 	void SetTokens(unsigned int value, unsigned index) { tokens_[index] = tokens_[index] - value; };
 	string GetName() const { return name_; };
@@ -31,7 +33,7 @@ public:
 	unsigned int GetAllMoneys();
 	void PrintMoneyAndTokens();
 
-	//~Player();
+	~Player();
 };
 
 #pragma endregion
@@ -64,9 +66,10 @@ public:
 	unsigned int GetPot() const { return pot_; };
 	unsigned int GetMoneyPlayedOpponent() { return moneyPlayedOpponent_; };
 	unsigned int GetMoneyPlayedByYou() { return moneyPlayedByYou_ = tokensPlayedByYou_[0] * 1 + tokensPlayedByYou_[1] * 5 + tokensPlayedByYou_[2] * 25 + tokensPlayedByYou_[3] * 50 + tokensPlayedByYou_[4] * 100; };
+
 	#pragma endregion
 
-	void Follow();
+	bool Follow();
 	void All_In();
 	bool Check();
 	void Bet();
@@ -81,7 +84,7 @@ public:
 	void DrawHand();		// Draw hands.
 	void ChangeTurn();		//Invert the bool to alert drive it is the other player to play. Bool specify if app is waiting from the drive, or if this one write on it.
 	bool GetInfoFromOpponent(MenuPokerGame*);	// Get info from the opponent and act consequently. 
-	void DetermineWinner();					// Determine which player is the winner of the round.
+	string DetermineWinner();					// Determine which player is the winner of the round. Return "1" if the server is the winner, "0" for the client.
 	void GiveTokensToWinner(string);		// Give tokens to the winner
 };
 

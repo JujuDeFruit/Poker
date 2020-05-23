@@ -11,12 +11,11 @@ using namespace std;
 
 int main()
 {
-
     short unsigned int  choice;
     bool condition = false;
     while (condition == false) {
-        cout << "                        BEST POKER OF THE WORLD " << endl;
-        cout << "                    by DEGRANGE Alexis / RAYNAL Julien" << endl << endl;
+        cout << "                   BEST POKER OF THE WORLD " << endl;
+        cout << "              by DEGRANGE Alexis / RAYNAL Julien" << endl << endl;
         cout << endl << "====| Client write 0 ===== Server write 1 |====" << endl;
         cin >> choice;
         if (choice == 0) {
@@ -37,8 +36,7 @@ int main()
         else {
             cout << "Input Error, retype" << endl;  
         }
-
-             
+ 
         cout << endl << "Do you want to restart a game with your friend ?" << endl;
         cout << "=== Write '1' to restart ===" << endl;
         cin >> choice;
@@ -47,8 +45,5 @@ int main()
             system("cls");
         }
     }
-
-
-
     return 0;
 }
