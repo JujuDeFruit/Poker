@@ -25,7 +25,8 @@ void Menu::ShowMenu()
 {
 	cout << title_ << endl;
 	for (int i = 0; i < listeOptions_.size(); i++) {
-		cout << "- " << setw(2) << i << " : " << listeOptions_[i].GetDescription() << endl;
+		/* If statement use to hide hidden option to print deck used just for the demo. */
+		if (listeOptions_[i].GetNom() != "hiddenOption") cout << "- " << setw(2) << i << " : " << listeOptions_[i].GetDescription() << endl;
 	}
 }
 
@@ -38,21 +39,21 @@ int Menu::AskChoix()
 	return choice;
 }
 
-void Menu::Execute()
-{
-	bool end = false;
-	while (!end) {
-		system("cls");
-		ShowMenu();
-		int choice = AskChoix();
-		if (choice >= 0 && choice < listeOptions_.size())
-			ExecuteOption(listeOptions_[choice].GetNom(), end);
-		else {
-			cout << "Wrong choice" << endl;
-			system("pause");
-		}
-	}
-}
+//void Menu::Execute()
+//{
+//	bool end = false;
+//	while (!end) {
+//		system("cls");
+//		ShowMenu();
+//		int choice = AskChoix();
+//		if (choice >= 0 && choice < listeOptions_.size())
+//			ExecuteOption(listeOptions_[choice].GetNom(), end);
+//		else {
+//			cout << "Wrong choice" << endl;
+//			system("pause");
+//		}
+//	}
+//}
 
 bool Menu::Leave()
 {

@@ -17,7 +17,9 @@ Card::Card(string number, string suit)
 
 #pragma region Methods
 
-/* Print a card with the correspondant symbol. */
+/* 
+ * Print a card with the correspondant symbol. 
+ */
 void Card::PrintCard()
 {
 	cout << "|";
