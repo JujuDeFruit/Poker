@@ -44,6 +44,7 @@ bool fileAlreadyExists(const ODrive &od, const string &fileName) {
 	bool error = getDirectoryFileList(odDrivePath, fileList);
 
 	for each (string file in fileList) {
+		/* Does the file exist ? */
 		if (fileName == file) return true;
 	}
 	return false;

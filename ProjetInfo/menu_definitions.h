@@ -23,14 +23,14 @@ class Menu{
 protected : 
 	string title_;
 	vector<OptionMenu> listeOptions_;
-    bool gameIsCreate_ = false;			//to know if the game is created
+    bool gameIsCreate_ = false;			//to know if the game is created or not.
 public:    
     Menu(const string & title);
     void SetTitle(const string &title);
     void AddOption(const string &nom,const string &description);
     virtual void ShowMenu();
     int AskChoix();
-    virtual void Execute();
+    virtual void Execute() = 0;
     virtual void ExecuteOption(const string &nom,bool &fin) = 0;
     bool Leave();
     virtual void Help();
@@ -38,21 +38,21 @@ public:
 
 class MenuPokerStart : public Menu {
 private:
-	Game* game_ = NULL;
+	Game* game_ = NULL;		// The starting round menu is linked to a game.
 public:
     MenuPokerStart(Game*);
 	virtual void ExecuteOption(const string &nom, bool &fin);
+	virtual void ShowMenu();
+	virtual void Execute();
 };
 
 class MenuPokerGame : public Menu { 
 private :
 	Round* round_;
-	Deck river_;
-	Deck hand_;
 public :
-    MenuPokerGame(Round* round, Deck river, Deck hand);
+    MenuPokerGame(Round* round);
 	virtual void ExecuteOption(const string &nom, bool &fin);
-	virtual void ShowMenu();
+	virtual void ShowMenu(string);		// Set the action of the opponent as parameter.
 	virtual void Execute();
 };
 

@@ -8,6 +8,7 @@
 #include <thread>
 #include <chrono>
 #include <list>
+#include "constantes_files_name.h"
 #include "odrive.h"
 #include "sys/stat.h"
 #include "dirfilelist.h"
@@ -18,6 +19,7 @@
 #endif
 
 using namespace std;
+#pragma region Constructor
 
 /**
  * Constructs the ODrive object
@@ -61,6 +63,8 @@ ODrive::ODrive(string odAgentDir, bool debugMode)
 	}
 }
 
+#pragma endregion
+
 #pragma region Basic methods
 
 void ODrive::sync(string dir)
@@ -90,7 +94,7 @@ void ODrive::sync(string dir)
 
 void ODrive::refresh(string dir = "")
 {
-	dir = dir == "" ? odDrivePath_ : dir;
+	//dir = dir == "" ? odDrivePath_ : dir;
 	// Wait for 1s
 	this_thread::sleep_for(chrono::seconds(1));
 	// Send refresh command
@@ -123,7 +127,7 @@ void ODrive::delFile(string file)
 #ifdef __unix__
 	ocmd << "rm \"" << odDrivePath_ << '/' << file << "\"" << redirString_;
 #elif defined(_WIN32) || defined(WIN32)
-	ocmd << "del \"" << odDrivePath_ << '/' << file << "\"" << redirString_;
+	ocmd << "del \"" << odDrivePath_ << '\\' << file << "\""/* << redirString_*/;
 #endif
 	system(ocmd.str().c_str());
 
@@ -210,16 +214,16 @@ void ODrive::writeInErrorLogFile(string message) {
  */
 void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 	ODrive od;
-	od.sync(file); // Create the file
+	//od.sync(file);
 
 	ofstream ofile(od.getFullName(file), mode);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
-	else if (message == "NULL") {
+	else if (message == "NULL") {	// If the argument is 'NULL' then, clear the file.
 		ofile.close();
 		return;
 	}
 	else {
-		ofile << message << endl;
+		ofile << message << endl;	// If there is not errors, write the message.
 		if (ofile.bad()) writeInErrorLogFile("Writing error ! Message \"" + message + "\" not printed. ");
 		else writeInErrorLogFile("Message : \"" + message + "\"\t\t\t | \tFile : \"" + file + "\".");
 	}
@@ -235,7 +239,6 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 	if (!messages.size()) return;
 
 	ODrive od;
-	od.sync(file); // Create the file
 
 	ofstream ofile(od.getFullName(file), ofstream::app);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
@@ -252,9 +255,7 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 /**
  * Clear all the files in the drive when the game is over.
  */
-void ODrive::clearAllFiles(){
-
-
+void ODrive::deleteAllFiles(){
 	list<string> fileList;
 	bool error = getDirectoryFileList(odDrivePath_, fileList);
 
@@ -262,7 +263,7 @@ void ODrive::clearAllFiles(){
 	else {
 		fileList.sort();
 		for each (string file in fileList) {
-			writeInFile(file, "NULL", ofstream::out);
+			delFile(file);
 		}
 	}
 }
@@ -289,5 +290,44 @@ vector<string> ODrive::readFile(string file) {
 	if (fileContent.size()) fileContent.pop_back();
 
 	return fileContent;
+}
+
+/*
+ * Sync all the files have .cloud extension. 
+ */
+void ODrive::syncAll() {
+	list<string> files;
+	bool error = getDirectoryFileList(odDrivePath_, files);
+	if (error) {
+		writeInErrorLogFile("Error getting file list.");
+		return;
+	}
+	else {
+		for each (string file in files) {
+			if (file.find(".cloud")) {
+				sync(file);
+			}
+		}
+	}
+}
+
+/*
+ * Clear all the files exect the init one.
+ */
+void ODrive::clearFiles() {
+	list<string> files;
+	bool error = getDirectoryFileList(odDrivePath_, files);
+
+	files.remove(ConstFiles::INITFILE);
+
+	if (error) {
+		writeInErrorLogFile("Error getting file list.");
+		return;
+	}
+	else {
+		for each (string file in files) {
+			writeInFile(file, "NULL", ofstream::out);
+		}
+	}
 }
 #pragma endregion

@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="card_definitions.h" />
+    <ClInclude Include="constantes_files_name.h" />
     <ClInclude Include="dirfilelist.h" />
     <ClInclude Include="game_definitions.h" />
     <ClInclude Include="menu_definitions.h" />

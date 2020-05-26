@@ -1,13 +1,9 @@
-#pragma region Includes
-
 #include"card_definitions.h"
 #include<string>
 #include<vector>
 #include <algorithm>    // std::random_shuffle, reverse
 #include <ctime>        // std::time
 #include<iostream>
-
-#pragma endregion
 
 using namespace std;
 
@@ -27,16 +23,14 @@ BeginDeck::BeginDeck(bool createDeck) {
 		const vector<string> suitList = Deck::SuitList();
 
 		/* This part will create the 52 cards deck. Instead of settings all cards manually, we decided to create the deck from the previous lists : NumberList and SuitList*/
-		for (vector<string>::const_iterator itS = suitList.begin(); itS != suitList.end(); itS++)
-		{
-			for (vector<string>::const_iterator itV = valueList.begin(); itV != valueList.end(); itV++)
-			{
-				Card card(*itV, *itS);
+		for each (string suit in suitList) {
+			for each (string value in valueList) {
+				Card card(value, suit);
 				cardList_.push_back(card); // Adding the card to the deck
 			}
 		}
 		isShaked_ = false;
-		/*With this method, each card of the deck is unique*/
+		/* Each card of the deck is unique. */
 	}
 }
 
@@ -44,8 +38,11 @@ BeginDeck::BeginDeck(bool createDeck) {
 
 #pragma region Methods to interact with the deck
 
-/* This method permit to draw one or many cards. The number of cards to draw is given in parameters.
-Each picked card is draw from the end of the vector (Ex : for a full deck, 2 cards picked are deck[51] and deck [50], the card deck[52] is the burned cards). */
+/*
+ * This method permit to draw one or many cards. The number of cards to draw is given in parameters.
+ * Each picked card is draw from the end of the vector (Ex : for a full deck, 2 cards picked are deck[51] and deck [50], the card deck[52] is the burned cards). 
+ * @param number : number of card to pick from the deck.
+*/
 Deck BeginDeck::DrawCard(int number)
 {
 	/* If the deck is empty, return void. */
@@ -63,8 +60,7 @@ Deck BeginDeck::DrawCard(int number)
 	cardList_.pop_back(); // Burn the first card of the deck before to pick a card.
 
 	int deckSize = cardList_.size(); // Initiale size of the deck.
-	for (unsigned int i = deckSize - 1; i >= deckSize - number; i--)
-	{
+	for (unsigned int i = deckSize - 1; i >= deckSize - number; i--) {
 		cards.push_back(cardList_[i]); // Add the card to the list of card to be returned.
 		cardList_.pop_back(); // Remove the card from the deck.
 	}
@@ -75,7 +71,9 @@ Deck BeginDeck::DrawCard(int number)
 	return ToDeck({ cards });
 }
 
-/* This method shake the deck. Initially, the deck isn't shaked. */
+/* 
+ * This method shake the deck. Initially, the deck isn't shaked. 
+ */
 void BeginDeck::ShakeDeck()
 {
 	srand(unsigned(time(0))); // Modifying the seed depending on time (to always be different).
