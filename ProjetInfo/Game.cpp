@@ -20,7 +20,7 @@ Game::Game(bool application) {
 
 	ODrive od;
 	/* Delete all previous files to start a new game. */
-	if (application) od.deleteAllFiles(); // TODO2
+	/*if (application)*/ od.deleteAllFiles(); // TODO2
 
 	server_ = application;
 
