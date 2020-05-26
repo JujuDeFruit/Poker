@@ -9040,3 +9040,6 @@ Message : "2+heart"			 | 	File : "0Deck.txt".
 Error while opening 0Pot.txt file.
 Error while opening 0Winner.txt file.
 Error while opening 0Action.txt file.
+Client connection.
+Game begin.
+Error while opening 0Hand.txt file.
