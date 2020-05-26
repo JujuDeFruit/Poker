@@ -216,8 +216,8 @@ void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 	ODrive od;
 
 	 /* If the reading file is not sync yet.*/
-	size_t sync = file.find(".cloud");
-	if (sync != string::npos) od.sync(file);
+	//size_t sync = file.find(".cloud");
+	//if (sync != string::npos) od.sync(file);
 
 	ofstream ofile(od.getFullName(file), mode);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
@@ -244,8 +244,8 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 	ODrive od;
 
 	/* If the reading file is not sync yet.*/
-	size_t sync = file.find(".cloud");
-	if (sync != string::npos) od.sync(file);
+	//size_t sync = file.find(".cloud");
+	//if (sync != string::npos) od.sync(file);
 
 	ofstream ofile(od.getFullName(file), ofstream::app);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
@@ -282,9 +282,11 @@ void ODrive::deleteAllFiles(){
 vector<string> ODrive::readFile(string file) {
 	vector<string> fileContent;
 
+	refresh("");
+
 	/* If the reading file is not sync yet.*/
-	size_t sync = file.find(".cloud");
-	if (sync != string::npos) od.sync(file);
+	size_t syncFile = file.find(".cloud");
+	if (syncFile != string::npos) sync(file);
 
 	// If the comm files exists, prints contents
 	if (ifstream(getFullName(file)).good())
