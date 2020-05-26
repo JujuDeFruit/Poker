@@ -20,7 +20,7 @@ Game::Game(bool application) {
 
 	ODrive od;
 	/* Delete all previous files to start a new game. */
-	if (application) od.deleteAllFiles(); // TODO2
+	od.deleteAllFiles(); // TODO2
 
 	server_ = application;
 
@@ -30,6 +30,30 @@ Game::Game(bool application) {
 	Synchronisation();
 	player_ = new Player(application);
 	Start();
+}
+
+/*
+ * Synchronise 2 players.
+ */
+void Game::Synchronisation() {
+	ODrive od;
+
+	if (!server_) {
+		od.refresh("");
+		/*while (!fileAlreadyExists(od, ConstFiles::INITFILE + ".cloud")) {
+			od.refresh("");
+		}*/ //TODO
+		od.sync(ConstFiles::INITFILE);
+		/* The client wait until the server get connected. */
+		vector<string> callback = od.readFile(ConstFiles::INITFILE);
+		if (!callback.size()) od.waitForChange(ConstFiles::INITFILE);
+		od.writeInErrorLogFile("Client connection.");
+	}
+	else {
+		/* Server write 'ready' in init file to synchronize the client. */
+		od.writeInFile(ConstFiles::INITFILE, "ready", ios_base::out);
+		od.writeInErrorLogFile("Server connection.");
+	}
 }
 
 /*
@@ -60,30 +84,6 @@ void Game::Start() {
 		system("cls");
 		cout << "You won the game over your opponent. You are the WINNER !" << endl;
 		system("pause");
-	}
-}
-
-/*
- * Synchronise 2 players.
- */
-void Game::Synchronisation() {
-	ODrive od;
-
-	if (!server_) {
-		od.refresh("");
-		/*while (!fileAlreadyExists(od, ConstFiles::INITFILE + ".cloud")) {
-			od.refresh("");
-		}*/ //TODO
-		od.sync(ConstFiles::INITFILE);
-		/* The client wait until the server get connected. */
-		vector<string> callback = od.readFile(ConstFiles::INITFILE); 
-		if (!callback.size()) od.waitForChange(ConstFiles::INITFILE);
-		od.writeInErrorLogFile("Client connection.");
-	}
-	else {
-		/* Server write 'ready' in init file to synchronize the client. */
-		od.writeInFile(ConstFiles::INITFILE, "ready", ios_base::out);
-		od.writeInErrorLogFile("Server connection.");
 	}
 }
 
