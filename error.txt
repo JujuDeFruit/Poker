@@ -9043,3 +9043,6 @@ Error while opening 0Action.txt file.
 Client connection.
 Game begin.
 Error while opening 0Hand.txt file.
+Client connection.
+Game begin.
+Error while opening 0Hand.txt file.
