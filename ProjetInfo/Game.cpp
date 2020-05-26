@@ -19,12 +19,14 @@ Game::Game(bool application) {
 	cout << "Deleting files !" << endl;
 
 	ODrive od;
+	/* Delete all previous files to start a new game. */
 	if (application) od.deleteAllFiles(); // TODO2
 
 	server_ = application;
 
 	cout << "Waiting for your partner !" << endl;
 
+	/* Waiting for 2 players. */
 	Synchronisation();
 	player_ = new Player(application);
 	Start();
@@ -35,31 +37,20 @@ Game::Game(bool application) {
  */
 void Game::Start() {
 	ODrive od;
+	/* Write in report log. (error.txt) */
 	od.writeInErrorLogFile("Game begin.");
 
-	bool winner = false;
-	string win;
-
-	while (!winner) {
+	while (1) {
+		/* Menu to start a round. */
 		MenuPokerStart mstart(this);
 		mstart.Execute();
-		currentRoundId_ += 1;
-		//if (player_->GetAllMoneys() == 0) {
-		//	winner = true;
-		//	const string winningGameFile = server_ ? ConstFiles::WINNINGGAMEFILESERVER : ConstFiles::WINNINGGAMEFILECLIENT;
-		//	const string win = server_ ? "0" : "1";		// Winner is not in this game, the opponent won the game.
-		//	od.writeInFile(winningGameFile, win, ofstream::out);
-		//}
-		//else {
-		//	const string winningGameFile = server_ ? ConstFiles::WINNINGGAMEFILECLIENT : ConstFiles::WINNINGGAMEFILESERVER;
-		//	vector<string> wins = od.readFile(winningGameFile);
-		//	if (wins.size()) {
-		//		win = wins[0];
-		//		winner = true;
-		//	}
-		//}
+		// End of a round.
+		currentRoundId_ += 1;	// Round Id, to switch the beginner of the game.  
+		/* If a player has not money anymore, or if he has all the money enable. Then the whole game is over. */
 		if (!player_->GetAllMoneys() || player_->GetAllMoneys() == 2 * player_->GetInitialMoney()) break;
 	}
+
+	/* End of the game. Print a message. */
 	if (!player_->GetAllMoneys()) {
 		system("cls");
 		cout << "You lose the game over your opponent. You are the LOSER !" << endl;
@@ -70,16 +61,6 @@ void Game::Start() {
 		cout << "You won the game over your opponent. You are the WINNER !" << endl;
 		system("pause");
 	}
-	/*if ((win == "0" && !server_) || (win == "1" && server_)) {
-		system("cls");
-		cout << "You won the game over your opponent. You are the WINNER !" << endl;
-		system("pause");
-	}
-	else {
-		system("cls");
-		cout << "You lose the game over your opponent. You are the LOSER !" << endl;
-		system("pause");
-	}*/
 }
 
 /*
@@ -94,11 +75,13 @@ void Game::Synchronisation() {
 			od.refresh("");
 		}*/ //TODO
 		od.sync(ConstFiles::INITFILE);
-		vector<string> callback = od.readFile(ConstFiles::INITFILE);
+		/* The client wait until the server get connected. */
+		vector<string> callback = od.readFile(ConstFiles::INITFILE); 
 		if (!callback.size()) od.waitForChange(ConstFiles::INITFILE);
 		od.writeInErrorLogFile("Client connection.");
 	}
 	else {
+		/* Server write 'ready' in init file to synchronize the client. */
 		od.writeInFile(ConstFiles::INITFILE, "ready", ios_base::out);
 		od.writeInErrorLogFile("Server connection.");
 	}
@@ -108,5 +91,5 @@ void Game::Synchronisation() {
  * Destructor of the class Game.
  */
 Game::~Game() {
-	delete player_;
+	delete player_;	// Delete player. 
 }

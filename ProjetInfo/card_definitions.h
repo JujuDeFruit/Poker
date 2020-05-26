@@ -1,10 +1,6 @@
 #pragma once
-#pragma region Includes
-
 #include<string>
 #include<vector>
-
-#pragma endregion
 
 using namespace std;
 

@@ -1,23 +1,32 @@
-#pragma region Includes
-
 #include"card_definitions.h"
 #include<iostream>
 #include <algorithm>    // std::random_shuffle, reverse
 #include<vector>
 #include<string>
-#include "sstream"
-
-#pragma endregion
+#include <sstream>
 
 
 #pragma region Constructors of the Deck class
+/*
+ * Constructor thanks to a vector of cards
+ * @param cards : convert the vector into a deck.
+ */
 Deck::Deck(vector<Card> cards) { cardList_ = cards; }
 
+/*
+ * Constructor via begin & end iterators.
+ * @param begin : iterator to begin the deck.
+ * @param end : iterator to end the deck.
+ */
 Deck::Deck(vector<Card>::iterator begin, vector<Card>::iterator end) {
 	vector<Card> cards(begin, end);
 	cardList_ = cards;
 }
 
+/* 
+ * Copy constructor.
+ * @param deck : deck to copy.
+ */
 Deck::Deck(const Deck& deck) :Deck(deck.cardList_) {}
 
 #pragma endregion
@@ -25,7 +34,10 @@ Deck::Deck(const Deck& deck) :Deck(deck.cardList_) {}
 
 #pragma region Overdefinition
 
-/* Overdefinition od + operator to fit to deck class. */
+/* 
+ * Overdefinition od + operator to fit to deck class. 
+ * @param deck : deck to add to the current one.
+ */
 Deck Deck::operator+(Deck deck) {
 	Deck d(*this);
 	d.cardList_.insert(d.End(), deck.Begin(), deck.End());
@@ -37,13 +49,17 @@ Deck Deck::operator+(Deck deck) {
 
 #pragma region Basic methods
 
-/* Method converts a collection of cards into a deck. */
+/* 
+ * Method converts a collection of cards into a deck. 
+ */
 Deck Deck::ToDeck(vector<Card> cards) {
 	Deck deck(cards);
 	return deck;
 }
 
-/* Print the cards of the whole deck. */
+/* 
+ * Print the cards of the whole deck. 
+ */
 void Deck::PrintDeck()
 {
 	for each (Card card in cardList_) card.PrintCard();
@@ -54,26 +70,32 @@ void Deck::PrintDeck()
 
 #pragma region Suits and Values
 
-/* This method return all values a card can have */
+/* 
+ * This method return all values a card can have. STATIC METHOD
+ */
 vector<string> Deck::ValueList()
 {
 	vector<string> valueList(13); // From 1 to 13 : from 1 to King (list with all the values a card can get) 
 	for (unsigned int i = 1; i < 11; i++) valueList[i - 1] = to_string(i); // Let's full the list to 10 value string
-	valueList[10] = "Jack";
+	valueList[10] = "Jack";		// Special value.
 	valueList[11] = "Queen";
 	valueList[12] = "King";
 
 	return valueList;
 }
 
-/* This method return all suits a card can have */
+/* 
+ * This method return all suits a card can have. STATIC METHOD. 
+ */
 vector<string> Deck::SuitList()
 {
 	vector<string> suitList = { "spade", "club", "heart", "diamond" }; // List of each (4) suits in a deck of cards
 	return suitList;
 }
 
-/* Sort the card by values of cards. */
+/* 
+ * Sort the card by values of cards from 1 to King.
+ */
 void Deck::SortCardListByValue() {
 
 	vector<Card> sortByValue; // The sorted cards to return.
@@ -104,7 +126,9 @@ void Deck::SortCardListByValue() {
 	cardList_ = sortByValue; // Return the sorted list.
 }
 
-/* Gather same suit cards. */
+/* 
+ * Gather same suit cards. 
+ */
 void Deck::SortCardListBySuit() {
 	vector<Card> sortedList;
 	const vector<string> suitList = Deck::SuitList();
@@ -122,7 +146,10 @@ void Deck::SortCardListBySuit() {
 
 #pragma region Extract and Erase cards
 
-/* Extract a subvector all cards contain string key. */
+/* 
+ * Extract a subvector all cards contain string key, for example if key = "1", then then current deck is sorted to contain just aces. 
+ * @param key : key to sort the deck. 
+ */
 void Deck::ExtractCards(string key) {
 	vector<Card> extractedList; // The subvector to return.
 	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) {
@@ -134,7 +161,10 @@ void Deck::ExtractCards(string key) {
 	cardList_ = extractedList;
 }
 
-/* Return a subvector which does not contain a card containning the key. */
+/* 
+ * Return a subvector which does not contain all cards containning the key. 
+ * @param key : key to sort the deck.
+ */
 void Deck::EraseCards(string key) {
 	vector<Card> returnedList;
 	Deck list(cardList_); // All the cards from the list that contain the key.
@@ -149,11 +179,15 @@ void Deck::EraseCards(string key) {
 	cardList_ = returnedList;
 }
 
-/* Method that erase cards from a vector. */
+/* 
+ * Method that erase cards of the deck from another subvector.
+ * @param cardsToErase : subvector to substract of the current deck.
+ */
 void Deck::EraseCards(Deck cardsToErase) {
 	Deck cards = cardList_;
 	for (vector<Card>::iterator it = cardsToErase.Begin(); it != cardsToErase.End(); it++) {
 		vector<Card>::iterator itCard = find(cards.Begin(), cards.End(), *it);
+		/* If the card of the subvector is in the current deck, then erase it from the returned list. */
 		if (itCard != cards.End()) {
 			cards.GetCardList()->erase(itCard);
 		}
@@ -166,10 +200,14 @@ void Deck::EraseCards(Deck cardsToErase) {
 
 #pragma region About deck
 
-/* Method returns true if the current deck contains all the cards of the deck in parameter. */
+/* 
+ * Method returns true if the current deck contains all the cards of the deck in parameter. 
+ * @param deck :  deck to check if it is contained in the current deck.
+ */
 bool Deck::Has(Deck deck) {
 	bool has = true;
 	for each(Card card in deck.cardList_) {
+		/* If the current deck does not have at least , then return false. */
 		if (!Count(card)) {
 			has = false;
 			break;
@@ -178,7 +216,10 @@ bool Deck::Has(Deck deck) {
 	return has;
 }
 
-/* Count the number of cards that contains the key. */
+/* 
+ * Count the number of cards that contains the key.
+ * @param key : selection's criterion to return the count.
+ */
 int Deck::Count(string key) {
 	int count = 0;
 	for (vector<Card>::iterator it = cardList_.begin(); it != cardList_.end(); it++) {
@@ -187,7 +228,10 @@ int Deck::Count(string key) {
 	return count;
 }
 
-/* Count the number of cards of the deck that correspond to the card in parameter. */
+/* 
+ * Count the number of cards of the deck that correspond to the card in parameter. 
+ * @param c : card to check if is contained in the current deck. 
+ */
 int Deck::Count(Card c) {
 	int counter = 0;
 	for each(Card card in cardList_) {
@@ -196,7 +240,9 @@ int Deck::Count(Card c) {
 	return counter;
 }
 
-/* Check if a collection of cards is straight or not. */
+/* 
+ * Check if a deck is straight or not. 
+ */
 bool Deck::IsStraight() {
 	bool isStraight = true;
 	for (unsigned int i = 0; i < 4; i++) {
@@ -206,11 +252,13 @@ bool Deck::IsStraight() {
 			break;
 		}
 	}
-	if (Count("1") && Count("2") && Count("3") && Count("4") && Count("5")) isStraight = true;
+	if (Count("1") && Count("2") && Count("3") && Count("4") && Count("5")) isStraight = true;	// Ace can create a straight with the highest value or the lowest.
 	return isStraight;
 }
 
-/* Method that remove same multiple cards value. */
+/* 
+ * Remove same multiple cards value. 
+ */
 void Deck::RemoveSameValueCards() {
 	Deck deck(cardList_);
 	vector<string> values;
@@ -233,7 +281,10 @@ void Deck::RemoveSameValueCards() {
 	*this = uniqueValueList;
 }
 
-/* Method counts the number of combinaison in a deck of cards. */
+/*
+ * Counts the number of combinaison in a deck of cards. Combinaisons can be counted : Pair, Trips, Quads.
+ * @param e : Combinaison to count (Pair, Trips, Quads).  
+ */
 int Deck::CountCombinaison(combinaisonTypes e) {
 
 	int nbCards;
@@ -303,17 +354,16 @@ Deck Deck::Concat(Deck deck) {
 	Deck d(cardList_);
 	d.GetCardList()->insert(d.End(), deck.Begin(), deck.End());
 	return d;
-
 }
 
 /*
- * Serialize cards to write them in files.
+ * Serialize cards to write them in files as a collection of string. First element is the first line of the file ...
  * @param deck : deck to serialize.
  */
 vector<string> Deck::SerializeCards(Deck deck) {
 	vector<string> cards;
 	for each (Card card in *deck.GetCardList()) {
-		string json = card.GetValue() + "+" + card.GetSuit();
+		string json = card.GetValue() + "+" + card.GetSuit();	// Format of the serialized card "Value+Suit" => avoid spaces : easier to read stream.
 		cards.push_back(json);
 	}
 	return cards;
@@ -321,16 +371,16 @@ vector<string> Deck::SerializeCards(Deck deck) {
 
 /*
  * Deserialize cards and turn in into a deck.
- * @param cards : list to deserialize.
+ * @param cards : list to deserialize into a deck of cards.
  */
 Deck Deck::DeserializeCards(vector<string> cards) {
 	Deck deck;
 	for each (string cardJson in cards) {
 		size_t pos = cardJson.find("+");
-		cardJson.replace(pos, 1, " ");
+		cardJson.replace(pos, 1, " ");	// Replace '+' char by space to create two distinct streams.
 		string value, suit;
 		istringstream iss(cardJson);
-		iss >> value >> suit;
+		iss >> value >> suit;	// Get the value and the suit. Serialize card "value+suit".
 		Card card(value, suit);
 		deck.GetCardList()->push_back(card);
 	}

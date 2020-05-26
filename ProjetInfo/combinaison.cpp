@@ -1,9 +1,5 @@
-#pragma region Includes
-
 #include"card_definitions.h"
 #include<iostream>
-
-#pragma endregion
 
 using namespace std;
 
@@ -17,9 +13,14 @@ const int CARDS_RIVER = 5;
 
 #pragma region Constructor
 
-/* Return the highest combinaison possible with  player's hand and the river. */
+/* 
+ * Return the highest combinaison possible with  player's hand and the river. 
+ * @param hand : hand of the player.
+ * @param river : the river.
+ */
 Combinaison::Combinaison(Deck hand, Deck river) {
 
+	/* Little verification, if river is given as the hand and the hand given as the river. */
 	if (hand.GetCardList()->size() == CARDS_RIVER && river.GetCardList()->size() == CARDS_HAND)
 	{
 		Deck intermediate(hand);
@@ -27,7 +28,8 @@ Combinaison::Combinaison(Deck hand, Deck river) {
 		river = intermediate;
 	}
 
-	/* Let's find the highest combinaison as possible. */
+	/* Let's find the highest combinaison as possible. Check if the combinaison matches. If it is then return the combinaison. 
+	   Stack the highest card to separate tie game as possible. */
 	if (RoyalFlush(hand, river).isCombinaison_) {
 		combinaisonComposition_ = RoyalFlush(hand, river);
 		highestCard_ = HighCard(hand).cards_[0];
@@ -67,22 +69,24 @@ Combinaison::Combinaison(Deck hand, Deck river) {
 	else {
 		combinaisonComposition_ = HighCard(hand);
 	}
-	//cout << combinaisonComposition_.combinaison_ << endl;
-	//combinaisonComposition_.cards_.PrintDeck();
-	//system("pause");
 }
 
 #pragma endregion
 
 #pragma region Check combinaison
 
-/* This method return the composition of a royale pair combinaison. */
+/* 
+ * Return the composition of a royale flush combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::RoyalFlush(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
 	Deck deck = hand.Concat(river);		// Build the full deck
 
 	const vector<string> suitList = Deck::SuitList();
+
 	/* Browse all suit to find a flush. */
 	for each (string suit in suitList)
 	{
@@ -92,6 +96,7 @@ CombinaisonComposition Combinaison::RoyalFlush(Deck hand, Deck river) {
 			&& deck.Count(Card("Queen", suit))
 			&& deck.Count(Card("King", suit))
 			&& deck.Count(Card("1", suit))
+			// Is the hand involved in the combinaison ?
 			&& (hand.Count(Card("10", suit)) || hand.Count(Card("Jack", suit)) || hand.Count(Card("Queen", suit)) || hand.Count(Card("King", suit)) || hand.Count(Card("1", suit)))
 			)
 		{
@@ -106,7 +111,11 @@ CombinaisonComposition Combinaison::RoyalFlush(Deck hand, Deck river) {
 	return combinaisonComposition;
 }
 
-/* This method return the composition of a straight flush combinaison. */
+/*
+ * Return the composition of a straight flush combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::StraightFlush(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
@@ -144,7 +153,11 @@ CombinaisonComposition Combinaison::StraightFlush(Deck hand, Deck river) {
 	return combinaisonComposition;
 }
 
-/* This method return the composition of a quads combinaison. */
+/*
+ * Return the composition of a quads combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::Quads(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
@@ -171,7 +184,11 @@ CombinaisonComposition Combinaison::Quads(Deck hand, Deck river) {
 	return combinaisonComposition;
 }
 
-/* This method return the composition of a fullhouse combinaison. */
+/*
+ * Return the composition of a fullhouse combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::Fullhouse(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
@@ -217,11 +234,15 @@ CombinaisonComposition Combinaison::Fullhouse(Deck hand, Deck river) {
 	return combinaisonComposition;
 }
 
-/* This method return the composition of a flush combinaison. */
+/*
+ * Return the composition of a flush combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::Flush(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
-	Deck deck = hand.Concat(river);
+	Deck deck = hand.Concat(river); // Build the 7 cards deck (hand + river).
 
 	/* Deck that store all the cards of the flush. */
 	Deck sameSuitCards;
@@ -268,7 +289,11 @@ CombinaisonComposition Combinaison::Flush(Deck hand, Deck river) {
 
 }
 
-/* This method return the composition of a flush combinaison. */
+/*
+ * Return the composition of a straight combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::Straight(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
@@ -302,7 +327,11 @@ CombinaisonComposition Combinaison::Straight(Deck hand, Deck river) {
 	return combinaisonComposition;
 }
 
-/* This method return the composition of a trips combinaison. */
+/*
+ * Return the composition of a trips combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */ 
 CombinaisonComposition Combinaison::Trips(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
@@ -330,7 +359,11 @@ CombinaisonComposition Combinaison::Trips(Deck hand, Deck river) {
 	return combinaisonComposition;
 }
 
-/* This method return the composition of a two pairs combinaison. */
+/*
+ * Return the composition of a two pairs combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::TwoPairs(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
@@ -367,7 +400,11 @@ CombinaisonComposition Combinaison::TwoPairs(Deck hand, Deck river) {
 	return combinaisonComposition;
 }
 
-/* This method return the composition of a pair combinaison. */
+/*
+ * Return the composition of a pair combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::Pair(Deck hand, Deck river) {
 	CombinaisonComposition combinaisonComposition;
 
@@ -407,7 +444,11 @@ CombinaisonComposition Combinaison::Pair(Deck hand, Deck river) {
 	return combinaisonComposition;
 }
 
-/* Return the highest card of the deck. It is not considered as combinaison. */
+/*
+ * Return the highest card of the deck. It is not considered as combinaison.
+ * @param hand : player's hand.
+ * @param river : river.
+ */
 CombinaisonComposition Combinaison::HighCard(Deck hand) {
 	CombinaisonComposition combinaisonComposition;
 	combinaisonComposition.combinaison_ = combinaisonTypes::highCard;
@@ -425,28 +466,39 @@ CombinaisonComposition Combinaison::HighCard(Deck hand) {
 
 #pragma region Compare combinaisons
 
+/*
+ * Overdefiniton of == operator to fit to Combinaison class.
+ * Check if 2 combinaison are equals. Conditions : same combinaison based on the same cards AND the highest card of each player's hand is equal (value). 
+ * @param combinaison : combinaison to compare.
+ */
 bool Combinaison::operator==(Combinaison combinaison) {
 	bool isEqual = false;
 
+	/* Sort each based deck combinaison by value. */
 	combinaisonComposition_.cards_.SortCardListByValue();
 	combinaison.combinaisonComposition_.cards_.SortCardListByValue();
 
 	vector<string> valuesOfThis;
+	/* Store values of each cards of the object. */
 	for each (Card card in *combinaisonComposition_.cards_.GetCardList()) { valuesOfThis.push_back(card.GetValue()); }
 
 	vector<string> valuesCombinaison;
+	/* Store values of each cards of the parameter. */
 	for each(Card card in *combinaison.combinaisonComposition_.cards_.GetCardList()) { valuesCombinaison.push_back(card.GetValue()); }
 
-	if (combinaisonComposition_.combinaison_ == combinaison.combinaisonComposition_.combinaison_
-		&&	valuesOfThis == valuesCombinaison
-		&& Card::ConvertCardValueToNumber(highestCard_.GetValue()) == Card::ConvertCardValueToNumber(combinaison.highestCard_.GetValue())) {
-		cout << "Tie game !" << endl;
+	if (combinaisonComposition_.combinaison_ == combinaison.combinaisonComposition_.combinaison_												// If combinaisons are same.
+		&&	valuesOfThis == valuesCombinaison																									// If cards value are all equals.
+		&& Card::ConvertCardValueToNumber(highestCard_.GetValue()) == Card::ConvertCardValueToNumber(combinaison.highestCard_.GetValue())) {	// If highest cards have the same value.
 		isEqual = true;
 	}
 	return isEqual;
 }
 
-/* Overdefinition of < operator to fit with Combinaison class. Returns a bool3States enum on the ground that to return TRUE, FALSE or NULL_STATE (for a tie game). */
+/*
+ * Overdefinition of < operator to fit with Combinaison class.
+ * Returns a bool3States enum on the ground that to return TRUE, FALSE or NULL_STATE (for a tie game).
+ * @param combinaison : combinaison to compare.
+ */
 bool3States Combinaison::operator<(Combinaison combinaison) {
 
 	bool3States isInferior;
@@ -499,7 +551,11 @@ bool3States Combinaison::operator<(Combinaison combinaison) {
 	return isInferior;
 }
 
-/* Overdefinition of > operator to fit with Combinaison class. Returns a bool3States enum on the ground that to return TRUE, FALSE or NULL_STATE (for a tie game). */
+/*
+ * Overdefinition of > operator to fit with Combinaison class.
+ * Returns a bool3States enum on the ground that to return TRUE, FALSE or NULL_STATE (for a tie game).
+ * @param combinaison : combinaison to compare.
+ */
 bool3States Combinaison::operator>(Combinaison combinaison) {
 	if (*this == combinaison) return NULL_STATE;
 	else if (*this < combinaison) return FALSE;

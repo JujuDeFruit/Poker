@@ -230,12 +230,9 @@ bool Round::Follow() {
 
 		if (!river_.GetCardList()->size()) {
 			river_ += beginDeck_.DrawCard(3);
-			//river_ += beginDeck_.DrawCard(1);	// Burn the cards.
-			//river_ += beginDeck_.DrawCard(1);
 		}
 		if (river_.GetCardList()->size() == 3) {
-			river_ += beginDeck_.DrawCard(1);	// Burn the cards.
-			//river_ += beginDeck_.DrawCard(1);
+			river_ += beginDeck_.DrawCard(1);
 		}
 		if (river_.GetCardList()->size() == 4) {
 			river_ += beginDeck_.DrawCard(1);
@@ -247,10 +244,8 @@ bool Round::Follow() {
 		//od.writeInFile(deckFile, Deck::SerializeCards(beginDeck_));
 
 		string win = DetermineWinner();
-		GiveTokensToWinner(win);
 		system("cls");
-		if ((win == "1" && player_->GetServer()) || (win == "0" && !player_->GetServer())) cout << "You won the round. You earn " << pot_ << " $." << endl;
-		else cout << "You losed the round. You lose " << pot_ << " $." << endl;
+		GiveTokensToWinner(win);
 		WriteActionInFile("Follow");
 		ChangeTurn();
 		system("pause");
@@ -421,6 +416,8 @@ bool Round::Check() {
 
 	if (!yourTurn_) return end;
 
+	string winner = "";
+
 	if (opponentAction_ == "All_In") {
 		cout << endl << "Your opponent made a All In. You just can follow or fold." << endl;
 		system("pause");
@@ -443,7 +440,9 @@ bool Round::Check() {
 			break;
 		case 4: River();
 			break;
-		case 5: DetermineWinner();
+		case 5: winner = DetermineWinner();
+			system("cls");
+			GiveTokensToWinner(winner);
 			end = true;
 			break;
 		default:
@@ -469,16 +468,30 @@ bool Round::Check() {
 	/* Change the turn. */
 	ChangeTurn();
 
+	if (winner != "") system("pause");
+
 	/* If end == true, there is a winner. */
 	return end;
 }
 
 bool Round::Fold() {
 	if (!yourTurn_) return false;
+	pot_ = GetMoneyPlayedByYou() + moneyPlayedOpponent_ + pot_;
 	system("cls");
 	/* Player is folding. */
 	WriteActionInFile("Fold");
-	cout << "You lose " << pot_ << " $." << endl;
+	cout << "You lose " << pot_ - moneyPlayedOpponent_ << " $." << endl;
+	
+	/* Write the evolution of pot in the file. */
+	ODrive od;
+	const string potFile = player_->GetServer() ? ConstFiles::POTFILESERVER : ConstFiles::POTFILECLIENT;
+	od.writeInFile(potFile, to_string(pot_), ofstream::out);
+
+	/* Set to zero, money played by player. Money doesn't belong to them anymore : it is the pot. */
+	//tokensPlayedByYou_[0] = tokensPlayedByYou_[1] = tokensPlayedByYou_[2] = tokensPlayedByYou_[3] = tokensPlayedByYou_[4] = 0;
+	//const string fileMoney = player_->GetServer() ? ConstFiles::MONEYFILESERVER : ConstFiles::MONEYFILECLIENT;
+	//od.writeInFile(fileMoney, "0", ofstream::out);
+
 	ChangeTurn();
 	system("pause");
 	return true;
@@ -563,7 +576,7 @@ void Round::River() {
 		od.writeInFile(riverFile, river);
 
 		const string deckFile = player_->GetServer() ? ConstFiles::DECKFILESERVER : ConstFiles::DECKFILECLIENT;
-		od.writeInFile(deckFile, "NULL", ofstream::out);
+		od.writeInFile(deckFile, "NULL", ofstream::out);	// Empty the file : clear the file, before to fill it again with the new Combinaison.
 		od.writeInFile(deckFile, Deck::SerializeCards(beginDeck_));
 	}
 	else {
@@ -575,23 +588,38 @@ void Round::River() {
  * Determine the winner of the round.
  */
 string Round::DetermineWinner() {
-	Combinaison handThisCombinaison(player_->GetHand(), river_);
+	Combinaison handThisCombinaison(player_->GetHand(), river_);	// Create my combinaison.
 	ODrive od;
 	const string file = player_->GetServer() ? ConstFiles::HANDFILECLIENT : ConstFiles::HANDFILESERVER;
-	Deck handOpponent = Deck::DeserializeCards(od.readFile(file));
-	Combinaison handOpponentCombinaison(handOpponent, river_);
+	Deck handOpponent = Deck::DeserializeCards(od.readFile(file));	// Get opponent's hand.
+	Combinaison handOpponentCombinaison(handOpponent, river_);	// Create opponent combinaison.
 	string winner;
-	if ((handThisCombinaison < handOpponentCombinaison) == -1) winner = "-1";	// It is a tie game (combinaison are equals)
+	if ((handThisCombinaison < handOpponentCombinaison) == -1 /*Tie Game*/) winner = "-1";	// It is a tie game (combinaison are equals)
 	else if ((handThisCombinaison < handOpponentCombinaison) == 1 /*True*/) winner = player_->GetServer() ? "0" : "1";	// The opponent has a better combinaison (write '1' if the winner is the server, '0' for the client).
 	else if ((handThisCombinaison < handOpponentCombinaison) == 0 /*False*/) winner = player_->GetServer() ? "1" : "0";
 	else od.writeInErrorLogFile("Error evaluating winner.");
 
-	GiveTokensToWinner(winner);
+	/* If the current player is the winner, he gets the pot. Else player loses everything. */
+	//GiveTokensToWinner(winner);
 
 	const string fileWinner = player_->GetServer() ? ConstFiles::WINNERFILESERVER : ConstFiles::WINNERFILECLIENT;
-	od.writeInFile(fileWinner, winner, ofstream::out);
+	od.writeInFile(fileWinner, winner, ofstream::out);	// Write the winner in the appropriate file.
 
 	return winner;
+}
+
+/* 
+ * Hidden option used just for the demo to print deck. 
+ * @param sorted : sort the deck ?
+ */
+void Round::PrintDeck() {
+	system("cls");
+	bool sorted = false;
+	cout << "Sorted ?" << endl;
+	cin >> sorted;
+	if (sorted) beginDeck_.SortCardListByValue();
+	beginDeck_.PrintDeck();
+	system("pause");
 }
 
 #pragma endregion
@@ -675,8 +703,8 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 #pragma region Winner Info
 		system("cls");
 		winner = winners[0];
-		if ((isServer && winner == "1") || (!isServer && winner == "0")) cout << "You won the round. You earn " << pot_ << " $." << endl;
-		else cout << "You lose the round. You lose " << pot_ << " $" << endl;
+		//if ((isServer && winner == "1") || (!isServer && winner == "0")) cout << "You won the round. You earn " << pot_ << " $." << endl;
+		//else cout << "You lose the round. You lose " << pot_ << " $" << endl;
 		GiveTokensToWinner(winner);
 		system("pause");
 		end = true;
@@ -697,7 +725,7 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 
 		if (action == "Fold") {
 			system("cls");
-			cout << "You won the round, your opponent folded. You earn " << pot_ << " $" << endl;
+			cout << "Your opponent folded." << endl;// You earn " << pot_ << " $" << endl;
 			string winner = isServer ? "1" : "0";	// Set the winner.
 			GiveTokensToWinner(winner);
 			system("pause");
@@ -737,25 +765,13 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 			else moneyPlayedOpponent_ = 0;
 #pragma endregion
 
-#pragma region All-In Infos
-			/*if (action == "Follow") {
-				const string fileMyAction = isServer ? ConstFiles::ACTIONFILESERVER : ConstFiles::ACTIONFILECLIENT;
-				vector<string> myActions = od.readFile(fileMyAction);
-				if (myActions.size() && myActions[0] == "All_In") {
-					string win = DetermineWinner();
-					GiveTokensToWinner(win);
-					end = true;
-				}
-			}*/
-#pragma endregion
-
 #pragma endregion
 		}
 		system("cls");
 		if (winner == "" && action != "Fold") mPG->ShowMenu(action);	// If there is not winner, then show the menu.
 	}
 
-	if (end) od.clearFiles();
+	if (end) od.clearFiles();	// Reset all the files execpt the __init__.txt one.
 
 	return end;
 }
@@ -766,6 +782,7 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 void Round::GiveTokensToWinner(string winner) {
 	/* Add the value pot as token to the actual player if this one won. */
 	if ((winner == "1" && player_->GetServer()) || (winner == "0" && !player_->GetServer())) {
+		cout << "You won the round. You earn " << pot_ - moneyPlayedByYou_ << " $." << endl;
 		unsigned int tokens100ToAdd = pot_ / (unsigned int)100;
 		player_->SetTokens(-tokens100ToAdd, 4);	// 100 $ tokens
 		pot_ -= tokens100ToAdd * 100;
@@ -780,4 +797,25 @@ void Round::GiveTokensToWinner(string winner) {
 		pot_ -= tokens5ToAdd * 5;
 		player_->SetTokens(-pot_, 0);			// 1 $ tokens
 	}
+	else if ((winner == "1" && !player_->GetServer()) || (winner == "0" && player_->GetServer())) { // If you losed the game.
+		cout << "You losed the round. You lose " << pot_ - moneyPlayedOpponent_ << " $." << endl;
+	}
+	else if (winner == "-1") {	// Tie Game : each player has the half of the pot. Pot is always a pair number, on the ground that it is a sum of 2 numbers.
+		unsigned int pot = pot_ / (unsigned int)2;
+
+		unsigned int tokens100ToAdd = pot / (unsigned int)100;
+		player_->SetTokens(-tokens100ToAdd, 4);	// 100 $ tokens
+		pot -= tokens100ToAdd * 100;
+		unsigned int tokens50ToAdd = pot / (unsigned int)50;
+		player_->SetTokens(-tokens50ToAdd, 3);	// 50 $ tokens
+		pot -= tokens50ToAdd * 50;
+		unsigned int tokens25ToAdd = pot / (unsigned int)25;
+		player_->SetTokens(-tokens25ToAdd, 2);	// 25 $ tokens
+		pot -= tokens25ToAdd * 25;
+		unsigned int tokens5ToAdd = pot / (unsigned int)5;
+		player_->SetTokens(-tokens5ToAdd, 1);	// 5 $ tokens
+		pot -= tokens5ToAdd * 5;
+		player_->SetTokens(-pot, 0);			// 1 $ tokens
+		cout << "Tie Game." << endl;
+	}	
 }

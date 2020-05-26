@@ -19,6 +19,7 @@
 #endif
 
 using namespace std;
+#pragma region Constructor
 
 /**
  * Constructs the ODrive object
@@ -61,6 +62,8 @@ ODrive::ODrive(string odAgentDir, bool debugMode)
 		logStream << odDrivePath_ << endl;
 	}
 }
+
+#pragma endregion
 
 #pragma region Basic methods
 
@@ -211,16 +214,16 @@ void ODrive::writeInErrorLogFile(string message) {
  */
 void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 	ODrive od;
-	od.sync(file); // Create the file
+	//od.sync(file);
 
 	ofstream ofile(od.getFullName(file), mode);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
-	else if (message == "NULL") {
+	else if (message == "NULL") {	// If the argument is 'NULL' then, clear the file.
 		ofile.close();
 		return;
 	}
 	else {
-		ofile << message << endl;
+		ofile << message << endl;	// If there is not errors, write the message.
 		if (ofile.bad()) writeInErrorLogFile("Writing error ! Message \"" + message + "\" not printed. ");
 		else writeInErrorLogFile("Message : \"" + message + "\"\t\t\t | \tFile : \"" + file + "\".");
 	}
@@ -236,7 +239,6 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 	if (!messages.size()) return;
 
 	ODrive od;
-	od.sync(file); // Create the file
 
 	ofstream ofile(od.getFullName(file), ofstream::app);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
