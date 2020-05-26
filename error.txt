@@ -437,3 +437,316 @@ Message : "1"			 | 	File : "Turn.txt".
 Message : "0"			 | 	File : "Turn.txt".
 Message : "1"			 | 	File : "Turn.txt".
 
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Message : "7+spade"			 | 	File : "1Hand.txt".
+Message : "Queen+diamond"			 | 	File : "1Hand.txt".
+Message : "10+diamond"			 | 	File : "Deck.txt".
+Message : "4+club"			 | 	File : "Deck.txt".
+Message : "2+club"			 | 	File : "Deck.txt".
+Message : "7+diamond"			 | 	File : "Deck.txt".
+Message : "5+heart"			 | 	File : "Deck.txt".
+Message : "1+diamond"			 | 	File : "Deck.txt".
+Message : "Jack+club"			 | 	File : "Deck.txt".
+Message : "8+club"			 | 	File : "Deck.txt".
+Message : "6+club"			 | 	File : "Deck.txt".
+Message : "5+spade"			 | 	File : "Deck.txt".
+Message : "3+heart"			 | 	File : "Deck.txt".
+Message : "5+diamond"			 | 	File : "Deck.txt".
+Message : "8+spade"			 | 	File : "Deck.txt".
+Message : "Jack+heart"			 | 	File : "Deck.txt".
+Message : "4+diamond"			 | 	File : "Deck.txt".
+Message : "10+spade"			 | 	File : "Deck.txt".
+Message : "10+heart"			 | 	File : "Deck.txt".
+Message : "9+diamond"			 | 	File : "Deck.txt".
+Message : "3+club"			 | 	File : "Deck.txt".
+Message : "3+diamond"			 | 	File : "Deck.txt".
+Message : "6+spade"			 | 	File : "Deck.txt".
+Message : "1+heart"			 | 	File : "Deck.txt".
+Message : "Queen+spade"			 | 	File : "Deck.txt".
+Message : "1+spade"			 | 	File : "Deck.txt".
+Message : "8+heart"			 | 	File : "Deck.txt".
+Message : "Jack+spade"			 | 	File : "Deck.txt".
+Message : "4+heart"			 | 	File : "Deck.txt".
+Message : "6+diamond"			 | 	File : "Deck.txt".
+Message : "King+diamond"			 | 	File : "Deck.txt".
+Message : "2+heart"			 | 	File : "Deck.txt".
+Message : "7+club"			 | 	File : "Deck.txt".
+Message : "9+heart"			 | 	File : "Deck.txt".
+Message : "10+club"			 | 	File : "Deck.txt".
+Message : "5+club"			 | 	File : "Deck.txt".
+Message : "6+heart"			 | 	File : "Deck.txt".
+Message : "King+club"			 | 	File : "Deck.txt".
+Message : "4+spade"			 | 	File : "Deck.txt".
+Message : "Jack+diamond"			 | 	File : "Deck.txt".
+Message : "Queen+club"			 | 	File : "Deck.txt".
+Message : "King+heart"			 | 	File : "Deck.txt".
+Message : "8+diamond"			 | 	File : "Deck.txt".
+Message : "King+spade"			 | 	File : "Deck.txt".
+Message : "9+club"			 | 	File : "Deck.txt".
+Message : "7+heart"			 | 	File : "Deck.txt".
+Message : "2+spade"			 | 	File : "Deck.txt".
+Message : "2+diamond"			 | 	File : "Deck.txt".
+Message : "9+spade"			 | 	File : "Deck.txt".
+Message : "1+club"			 | 	File : "Deck.txt".
+Message : "3+spade"			 | 	File : "Deck.txt".
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Message : "6+club"			 | 	File : "1Hand.txt".
+Message : "10+heart"			 | 	File : "1Hand.txt".
+Message : "King+club"			 | 	File : "Deck.txt".
+Message : "1+diamond"			 | 	File : "Deck.txt".
+Message : "8+club"			 | 	File : "Deck.txt".
+Message : "3+diamond"			 | 	File : "Deck.txt".
+Message : "2+club"			 | 	File : "Deck.txt".
+Message : "8+diamond"			 | 	File : "Deck.txt".
+Message : "4+heart"			 | 	File : "Deck.txt".
+Message : "3+spade"			 | 	File : "Deck.txt".
+Message : "5+spade"			 | 	File : "Deck.txt".
+Message : "Queen+spade"			 | 	File : "Deck.txt".
+Message : "3+heart"			 | 	File : "Deck.txt".
+Message : "2+diamond"			 | 	File : "Deck.txt".
+Message : "King+heart"			 | 	File : "Deck.txt".
+Message : "1+club"			 | 	File : "Deck.txt".
+Message : "King+diamond"			 | 	File : "Deck.txt".
+Message : "5+heart"			 | 	File : "Deck.txt".
+Message : "10+club"			 | 	File : "Deck.txt".
+Message : "7+spade"			 | 	File : "Deck.txt".
+Message : "Queen+heart"			 | 	File : "Deck.txt".
+Message : "4+diamond"			 | 	File : "Deck.txt".
+Message : "9+diamond"			 | 	File : "Deck.txt".
+Message : "1+spade"			 | 	File : "Deck.txt".
+Message : "Queen+diamond"			 | 	File : "Deck.txt".
+Message : "6+diamond"			 | 	File : "Deck.txt".
+Message : "6+spade"			 | 	File : "Deck.txt".
+Message : "9+heart"			 | 	File : "Deck.txt".
+Message : "Jack+spade"			 | 	File : "Deck.txt".
+Message : "Jack+club"			 | 	File : "Deck.txt".
+Message : "4+club"			 | 	File : "Deck.txt".
+Message : "10+diamond"			 | 	File : "Deck.txt".
+Message : "8+spade"			 | 	File : "Deck.txt".
+Message : "Jack+diamond"			 | 	File : "Deck.txt".
+Message : "7+club"			 | 	File : "Deck.txt".
+Message : "3+club"			 | 	File : "Deck.txt".
+Message : "10+spade"			 | 	File : "Deck.txt".
+Message : "6+heart"			 | 	File : "Deck.txt".
+Message : "7+diamond"			 | 	File : "Deck.txt".
+Message : "2+spade"			 | 	File : "Deck.txt".
+Message : "Queen+club"			 | 	File : "Deck.txt".
+Message : "1+heart"			 | 	File : "Deck.txt".
+Message : "King+spade"			 | 	File : "Deck.txt".
+Message : "5+club"			 | 	File : "Deck.txt".
+Message : "Jack+heart"			 | 	File : "Deck.txt".
+Message : "4+spade"			 | 	File : "Deck.txt".
+Message : "7+heart"			 | 	File : "Deck.txt".
+Message : "8+heart"			 | 	File : "Deck.txt".
+Message : "9+club"			 | 	File : "Deck.txt".
+Message : "5+diamond"			 | 	File : "Deck.txt".
+Message : "9+spade"			 | 	File : "Deck.txt".
+Message : "0"			 | 	File : "Turn.txt".
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Message : "Jack+club"			 | 	File : "1Hand.txt".
+Message : "4+heart"			 | 	File : "1Hand.txt".
+Message : "3+club"			 | 	File : "Deck.txt".
+Message : "Queen+spade"			 | 	File : "Deck.txt".
+Message : "1+heart"			 | 	File : "Deck.txt".
+Message : "1+diamond"			 | 	File : "Deck.txt".
+Message : "8+heart"			 | 	File : "Deck.txt".
+Message : "9+club"			 | 	File : "Deck.txt".
+Message : "8+diamond"			 | 	File : "Deck.txt".
+Message : "Jack+heart"			 | 	File : "Deck.txt".
+Message : "Jack+diamond"			 | 	File : "Deck.txt".
+Message : "7+club"			 | 	File : "Deck.txt".
+Message : "3+heart"			 | 	File : "Deck.txt".
+Message : "King+heart"			 | 	File : "Deck.txt".
+Message : "6+heart"			 | 	File : "Deck.txt".
+Message : "King+club"			 | 	File : "Deck.txt".
+Message : "7+diamond"			 | 	File : "Deck.txt".
+Message : "6+spade"			 | 	File : "Deck.txt".
+Message : "2+club"			 | 	File : "Deck.txt".
+Message : "Queen+club"			 | 	File : "Deck.txt".
+Message : "10+spade"			 | 	File : "Deck.txt".
+Message : "King+spade"			 | 	File : "Deck.txt".
+Message : "5+club"			 | 	File : "Deck.txt".
+Message : "5+diamond"			 | 	File : "Deck.txt".
+Message : "2+diamond"			 | 	File : "Deck.txt".
+Message : "9+diamond"			 | 	File : "Deck.txt".
+Message : "3+diamond"			 | 	File : "Deck.txt".
+Message : "9+spade"			 | 	File : "Deck.txt".
+Message : "Queen+diamond"			 | 	File : "Deck.txt".
+Message : "7+spade"			 | 	File : "Deck.txt".
+Message : "6+club"			 | 	File : "Deck.txt".
+Message : "8+spade"			 | 	File : "Deck.txt".
+Message : "2+heart"			 | 	File : "Deck.txt".
+Message : "10+club"			 | 	File : "Deck.txt".
+Message : "2+spade"			 | 	File : "Deck.txt".
+Message : "4+club"			 | 	File : "Deck.txt".
+Message : "6+diamond"			 | 	File : "Deck.txt".
+Message : "10+heart"			 | 	File : "Deck.txt".
+Message : "5+spade"			 | 	File : "Deck.txt".
+Message : "1+spade"			 | 	File : "Deck.txt".
+Message : "7+heart"			 | 	File : "Deck.txt".
+Message : "King+diamond"			 | 	File : "Deck.txt".
+Message : "9+heart"			 | 	File : "Deck.txt".
+Message : "Jack+spade"			 | 	File : "Deck.txt".
+Message : "Queen+heart"			 | 	File : "Deck.txt".
+Message : "5+heart"			 | 	File : "Deck.txt".
+Message : "1+club"			 | 	File : "Deck.txt".
+Message : "10+diamond"			 | 	File : "Deck.txt".
+Message : "3+spade"			 | 	File : "Deck.txt".
+Message : "4+spade"			 | 	File : "Deck.txt".
+Message : "8+club"			 | 	File : "Deck.txt".
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Message : "7+heart"			 | 	File : "1Hand.txt".
+Message : "5+spade"			 | 	File : "1Hand.txt".
+Message : "6+heart"			 | 	File : "Deck.txt".
+Message : "7+spade"			 | 	File : "Deck.txt".
+Message : "3+club"			 | 	File : "Deck.txt".
+Message : "8+spade"			 | 	File : "Deck.txt".
+Message : "6+club"			 | 	File : "Deck.txt".
+Message : "8+heart"			 | 	File : "Deck.txt".
+Message : "Jack+heart"			 | 	File : "Deck.txt".
+Message : "4+club"			 | 	File : "Deck.txt".
+Message : "Queen+heart"			 | 	File : "Deck.txt".
+Message : "King+spade"			 | 	File : "Deck.txt".
+Message : "2+diamond"			 | 	File : "Deck.txt".
+Message : "9+heart"			 | 	File : "Deck.txt".
+Message : "6+spade"			 | 	File : "Deck.txt".
+Message : "1+club"			 | 	File : "Deck.txt".
+Message : "Jack+club"			 | 	File : "Deck.txt".
+Message : "7+diamond"			 | 	File : "Deck.txt".
+Message : "4+spade"			 | 	File : "Deck.txt".
+Message : "1+heart"			 | 	File : "Deck.txt".
+Message : "10+spade"			 | 	File : "Deck.txt".
+Message : "10+heart"			 | 	File : "Deck.txt".
+Message : "8+diamond"			 | 	File : "Deck.txt".
+Message : "5+diamond"			 | 	File : "Deck.txt".
+Message : "1+spade"			 | 	File : "Deck.txt".
+Message : "4+diamond"			 | 	File : "Deck.txt".
+Message : "4+heart"			 | 	File : "Deck.txt".
+Message : "5+heart"			 | 	File : "Deck.txt".
+Message : "3+diamond"			 | 	File : "Deck.txt".
+Message : "Queen+spade"			 | 	File : "Deck.txt".
+Message : "Queen+diamond"			 | 	File : "Deck.txt".
+Message : "King+club"			 | 	File : "Deck.txt".
+Message : "6+diamond"			 | 	File : "Deck.txt".
+Message : "10+club"			 | 	File : "Deck.txt".
+Message : "Queen+club"			 | 	File : "Deck.txt".
+Message : "7+club"			 | 	File : "Deck.txt".
+Message : "8+club"			 | 	File : "Deck.txt".
+Message : "Jack+spade"			 | 	File : "Deck.txt".
+Message : "3+spade"			 | 	File : "Deck.txt".
+Message : "King+heart"			 | 	File : "Deck.txt".
+Message : "5+club"			 | 	File : "Deck.txt".
+Message : "9+diamond"			 | 	File : "Deck.txt".
+Message : "2+spade"			 | 	File : "Deck.txt".
+Message : "King+diamond"			 | 	File : "Deck.txt".
+Message : "2+heart"			 | 	File : "Deck.txt".
+Message : "9+spade"			 | 	File : "Deck.txt".
+Message : "Jack+diamond"			 | 	File : "Deck.txt".
+Message : "9+club"			 | 	File : "Deck.txt".
+Message : "3+heart"			 | 	File : "Deck.txt".
+Message : "10+diamond"			 | 	File : "Deck.txt".
+Message : "1+diamond"			 | 	File : "Deck.txt".
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Server connection.
+Message : "ready"			 | 	File : "/__init__.txt".
+Game begin.
+Message : "Queen+spade"			 | 	File : "1Hand.txt".
+Message : "5+heart"			 | 	File : "1Hand.txt".
+Message : "5+club"			 | 	File : "Deck.txt".
+Message : "Jack+diamond"			 | 	File : "Deck.txt".
+Message : "Queen+diamond"			 | 	File : "Deck.txt".
+Message : "Queen+club"			 | 	File : "Deck.txt".
+Message : "8+heart"			 | 	File : "Deck.txt".
+Message : "7+diamond"			 | 	File : "Deck.txt".
+Message : "8+club"			 | 	File : "Deck.txt".
+Message : "8+spade"			 | 	File : "Deck.txt".
+Message : "6+diamond"			 | 	File : "Deck.txt".
+Message : "Jack+club"			 | 	File : "Deck.txt".
+Message : "10+heart"			 | 	File : "Deck.txt".
+Message : "6+spade"			 | 	File : "Deck.txt".
+Message : "4+diamond"			 | 	File : "Deck.txt".
+Message : "King+diamond"			 | 	File : "Deck.txt".
+Message : "10+diamond"			 | 	File : "Deck.txt".
+Message : "3+diamond"			 | 	File : "Deck.txt".
+Message : "4+club"			 | 	File : "Deck.txt".
+Message : "2+heart"			 | 	File : "Deck.txt".
+Message : "3+spade"			 | 	File : "Deck.txt".
+Message : "10+club"			 | 	File : "Deck.txt".
+Message : "3+heart"			 | 	File : "Deck.txt".
+Message : "5+diamond"			 | 	File : "Deck.txt".
+Message : "1+heart"			 | 	File : "Deck.txt".
+Message : "2+club"			 | 	File : "Deck.txt".
+Message : "Jack+heart"			 | 	File : "Deck.txt".
+Message : "Queen+heart"			 | 	File : "Deck.txt".
+Message : "6+heart"			 | 	File : "Deck.txt".
+Message : "1+club"			 | 	File : "Deck.txt".
+Message : "2+diamond"			 | 	File : "Deck.txt".
+Message : "Jack+spade"			 | 	File : "Deck.txt".
+Message : "2+spade"			 | 	File : "Deck.txt".
+Message : "7+spade"			 | 	File : "Deck.txt".
+Message : "1+spade"			 | 	File : "Deck.txt".
+Message : "8+diamond"			 | 	File : "Deck.txt".
+Message : "9+spade"			 | 	File : "Deck.txt".
+Message : "10+spade"			 | 	File : "Deck.txt".
+Message : "7+heart"			 | 	File : "Deck.txt".
+Message : "3+club"			 | 	File : "Deck.txt".
+Message : "King+heart"			 | 	File : "Deck.txt".
+Message : "9+heart"			 | 	File : "Deck.txt".
+Message : "4+heart"			 | 	File : "Deck.txt".
+Message : "1+diamond"			 | 	File : "Deck.txt".
+Message : "King+spade"			 | 	File : "Deck.txt".
+Message : "7+club"			 | 	File : "Deck.txt".
+Message : "9+diamond"			 | 	File : "Deck.txt".
+Message : "9+club"			 | 	File : "Deck.txt".
+Message : "5+spade"			 | 	File : "Deck.txt".
+Message : "4+spade"			 | 	File : "Deck.txt".
+Message : "King+club"			 | 	File : "Deck.txt".
