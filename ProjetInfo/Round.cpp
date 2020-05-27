@@ -460,7 +460,7 @@ bool Round::Check() {
 		od.writeInFile(fileMoney, "0", ofstream::out);
 	}
 
-	cout << "Loading check." << endl;
+	if (winner == "") cout << "Loading check." << endl;
 
 	/* Action of the player. */
 	WriteActionInFile("Check");
@@ -771,7 +771,7 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 		if (winner == "" && action != "Fold") mPG->ShowMenu(action);	// If there is not winner, then show the menu.
 	}
 
-	if (end) od.clearFiles();	// Reset all the files execpt the __init__.txt one.
+	if (end) od.clearFiles(isServer);	// Reset all the files execpt the __init__.txt one.
 
 	return end;
 }

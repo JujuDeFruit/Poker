@@ -92,41 +92,13 @@ void Game::Start() {
 }
 
 /*
- *Return all files game writes in following server_. 
- */
-vector<string> Game::Files() {
-	vector<string> fileList;
-	if (server_) {
-		fileList.push_back(ConstFiles::INITFILE);
-		fileList.push_back(ConstFiles::DECKFILESERVER);
-		fileList.push_back(ConstFiles::RIVERFILESERVER);
-		fileList.push_back(ConstFiles::TURNFILESERVER);
-		fileList.push_back(ConstFiles::HANDFILESERVER);
-		fileList.push_back(ConstFiles::HANDFILECLIENT);
-		fileList.push_back(ConstFiles::ACTIONFILESERVER);
-		fileList.push_back(ConstFiles::MONEYFILESERVER);
-		fileList.push_back(ConstFiles::WINNERFILESERVER);
-		fileList.push_back(ConstFiles::POTFILESERVER);
-	}
-	else if (!server_) {
-		fileList.push_back(ConstFiles::DECKFILECLIENT);
-		fileList.push_back(ConstFiles::RIVERFILECLIENT);
-		fileList.push_back(ConstFiles::TURNFILECLIENT);
-		fileList.push_back(ConstFiles::ACTIONFILECLIENT);
-		fileList.push_back(ConstFiles::MONEYFILECLIENT);
-		fileList.push_back(ConstFiles::WINNERFILECLIENT);
-		fileList.push_back(ConstFiles::POTFILECLIENT);
-	}
-	return fileList;
-}
-
-/*
  * Get all files, and synchronise them in local. 
  */
 void Game::InitialiseFiles() {
 
 	ODrive od;
-	vector<string> files = Files();
+	list<string> files = Files(server_);
+	/* Open the file without writing in it to create the file. */
 	for each (string file in files) {
 		od.writeInFile(file, "NULL", ofstream::out);
 	}

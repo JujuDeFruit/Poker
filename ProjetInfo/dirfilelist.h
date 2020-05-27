@@ -22,4 +22,10 @@ bool getDirectoryFileList(const string &dirName, list<string> & outputList);
  */
 bool fileAlreadyExists(const ODrive &od, const string &fileName);
 
+/*
+ * Return all files game writes in following server_.
+ * @param: server : Is the current player a server or client ?
+ */
+list<string> Files(bool server);
+
 #endif
