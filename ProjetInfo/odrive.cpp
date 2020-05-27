@@ -318,7 +318,10 @@ void ODrive::syncAll() {
 	}
 	else {
 		for each (string file in files) {
-			if (file.find(".cloud")) {
+			const string cloudString = ".cloud";
+			size_t cloud = file.find(cloudString);
+			if (cloud != string::npos) {
+				file.erase(cloud, cloudString.length());
 				sync(file);
 			}
 		}

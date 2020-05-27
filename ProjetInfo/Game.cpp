@@ -133,8 +133,9 @@ void Game::InitialiseFiles() {
 
 	list<string> fileList;
 	bool error = getDirectoryFileList(od.getOdDrivePath(), fileList);
-	while (fileList.size() != FILENUMBER) {
+	while (fileList.size() != FILENUMBER && !error) {
 		od.refresh("");
+		error = getDirectoryFileList(od.getOdDrivePath(), fileList);
 	}
 	od.syncAll();
 }
