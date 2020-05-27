@@ -145,7 +145,7 @@ void MenuPokerGame::Execute()
 		}	
 	}
 	ODrive od;
-	od.clearFiles(round_->GetPlayer()->GetServer());	// Reset all the files execpt the __init__.txt one.;
+	od.clearFiles(round_->GetPlayer()->GetServer());	// Reset all the files except the __init__.txt one.
 }
 
 #pragma endregion
