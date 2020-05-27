@@ -1,4 +1,4 @@
-#pragma message("SOLUTIONDIR == " SOLUTIONDIR)
+#pragma message("SOLUTIONDIR == " SOLUTIONDIR)	// Get the current path of the project.
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -19,6 +19,7 @@
 #endif
 
 using namespace std;
+
 #pragma region Constructor
 
 /**
