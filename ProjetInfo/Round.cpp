@@ -771,8 +771,6 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 		if (winner == "" && action != "Fold") mPG->ShowMenu(action);	// If there is not winner, then show the menu.
 	}
 
-	if (end) od.clearFiles(isServer);	// Reset all the files execpt the __init__.txt one.
-
 	return end;
 }
 
@@ -818,4 +816,9 @@ void Round::GiveTokensToWinner(string winner) {
 		player_->SetTokens(-pot, 0);			// 1 $ tokens
 		cout << "Tie Game." << endl;
 	}	
+}
+
+Round::~Round() {
+	ODrive od;
+	od.clearFiles(player_->GetServer());	// Reset all the files execpt the __init__.txt one.;
 }
