@@ -6,7 +6,6 @@
 
 using namespace std;
 
-//======================================= Menu1 =========================================/
 #pragma region MenuPokerStart
 
 /*
@@ -67,7 +66,6 @@ void MenuPokerStart::ShowMenu() {
 
 #pragma endregion
 
-//======================================= Menu2 =========================================/
 #pragma region MenuPokerGame
 
 /*

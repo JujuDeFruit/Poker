@@ -56,31 +56,22 @@ void Round::InitialiseRound() {
 		od.writeInFile(ConstFiles::DECKFILESERVER, deck);
 	}
 	else {
-		//od.refresh(""); TODO
-		/*while (!fileAlreadyExists(od, HANDFILECLIENT + ".cloud")) {
-			od.refresh("");
-		}*/ //TODO
-		// od.sync(clientHandFile); TODO
-		vector<string> callback = od.readFile(ConstFiles::HANDFILECLIENT);		// Get client's hand.
+		vector<string> callback = od.readFile(ConstFiles::HANDFILECLIENT);		// Get client's hand, set by the server application.
 		if (!callback.size()) od.waitForChange(ConstFiles::HANDFILECLIENT);
 		callback = od.readFile(ConstFiles::HANDFILECLIENT);
-		Deck* hand = new Deck(Deck::DeserializeCards(callback));
+		Deck* hand = new Deck(Deck::DeserializeCards(callback));				// Affect the hand deckto the local variable.
 		player_->SetHand(hand);
 
-		/*while (!fileAlreadyExists(od, ConstFiles::DECKFILESERVER + ".cloud")) {
-			od.refresh("");
-		}*/ //TODO
-		// od.sync(ConstFiles::DECKFILESERVER); TODO
-		vector<string> cards = od.readFile(ConstFiles::DECKFILESERVER);			// Set the deck.
+		vector<string> cards = od.readFile(ConstFiles::DECKFILESERVER);			// Get the deck from server.
 		if (!cards.size()) od.waitForChange(ConstFiles::DECKFILESERVER);
 		cards = od.readFile(ConstFiles::DECKFILESERVER);
-		beginDeck_ = BeginDeck::ToBeginDeck(Deck::DeserializeCards(cards));
+		beginDeck_ = BeginDeck::ToBeginDeck(Deck::DeserializeCards(cards));		// Set the begin Deck.
 
 		od.writeInFile(ConstFiles::DECKFILECLIENT, cards);
 
 	}
 
-	Start();
+	Start();			// Start the gaem.
 }
 
 /*
@@ -97,13 +88,16 @@ void Round::Start() {
 void Round::ChangeTurn() {
 	ODrive od;
 	string message = player_->GetServer() ? "0" : "1"; // Write '0' if server just played, else write '1'.
-	const string turnFile = player_->GetServer() ? ConstFiles::TURNFILESERVER : ConstFiles::TURNFILECLIENT;
+	const string turnFile = player_->GetServer() ? ConstFiles::TURNFILESERVER : ConstFiles::TURNFILECLIENT;		// Write the message for the player to play in the appropriate file.
 	od.writeInFile(turnFile, message, ofstream::out);
 	yourTurn_ = false;
 }
 
 #pragma region Options
 
+/*
+ * Follow your opponent. Bet the same ammount. Return a bool false to stop the round if you follow all-in.
+ */
 bool Round::Follow() {
 	if (!yourTurn_) return false;
 
@@ -111,6 +105,7 @@ bool Round::Follow() {
 
 	bool allIn = false;
 
+	/* Try if your opponent did not make a all in. Your opponent cannot follow if he does not have enought money. */
 	if (opponentAction_ != "All_In") {
 		if (player_->GetAllMoneys() < moneyPlayedOpponent_ || moneyPlayedOpponent_ == 0) {
 			cout << endl << "You can't follow" << endl;
@@ -118,7 +113,7 @@ bool Round::Follow() {
 			return false;
 		}
 	}
-	else {
+	else {			// You follow all-in. Bet everything.
 		allIn = true;
 		token1 = player_->GetTokens()[0];
 		token5 = player_->GetTokens()[1];
@@ -195,7 +190,7 @@ bool Round::Follow() {
 			}
 		}
 		yourBet = token1 * 1 + token5 * 5 + token25 * 25 + token50 * 50 + token100 * 100 + initialMoney;
-		if (yourBet != moneyPlayedOpponent_) {
+		if (yourBet != moneyPlayedOpponent_) {	// If you did not bet enought. 
 			cout << "Error : you have to chose the same amount of money" << endl;
 			condition = false;
 		}
@@ -218,16 +213,17 @@ bool Round::Follow() {
 	if (!allIn) {
 		const string file = player_->GetServer() ? ConstFiles::MONEYFILESERVER : ConstFiles::MONEYFILECLIENT;
 		ODrive od;
-		od.writeInFile(file, to_string(yourBet), ofstream::out);
+		od.writeInFile(file, to_string(yourBet), ofstream::out);	//	Erase file and write player's bet.
 	}
 	else {
-		pot_ = pot_ + yourBet + moneyPlayedOpponent_ + moneyPlayedByYou_;
+		pot_ = pot_ + yourBet + moneyPlayedOpponent_ + moneyPlayedByYou_;	//	Gather all money in the pot before sending it to opponent. 
 		string pot = to_string(pot_);
 
 		const string file = player_->GetServer() ? ConstFiles::POTFILESERVER : ConstFiles::POTFILECLIENT;
 		ODrive od;
-		od.writeInFile(file, pot, ofstream::out);
+		od.writeInFile(file, pot, ofstream::out);	// Send pot to opponent.
 
+		/* Evolve the river. */
 		if (!river_.GetCardList()->size()) {
 			river_ += beginDeck_.DrawCard(3);
 		}
@@ -237,44 +233,47 @@ bool Round::Follow() {
 		if (river_.GetCardList()->size() == 4) {
 			river_ += beginDeck_.DrawCard(1);
 		}
-		//const string riverFile = player_->GetServer() ? ConstFiles::RIVERFILESERVER : ConstFiles::RIVERFILECLIENT;
-		//od.writeInFile(riverFile, Deck::SerializeCards(river_));
 
-		//const string deckFile = player_->GetServer() ? ConstFiles::DECKFILESERVER : ConstFiles::DECKFILECLIENT;
-		//od.writeInFile(deckFile, Deck::SerializeCards(beginDeck_));
-
+		/* Determine the winner because it's a all-in. */
 		string win = DetermineWinner();
 		system("cls");
-		GiveTokensToWinner(win);
-		WriteActionInFile("Follow");
-		ChangeTurn();
+		GiveTokensToWinner(win);		//	Give money to the winner, else the loser lose all.
+		WriteActionInFile("Follow");	// write my action to inform opponent.
+		ChangeTurn();					// Change my turn, i cannot play until other player plays.
 		system("pause");
 	}
 
-	if (allIn) return true;
+	if (allIn) return true;				//	End the round.
 	else {
-		WriteActionInFile("Follow");
+		WriteActionInFile("Follow");	//	If  followed without all-in.
 		ChangeTurn();
 		return false;
 	}
 }
 
+/* 
+ * Make a all-in. 
+ */
 void Round::All_In() {
 	if (!yourTurn_) return;
 
+	/* If your opponent made a all-in, then you just can follow or fold. */
 	if (opponentAction_ == "All_In") {
 		cout << endl << "Your opponent made a All In. You just can follow or fold." << endl;
 		system("pause");
 		return;
 	}
 
+	/* Confirm all-in. */
 	string allin;
 	cout << "You are making a All In. Are you sure ? Type All In to confirm." << endl;
 	getline(cin >> ws, allin);
+
 	if (allin != "all in" && allin != "All in" && allin != "all In" && allin != "All In") {
 		cout << "Operation cancelled." << endl;
 		return;
 	}
+
 
 	tokensPlayedByYou_[0] = tokensPlayedByYou_[0] + player_->GetTokens()[0];
 	tokensPlayedByYou_[1] = tokensPlayedByYou_[1] + player_->GetTokens()[1];
@@ -294,22 +293,27 @@ void Round::All_In() {
 
 	const string file = player_->GetServer() ? ConstFiles::MONEYFILESERVER : ConstFiles::MONEYFILECLIENT;
 	ODrive od;
-	od.writeInFile(file, to_string(yourBet + moneyPlayedByYou_), ofstream::out);
+	od.writeInFile(file, to_string(yourBet + moneyPlayedByYou_), ofstream::out);	//	Inform your opponent about your bet.
 
-	WriteActionInFile("All_In");
+	WriteActionInFile("All_In");	//	Inform your opponent of your action.
 
 	ChangeTurn();
 }
 
+/*
+ * Make a bet.
+ */
 void Round::Bet() {
 	if (!yourTurn_) return;
 
+	/* If your opponent made a all-in, then you just can follow or fold. */
 	if (opponentAction_ == "All_In") {
 		cout << endl << "Your opponent made a All In. You just can follow or fold." << endl;
 		system("pause");
 		return;
 	}
 
+	/* If you do not have engought money, you cannot bet. */
 	if (player_->GetAllMoneys() < moneyPlayedOpponent_) {
 		cout << endl << "You can't bet" << endl;
 		system("pause");
@@ -388,6 +392,7 @@ void Round::Bet() {
 			condition = false;
 		}
 	}
+
 	//to know how many tokens you played and update the actually tokens you will have with you		
 	tokensPlayedByYou_[0] = tokensPlayedByYou_[0] + token1;
 	tokensPlayedByYou_[1] = tokensPlayedByYou_[1] + token5;
@@ -404,46 +409,52 @@ void Round::Bet() {
 
 	const string file = player_->GetServer() ? ConstFiles::MONEYFILESERVER : ConstFiles::MONEYFILECLIENT;
 	ODrive od;
-	od.writeInFile(file, to_string(yourBet), ofstream::out);
+	od.writeInFile(file, to_string(yourBet), ofstream::out);	//	Inform your opponent of your current bet. 
 
-	WriteActionInFile("Bet");
+	WriteActionInFile("Bet");	// inform your opponent of your action.
 
 	ChangeTurn();
 }
 
+/* 
+ * Make a check. 
+ */
 bool Round::Check() {
 	bool end = false;
 
 	if (!yourTurn_) return end;
 
-	string winner = "";
+	string winner = "";	//	Contains the winner. If '1', server won, else '0' client won the round.
 
+	/* If your opponent made a all-in, then you just can follow or fold. */
 	if (opponentAction_ == "All_In") {
 		cout << endl << "Your opponent made a All In. You just can follow or fold." << endl;
 		system("pause");
 		return end;
 	}
 
+	/*	If ammount are not equals, you cannot check. */
 	if (GetMoneyPlayedByYou() < moneyPlayedOpponent_) {
 		cout << "You cannot check. You must have the same ammount as your opponent." << endl;
 		system("pause");
 		return end;
 	}
 
+	/* If you check, and your opponent followed or checked, then evolve the game. */
 	if (opponentAction_ == "Check" || opponentAction_ == "Follow") {
 		int riverSize = river_.GetCardList()->size();
 		pot_ = GetMoneyPlayedByYou() + moneyPlayedOpponent_ + pot_;
 		switch (riverSize) {
-		case 0: Flop();
+		case 0: Flop();		// If river is not revealed, then flop.
 			break;
-		case 3: Turn();
+		case 3: Turn();		// If river is currently flop, then turn.
 			break;
-		case 4: River();
+		case 4: River();	// If river is currently turn, thenriver.
 			break;
-		case 5: winner = DetermineWinner();
+		case 5: winner = DetermineWinner();		//	If river is river, then and the rouond and determine winner.
 			system("cls");
-			GiveTokensToWinner(winner);
-			end = true;
+			GiveTokensToWinner(winner);			// Give the pot to the winner.
+			end = true;			// End the round.
 			break;
 		default:
 			ODrive od;
@@ -460,7 +471,7 @@ bool Round::Check() {
 		od.writeInFile(fileMoney, "0", ofstream::out);
 	}
 
-	if (winner == "") cout << "Loading check." << endl;
+	if (winner == "") cout << "Loading check." << endl;	
 
 	/* Action of the player. */
 	WriteActionInFile("Check");
@@ -474,6 +485,9 @@ bool Round::Check() {
 	return end;
 }
 
+/*
+ * Make a fold.
+ */
 bool Round::Fold() {
 	if (!yourTurn_) return false;
 	pot_ = GetMoneyPlayedByYou() + moneyPlayedOpponent_ + pot_;
@@ -487,7 +501,7 @@ bool Round::Fold() {
 	const string potFile = player_->GetServer() ? ConstFiles::POTFILESERVER : ConstFiles::POTFILECLIENT;
 	od.writeInFile(potFile, to_string(pot_), ofstream::out);
 
-	ChangeTurn();
+	ChangeTurn();		// Change the turn.
 	system("pause");
 	return true;
 }
@@ -502,15 +516,16 @@ bool Round::Fold() {
 void Round::DrawHand() {
 	ODrive od;
 
+	/* Pick 4 cards from the deck. */
 	Deck cardsToDraw = beginDeck_.DrawCard(4);
 
-	Deck* serverHand = new Deck({ cardsToDraw[0], cardsToDraw[2] });
-	vector<string> serverCards = Deck::SerializeCards(*serverHand);
+	Deck* serverHand = new Deck({ cardsToDraw[0], cardsToDraw[2] });	// First and third cards comopose server hand.
+	vector<string> serverCards = Deck::SerializeCards(*serverHand);		// Serialize cards to send them in odrive.
 	od.writeInFile(ConstFiles::HANDFILESERVER, serverCards);
-	player_->SetHand(serverHand);
+	player_->SetHand(serverHand);	//	Set player's hand.
 
 	Deck* clientHand = new Deck({ cardsToDraw[1], cardsToDraw[3] });
-	vector<string> clientCards = Deck::SerializeCards(*clientHand);
+	vector<string> clientCards = Deck::SerializeCards(*clientHand);		// Serialize client's hand cards to send them in odrive, to client get it.
 	od.writeInFile(ConstFiles::HANDFILECLIENT, clientCards);
 }
 
@@ -522,12 +537,13 @@ void Round::Flop() {
 	/* If any cards are face up, then reveal the 3 first ones. */
 	if (!river_.GetCardList()->size()) {
 		river_ += beginDeck_.DrawCard(3);
-		vector<string> riv = Deck::SerializeCards(river_);
+		vector<string> riv = Deck::SerializeCards(river_);	//	Send the current river to inform opponent.
 		const string riverFile = player_->GetServer() ? ConstFiles::RIVERFILESERVER : ConstFiles::RIVERFILECLIENT;
 		od.writeInFile(riverFile, riv);
 
+		/* Update the current date. */
 		const string deckFile = player_->GetServer() ? ConstFiles::DECKFILESERVER : ConstFiles::DECKFILECLIENT;
-		od.writeInFile(deckFile, "NULL", ofstream::out);
+		od.writeInFile(deckFile, "NULL", ofstream::out);	//	Erase file, before writing.
 		od.writeInFile(deckFile, Deck::SerializeCards(beginDeck_));
 	}
 	else {
@@ -541,14 +557,14 @@ void Round::Flop() {
 void Round::Turn() {
 	ODrive od;
 	if (river_.GetCardList()->size() == 3) {
-		Deck cardToAdd = beginDeck_.DrawCard();
-		river_ += cardToAdd;
+		Deck cardToAdd = beginDeck_.DrawCard();		//	draw a card.
+		river_ += cardToAdd;	// Add card to river. 
 		vector<string> river = Deck::SerializeCards(river_);
-		const string riverFile = player_->GetServer() ? ConstFiles::RIVERFILESERVER : ConstFiles::RIVERFILECLIENT;
+		const string riverFile = player_->GetServer() ? ConstFiles::RIVERFILESERVER : ConstFiles::RIVERFILECLIENT;		//	Update river.
 		od.writeInFile(riverFile, "NULL", ofstream::out);
 		od.writeInFile(riverFile, river);
 
-		const string deckFile = player_->GetServer() ? ConstFiles::DECKFILESERVER : ConstFiles::DECKFILECLIENT;
+		const string deckFile = player_->GetServer() ? ConstFiles::DECKFILESERVER : ConstFiles::DECKFILECLIENT;			//	Update deck.
 		od.writeInFile(deckFile, "NULL", ofstream::out);
 		od.writeInFile(deckFile, Deck::SerializeCards(beginDeck_));
 	}
@@ -564,13 +580,13 @@ void Round::River() {
 	ODrive od;
 	if (river_.GetCardList()->size() == 4) {
 		Deck cardToAdd = beginDeck_.DrawCard();
-		river_ += cardToAdd;
+		river_ += cardToAdd;			//	Add card to river.
 		vector<string> river = Deck::SerializeCards(river_);
-		const string riverFile = player_->GetServer() ? ConstFiles::RIVERFILESERVER : ConstFiles::RIVERFILECLIENT;
+		const string riverFile = player_->GetServer() ? ConstFiles::RIVERFILESERVER : ConstFiles::RIVERFILECLIENT;		//	Update river.
 		od.writeInFile(riverFile, "NULL", ofstream::out);
 		od.writeInFile(riverFile, river);
 
-		const string deckFile = player_->GetServer() ? ConstFiles::DECKFILESERVER : ConstFiles::DECKFILECLIENT;
+		const string deckFile = player_->GetServer() ? ConstFiles::DECKFILESERVER : ConstFiles::DECKFILECLIENT;			//	Update deck.
 		od.writeInFile(deckFile, "NULL", ofstream::out);	// Empty the file : clear the file, before to fill it again with the new Combinaison.
 		od.writeInFile(deckFile, Deck::SerializeCards(beginDeck_));
 	}
@@ -611,9 +627,9 @@ void Round::PrintDeck() {
 	system("cls");
 	bool sorted = false;
 	cout << "Sorted ?" << endl;
-	cin >> sorted;
+	cin >> sorted;			// Sort the deck by value.
 	if (sorted) beginDeck_.SortCardListByValue();
-	beginDeck_.PrintDeck();
+	beginDeck_.PrintDeck();		//	Print deck.
 	system("pause");
 }
 
@@ -626,12 +642,12 @@ void Round::PrintDeck() {
  */
 void Round::WriteActionInFile(const string action) {
 	ODrive od;
-	if (action != "Fold" && action != "Bet" && action != "All_In" && action != "Follow" && action != "Check") {
+	if (action != "Fold" && action != "Bet" && action != "All_In" && action != "Follow" && action != "Check") {	//	Iif acton is not error.
 		od.writeInErrorLogFile("Wrong action : " + action);
 		return;
 	}
 	string file = player_->GetServer() ? ConstFiles::ACTIONFILESERVER : ConstFiles::ACTIONFILECLIENT;
-	od.writeInFile(file, action, ofstream::out);
+	od.writeInFile(file, action, ofstream::out);		// Erase and write action.	
 }
 
 /*
@@ -644,7 +660,6 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 	bool isServer = player_->GetServer();
 
 	ODrive od;
-	//od.refresh(""); TODO
 
 #pragma region Turn info
 	/* While it is not the player's turn, he cannot play. */
@@ -663,12 +678,6 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 #pragma region Pot info
 
 	string potFile = isServer ? ConstFiles::POTFILECLIENT : ConstFiles::POTFILESERVER;
-	/*if (!fileAlreadyExists(od, potFile)) {
-		while (!fileAlreadyExists(od, potFile + ".cloud")) {
-			od.refresh("");
-		}
-		od.sync(potFile);
-	} TODO2 */
 	vector<string> pot = od.readFile(potFile);
 	if (pot.size() && stoi(pot[0]) > pot_) {
 		pot_ = stoi(pot[0]);
@@ -684,23 +693,16 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 
 #pragma endregion
 
-
 	const string fileWinner = isServer ? ConstFiles::WINNERFILECLIENT : ConstFiles::WINNERFILESERVER; // Check if the winner file is filled. If it is then, there is a winner (or a tie Game).
-	/*if (!fileAlreadyExists(od, fileWinner)) {
-		while (!fileAlreadyExists(od, fileWinner + ".cloud")) {
-			od.refresh("");
-		}
-		od.sync(fileWinner);
-	} TODO2 */
 	vector<string> winners = od.readFile(fileWinner);
 	string winner = "";
 	if (winners.size()) {
 #pragma region Winner Info
 		system("cls");
-		winner = winners[0];
-		GiveTokensToWinner(winner);
+		winner = winners[0];			// If ther is a winner, get it.
+		GiveTokensToWinner(winner);		// Give token if the current player is the winner.
 		system("pause");
-		end = true;
+		end = true;						// End the round.
 #pragma endregion
 	}
 	else {	// If there is not winner. 
@@ -708,47 +710,37 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 		const string file = isServer ? ConstFiles::ACTIONFILECLIENT : ConstFiles::ACTIONFILESERVER; // Get the current action of the other player.
 		vector<string> actions = od.readFile(file);
 		string action;
-		if (actions.size()) action = actions[0];
+		if (actions.size()) action = actions[0];		// If there is an action, get it.
 
 		opponentAction_ = action;
 
 		if (action == "Fold") {
 			system("cls");
-			cout << "Your opponent folded." << endl;// You earn " << pot_ << " $" << endl;
+			cout << "Your opponent folded." << endl;
 			string winner = isServer ? "1" : "0";	// Set the winner.
-			GiveTokensToWinner(winner);
+			GiveTokensToWinner(winner);		// If the current player is the winner
 			system("pause");
-			end = true;
+			end = true;		//	End the game.
 		}
 		else if (action != "") {		// Retrieve the initial case.
 
 #pragma region Deck info
+			/* Get the deck. */
 			const string deckFile = isServer ? ConstFiles::DECKFILECLIENT : ConstFiles::DECKFILESERVER;
-			/*while (!fileAlreadyExists(od, deckFile + ".cloud")) {
-			od.refresh("");
-			}
-			od.sync(deckFile); TODO */
 			vector<string> deck = od.readFile(deckFile);
 			if (beginDeck_.GetCardList()->size() > deck.size()) beginDeck_ = BeginDeck::ToBeginDeck(Deck::DeserializeCards(deck));
 #pragma endregion
 
 #pragma region River info
+			/* If the river, evolved the update it. */
 			const string riverFile = isServer ? ConstFiles::RIVERFILECLIENT : ConstFiles::RIVERFILESERVER;
-			/*while (!fileAlreadyExists(od, riverFile + ".cloud")) {
-			od.refresh("");
-			}
-			od.sync(riverFile); TODO */
 			vector<string> river = od.readFile(riverFile);
 			if (river_.GetCardList()->size() < river.size()) river_ = Deck::DeserializeCards(river);
 #pragma endregion
 
 #pragma region Money info
+			/* Get money played by opponent. */
 			const string fileMoney = isServer ? ConstFiles::MONEYFILECLIENT : ConstFiles::MONEYFILESERVER;
-			/*while (!fileAlreadyExists(od, fileMoney + ".cloud")) {
-				od.refresh("");
-			}
-			od.sync(fileMoney); TODO */
-
 			vector<string> moneys = od.readFile(fileMoney);
 			if (moneys.size()) moneyPlayedOpponent_ = stoi(moneys[0]);
 			else moneyPlayedOpponent_ = 0;
@@ -760,7 +752,7 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 		if (winner == "" && action != "Fold") mPG->ShowMenu(action);	// If there is not winner, then show the menu.
 	}
 
-	return end;
+	return end;		//	If end == true, end the round.
 }
 
 /*
