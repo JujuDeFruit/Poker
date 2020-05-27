@@ -487,11 +487,6 @@ bool Round::Fold() {
 	const string potFile = player_->GetServer() ? ConstFiles::POTFILESERVER : ConstFiles::POTFILECLIENT;
 	od.writeInFile(potFile, to_string(pot_), ofstream::out);
 
-	/* Set to zero, money played by player. Money doesn't belong to them anymore : it is the pot. */
-	//tokensPlayedByYou_[0] = tokensPlayedByYou_[1] = tokensPlayedByYou_[2] = tokensPlayedByYou_[3] = tokensPlayedByYou_[4] = 0;
-	//const string fileMoney = player_->GetServer() ? ConstFiles::MONEYFILESERVER : ConstFiles::MONEYFILECLIENT;
-	//od.writeInFile(fileMoney, "0", ofstream::out);
-
 	ChangeTurn();
 	system("pause");
 	return true;
@@ -703,8 +698,6 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 #pragma region Winner Info
 		system("cls");
 		winner = winners[0];
-		//if ((isServer && winner == "1") || (!isServer && winner == "0")) cout << "You won the round. You earn " << pot_ << " $." << endl;
-		//else cout << "You lose the round. You lose " << pot_ << " $" << endl;
 		GiveTokensToWinner(winner);
 		system("pause");
 		end = true;
@@ -713,10 +706,6 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 	else {	// If there is not winner. 
 #pragma region Action info
 		const string file = isServer ? ConstFiles::ACTIONFILECLIENT : ConstFiles::ACTIONFILESERVER; // Get the current action of the other player.
-		/*while (!fileAlreadyExists(od, file + ".cloud")) {
-			od.refresh("");
-		}
-		od.sync(file); TODO */
 		vector<string> actions = od.readFile(file);
 		string action;
 		if (actions.size()) action = actions[0];
@@ -816,9 +805,4 @@ void Round::GiveTokensToWinner(string winner) {
 		player_->SetTokens(-pot, 0);			// 1 $ tokens
 		cout << "Tie Game." << endl;
 	}	
-}
-
-Round::~Round() {
-	ODrive od;
-	od.clearFiles(player_->GetServer());	// Reset all the files execpt the __init__.txt one.;
 }
