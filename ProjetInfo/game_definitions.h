@@ -87,8 +87,6 @@ public:
 	void GiveTokensToWinner(string);		// Give tokens to the winner
 
 	void PrintDeck();	//Hidden option. There just for the demo to print all the deck.
-
-	~Round();
 };
 
 #pragma endregion
