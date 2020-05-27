@@ -39,22 +39,6 @@ int Menu::AskChoix()
 	return choice;
 }
 
-//void Menu::Execute()
-//{
-//	bool end = false;
-//	while (!end) {
-//		system("cls");
-//		ShowMenu();
-//		int choice = AskChoix();
-//		if (choice >= 0 && choice < listeOptions_.size())
-//			ExecuteOption(listeOptions_[choice].GetNom(), end);
-//		else {
-//			cout << "Wrong choice" << endl;
-//			system("pause");
-//		}
-//	}
-//}
-
 bool Menu::Leave()
 {
 	bool end = false;
