@@ -59,7 +59,7 @@ void Round::InitialiseRound() {
 		vector<string> callback = od.readFile(ConstFiles::HANDFILECLIENT);		// Get client's hand, set by the server application.
 		if (!callback.size()) od.waitForChange(ConstFiles::HANDFILECLIENT);
 		callback = od.readFile(ConstFiles::HANDFILECLIENT);
-		Deck* hand = new Deck(Deck::DeserializeCards(callback));				// Affect the hand deckto the local variable.
+		Deck* hand = new Deck(Deck::DeserializeCards(callback));				// Affect the hand deck to the local variable.
 		player_->SetHand(hand);
 
 		vector<string> cards = od.readFile(ConstFiles::DECKFILESERVER);			// Get the deck from server.
@@ -627,9 +627,10 @@ void Round::PrintDeck() {
 	system("cls");
 	bool sorted = false;
 	cout << "Sorted ?" << endl;
-	cin >> sorted;			// Sort the deck by value.
-	if (sorted) beginDeck_.SortCardListByValue();
-	beginDeck_.PrintDeck();		//	Print deck.
+	cin >> sorted;							// Sort the deck by value.
+	BeginDeck beginDeck = beginDeck_;		// Copy the deck to not sort it.
+	if (sorted) beginDeck.SortCardListByValue();
+	beginDeck.PrintDeck();					//	Print deck.
 	system("pause");
 }
 
@@ -666,10 +667,6 @@ bool Round::GetInfoFromOpponent(MenuPokerGame* mPG) {
 	if (!yourTurn_) {
 		cout << "Your partner is playing." << endl;
 		const string turnFile = isServer ? ConstFiles::TURNFILECLIENT : ConstFiles::TURNFILESERVER;
-		/*while (!fileAlreadyExists(od, turnFile + ".cloud")) {
-			od.refresh("");
-		}
-		od.sync(turnFile); TODO */
 		od.waitForChange(turnFile);
 		yourTurn_ = true;
 	}

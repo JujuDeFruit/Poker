@@ -334,6 +334,9 @@ void ODrive::syncAll() {
  */
 void ODrive::clearFiles(bool server) {
 	list<string> files = Files(server);
+	/*ODrive od;
+	list<string> files;
+	getDirectoryFileList(od.getOdDrivePath(), files);*/
 
 	if (server) files.remove(ConstFiles::INITFILE);
 
