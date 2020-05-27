@@ -113,7 +113,6 @@ public:
 	void Synchronisation();		// Synchronise two players.
 
 	void InitialiseFiles();		// Set all files parameters.
-	vector<string> Files();		// Return all files game write in following server_.
 	~Game();
 };
 

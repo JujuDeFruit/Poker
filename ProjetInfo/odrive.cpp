@@ -215,9 +215,9 @@ void ODrive::writeInErrorLogFile(string message) {
 void ODrive::writeInFile(string file, string message, ios_base::openmode mode) {
 	ODrive od;
 
-	 /* If the reading file is not sync yet.*/
-	//size_t sync = file.find(".cloud");
-	//if (sync != string::npos) od.sync(file);
+	/* If the reading file is not sync yet.*/
+   //size_t sync = file.find(".cloud");
+   //if (sync != string::npos) od.sync(file);
 
 	ofstream ofile(od.getFullName(file), mode);
 	if (!ofile.is_open()) writeInErrorLogFile("Opening error file \"" + file + "\"");
@@ -262,7 +262,7 @@ void ODrive::writeInFile(string file, vector<string> messages) {
 /**
  * Clear all the files in the drive when the game is over.
  */
-void ODrive::deleteAllFiles(){
+void ODrive::deleteAllFiles() {
 	list<string> fileList;
 	bool error = getDirectoryFileList(odDrivePath_, fileList);
 
@@ -307,7 +307,7 @@ vector<string> ODrive::readFile(string file) {
 }
 
 /*
- * Sync all the files have .cloud extension. 
+ * Sync all the files have .cloud extension.
  */
 void ODrive::syncAll() {
 	list<string> files;
@@ -318,7 +318,10 @@ void ODrive::syncAll() {
 	}
 	else {
 		for each (string file in files) {
-			if (file.find(".cloud")) {
+			const string cloudString = ".cloud";
+			size_t cloud = file.find(cloudString);
+			if (cloud != string::npos) {
+				file.erase(cloud, cloudString.length());
 				sync(file);
 			}
 		}
@@ -328,20 +331,13 @@ void ODrive::syncAll() {
 /*
  * Clear all the files exect the init one.
  */
-void ODrive::clearFiles() {
-	list<string> files;
-	bool error = getDirectoryFileList(odDrivePath_, files);
+void ODrive::clearFiles(bool server) {
+	list<string> files = Files(server);
 
-	files.remove(ConstFiles::INITFILE);
+	if (server) files.remove(ConstFiles::INITFILE);
 
-	if (error) {
-		writeInErrorLogFile("Error getting file list.");
-		return;
-	}
-	else {
-		for each (string file in files) {
-			writeInFile(file, "NULL", ofstream::out);
-		}
+	for each (string file in files) {
+		writeInFile(file, "NULL", ofstream::out);
 	}
 }
 #pragma endregion

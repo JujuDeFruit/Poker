@@ -30,7 +30,7 @@ public:
 	string getOdDrivePath() const { return odDrivePath_; };		// Return odrive path.
 	vector<string> readFile(string file);						// Read a file and return a vector of string which represent all lines.
 	void syncAll();												// Sync all files in the mounted point.
-	void clearFiles();											// Clear all files except the __init__.txt one.
+	void clearFiles(bool);										// Clear all files belonging to the current player (client/server) except the __init__.txt one.
 };
 
 #endif // ODRIVE_H

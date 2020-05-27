@@ -1,4 +1,5 @@
 #include "dirfilelist.h"
+#include "constantes_files_name.h"
 #include "odrive.h"
 #include <windows.h>
 
@@ -48,4 +49,34 @@ bool fileAlreadyExists(const ODrive &od, const string &fileName) {
 		if (fileName == file) return true;
 	}
 	return false;
+}
+
+/*
+ * Return all files game writes in following server_.
+ * @param: server : Is the current player a server or client ?
+ */
+list<string> Files(bool server) {
+	list<string> fileList;
+	if (server) {
+		fileList.push_back(ConstFiles::INITFILE);
+		fileList.push_back(ConstFiles::DECKFILESERVER);
+		fileList.push_back(ConstFiles::RIVERFILESERVER);
+		fileList.push_back(ConstFiles::TURNFILESERVER);
+		fileList.push_back(ConstFiles::HANDFILESERVER);
+		fileList.push_back(ConstFiles::HANDFILECLIENT);
+		fileList.push_back(ConstFiles::ACTIONFILESERVER);
+		fileList.push_back(ConstFiles::MONEYFILESERVER);
+		fileList.push_back(ConstFiles::WINNERFILESERVER);
+		fileList.push_back(ConstFiles::POTFILESERVER);
+	}
+	else if (!server) {
+		fileList.push_back(ConstFiles::DECKFILECLIENT);
+		fileList.push_back(ConstFiles::RIVERFILECLIENT);
+		fileList.push_back(ConstFiles::TURNFILECLIENT);
+		fileList.push_back(ConstFiles::ACTIONFILECLIENT);
+		fileList.push_back(ConstFiles::MONEYFILECLIENT);
+		fileList.push_back(ConstFiles::WINNERFILECLIENT);
+		fileList.push_back(ConstFiles::POTFILECLIENT);
+	}
+	return fileList;
 }
