@@ -19,14 +19,22 @@ const int FILENUMBER = 17;
  */
 Game::Game(bool application) {
 	server_ = application;
-	cout << "Deleting files !" << endl;
 
-	ODrive od;
-	/* Delete all previous files to start a new game. */
-	od.deleteAllFiles(); // TODO2
+	string local = "";
+	cout << "Local (1) ?" << endl;
+	cin >> local;
 
-	cout << "Initialise files" << endl;
-	InitialiseFiles();
+	if ((local == "1" && server_) || (local != "1")) {	// local variable for a local or online demo.
+		cout << "Deleting files !" << endl;
+		ODrive od;
+		/* Delete all previous files to start a new game. */
+		od.deleteAllFiles();
+	}
+
+	if (local != "1") {
+		cout << "Initialise files" << endl;
+		InitialiseFiles();
+	}
 
 	cout << "Waiting for your partner !" << endl;
 
@@ -44,9 +52,6 @@ void Game::Synchronisation() {
 
 	if (!server_) {
 		od.refresh("");
-		/*while (!fileAlreadyExists(od, ConstFiles::INITFILE + ".cloud")) {
-			od.refresh("");
-		}*/ //TODO
 		od.sync(ConstFiles::INITFILE);
 		/* The client wait until the server get connected. */
 		vector<string> callback = od.readFile(ConstFiles::INITFILE);

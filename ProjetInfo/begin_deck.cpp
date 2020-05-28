@@ -9,13 +9,20 @@ using namespace std;
 
 #pragma region Functions
 
-/* Function returns a random number between 0 and i - 1 */
+/* 
+ * Function returns a random number between 0 and i - 1 
+ * @param i : range of the random number.
+ */
 int RandomNumber(int i) { return rand() % i; };
 
 #pragma endregion
 
 #pragma region Constructor
 
+/*
+ * Constructor of the begin deck.
+ * @param createDeck : Distinguish declaration to construction.
+ */
 BeginDeck::BeginDeck(bool createDeck) {
 
 	if (createDeck) {

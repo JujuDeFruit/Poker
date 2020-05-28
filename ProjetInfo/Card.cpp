@@ -6,7 +6,11 @@
 
 #pragma region Constructor
 
-/*Each card is unique and defined by a number and a suit*/
+/*
+ * Constructor of the crd class. Each card is unique and defined by a number and a suit.
+ * @param number : number of the card (string).
+ * @param suit : suit of the card (string).
+ */
 Card::Card(string number, string suit)
 {
 	value_ = number;
@@ -24,7 +28,7 @@ void Card::PrintCard()
 {
 	cout << "|";
 
-	/* Set the flux mode to print Unicode-16 text */
+	/* Set the stream mode to print Unicode-16 text */
 	_setmode(_fileno(stdout), _O_U16TEXT);
 
 	wchar_t* symbol = nullptr;
@@ -53,13 +57,16 @@ void Card::PrintCard()
 	/* Print Unicode-16 text*/
 	wcout << value + L" " + symbol;
 	
-	/* Reset the flux mode to print standard text */
+	/* Reset the standard mode to print standard text */
 	_setmode(_fileno(stdout), _O_TEXT);
 
 	cout << "| ";
 }
 
-/* Static method that permit to cast cards' value (string) to its int value (from 1 to 13 [King]). */
+/* 
+ * Static method that permit to cast cards' value (string) to its int value (from 1 to 13 [King]). 
+ * @param cardValue : string card value to convert to card value (int).
+ */
 int Card::ConvertCardValueToNumber(string cardValue) {
 
 	int val = 0;
@@ -85,20 +92,29 @@ int Card::ConvertCardValueToNumber(string cardValue) {
 
 #pragma region Overdefinitions
 
-/* Method that permit to compare two cards. This method will be usefull to create Combinaison. */
+/* 
+ * Compare two cards. Overdefinition of == operator to fit to the card class. 
+ * @param card : card to compare to the current card.
+ */
 bool Card::operator==(const Card& card) const {
 	if (value_ == card.GetValue() && suit_ == card.GetSuit()) return true;
 	else return false;
 }
 
-/* Method to compare cards. */
+/*
+ * Compare two cards. Overdefinition of < operator to fit to the card class.
+ * @param card : card to compare to the current card.
+ */
 bool Card::operator<(const Card& card) const {
 	int valueThis = Card::ConvertCardValueToNumber(value_);
 	int valueCard = Card::ConvertCardValueToNumber(card.value_);
 	return valueThis < valueCard;
 }
 
-/* Overdefinition of assignement operator. */
+/*
+ * Affectation of a card. Overdefinition of = operator to fit to the card class.
+ * @param card : card to affect to the current card.
+ */
 void Card::operator=(const Card& card) {
 	value_ = card.GetValue();
 	suit_ = card.GetSuit();
