@@ -18,7 +18,6 @@ class OptionMenu
     string GetDescription() const {return description_;}
 };
 
-
 class Menu{      
 protected : 
 	string title_;
@@ -36,6 +35,10 @@ public:
     virtual void Help();
 };
 
+/*
+ * @author : Alexis Degrange 
+ * Menu to start a round. 
+ */
 class MenuPokerStart : public Menu {
 private:
 	Game* game_ = NULL;		// The starting round menu is linked to a game.
@@ -46,6 +49,10 @@ public:
 	virtual void Execute();
 };
 
+/* 
+ * @author : Alexis Degrange
+ * Manage round menu, to print all actions a player can do (bet, fllow ...) 
+ */
 class MenuPokerGame : public Menu { 
 private :
 	Round* round_;

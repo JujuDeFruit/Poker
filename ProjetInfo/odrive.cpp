@@ -95,7 +95,6 @@ void ODrive::sync(string dir)
 
 void ODrive::refresh(string dir = "")
 {
-	//dir = dir == "" ? odDrivePath_ : dir;
 	// Wait for 1s
 	this_thread::sleep_for(chrono::seconds(1));
 	// Send refresh command
