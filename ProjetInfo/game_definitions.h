@@ -9,6 +9,10 @@ class MenuPokerGame;		// Used in round declaration.
 #pragma region Player
 
 // ============================= PLAYER ============================= //
+/*
+ * @author : Alexis Degrange
+ * Create a player to manage user's tokens
+ */
 class Player {
 private:
 	string name_;			// PLayer's name
@@ -41,6 +45,10 @@ public:
 #pragma region Round
 
 // ============================= ROUND ============================= //
+/*
+ * @author: Alexis Degrange and Julien Raynal
+ * Create a round where player can play and bet money. It is the heart of the whole program.
+ */
 class Round {
 private:
 	Player* player_;							// Player on the round.
@@ -94,6 +102,10 @@ public:
 #pragma region Game
 
 // ============================= GAME ============================= //
+/* 
+ * @author : Alexis Degrange and Julien Raynal 
+ * Create a game and iterate a new round while the player do not win or lose.
+ */
 class Game {
 private:
 	bool server_;

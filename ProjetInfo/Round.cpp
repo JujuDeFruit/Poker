@@ -643,7 +643,7 @@ void Round::PrintDeck() {
  */
 void Round::WriteActionInFile(const string action) {
 	ODrive od;
-	if (action != "Fold" && action != "Bet" && action != "All_In" && action != "Follow" && action != "Check") {	//	Iif acton is not error.
+	if (action != "Fold" && action != "Bet" && action != "All_In" && action != "Follow" && action != "Check") {	//	If acton is not error.
 		od.writeInErrorLogFile("Wrong action : " + action);
 		return;
 	}

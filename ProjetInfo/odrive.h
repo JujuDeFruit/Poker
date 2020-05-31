@@ -23,6 +23,10 @@ public:
     bool isDir(string dir);
     void waitForChange(string file);
 
+	/*
+	 * @author : Julien Raynal
+	 * Adding odrive methods to fit to our program (writing in files, reading in files...)
+	 */
 	void writeInErrorLogFile(string);							// Write in report log.
 	void writeInFile(string, string, ios_base::openmode);		// Write a single line in a file and choose your openmode (erase and write or append ?).  
 	void writeInFile(string, vector<string>);					// Write many lines in a file

@@ -13,14 +13,20 @@ int RandomNumber(int i);
 
 #pragma region Enum
 
-/* Enum to know if the game if a win a loss or a tie game. */
+/* 
+ * @author : Julien Raynal
+ * Enum to know if the game if a win a loss or a tie game. 
+ */
 enum bool3States {
 	NULL_STATE = -1,
 	FALSE = 0,
 	TRUE = 1
 };
 
-/* Enumeration of all the poker combinaisons. The combinaisons are sorted by strength. */
+/*
+ * @auhtor : Julien Raynal
+ * Enumeration of all the poker combinaisons. The combinaisons are sorted by strength. 
+ */
 enum combinaisonTypes {
 	highCard = 0, // Hauteur
 	pair = 1, // Paire
@@ -38,7 +44,10 @@ enum combinaisonTypes {
 
 #pragma region Card
 
-/* Class that represent a playing card. */
+/*
+ * @author : Julien Raynal
+ * Class that represent a playing card. 
+ */
 class Card {
 private:
 	string value_; // Card value.
@@ -63,7 +72,10 @@ public:
 
 #pragma region Deck
 
-/* Class created to manipulate a deck of cards (vector<Card>). */
+/*
+ * @author : Julien Raynal
+ * Class created to manipulate a deck of cards (vector<Card>). 
+ */
 class Deck {
 protected:
 	vector<Card> cardList_; // The list of all the cards
@@ -108,7 +120,10 @@ public:
 	void EraseCards(Deck);				// Delete cards from the vector
 };
 
-/* Class gather all the 52 card in a same deck (object). */
+/*
+ * @author : Julien Raynal
+ * Class gather all the 52 card in a same deck (object). 
+ */
 class BeginDeck : public Deck {
 private:
 	bool isShaked_; // Is the deck shaked or not ?
@@ -123,14 +138,20 @@ public:
 
 #pragma region Combinaison
 
-/* Struct used to identified a combinaison. */
+/*
+ * @author : Julien Raynal
+ * Struct used to identified a combinaison. 
+ */
 struct CombinaisonComposition { 
 	combinaisonTypes combinaison_;			// Type of the combinaison (check combinaisonTypes enumeration).
 	Deck cards_;							// Cards involved in the combinaison.
 	bool isCombinaison_ = false;			// Is there a specific combinaison ?
 };
 
-/* Class used to create combinaison throught cards. This class is link to the combinaisonTypes enum. */
+/*
+ * @author : Julien Raynal
+ * Class used to create combinaison throught cards. This class is link to the combinaisonTypes enum. 
+ */
 class Combinaison {
 private: 
 	CombinaisonComposition combinaisonComposition_;		// All the informations about the combinaison.
