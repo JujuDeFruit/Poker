@@ -1130,3 +1130,16 @@ Message : "Check"			 | 	File : "1Action.txt".
 Message : "0"			 | 	File : "1Turn.txt".
 Message : "ready"			 | 	File : "__init__.txt".
 Server connection.
+An error occured when game closed.
+Opening error file "__init__.txt"
+Server connection.
+Game begin.
+Opening error file "1Hand.txt"
+Opening error file "0Hand.txt"
+Opening error file "1Deck.txt"
+Error while opening 0Pot.txt file.
+Error while opening 0Winner.txt file.
+Error while opening 0Action.txt file.
+Opening error file "1Money.txt"
+Opening error file "1Action.txt"
+Opening error file "1Turn.txt"
